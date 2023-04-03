@@ -11,6 +11,8 @@ import newNotificationSlice from './newNotification/reducers';
 import notificationSlice from './notification/reducers';
 import apiKeysSlice from './apiKeys/reducers';
 import statisticsSlice from "./statistics/reducers";
+import profilingSlice from "./profiling/reducers";
+import usageEstimateSlice from "./usageEstimation/reducers";
 
 const additionalMiddlewares = [LOG_REDUX_ACTIONS ? logger : undefined, trackingMiddleware];
 
@@ -24,6 +26,8 @@ export const appReducers = {
   apiKeysState: apiKeysSlice.reducer,
   newApiKeyState: newApiKeySlice.reducer,
   statisticsState: statisticsSlice.reducer,
+  profilingState: profilingSlice.reducer,
+  usageEstimateState: usageEstimateSlice.reducer
 };
 
 export const createStore = () =>
