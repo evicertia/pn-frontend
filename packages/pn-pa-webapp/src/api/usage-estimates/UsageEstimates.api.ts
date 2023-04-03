@@ -1,5 +1,11 @@
 import {apiClient} from "../apiClients";
-import {Estimate, EstimateSearchTable, FilterRequestEstimate, InfoDownload, Page} from "../../models/UsageEstimation";
+import {
+  EstimateDetail,
+  EstimateSearchTable,
+  FilterRequestEstimate,
+  InfoDownload,
+  Page
+} from "../../models/UsageEstimation";
 import {ESTIMATE_DETAIL, ESTIMATE_FILE_DETAIL, ESTIMATE_FILES, ESTIMATE_PAGINATION_LIST} from "./usageestimates.routes";
 
 export const UsageEstimatesApi = {
@@ -20,8 +26,8 @@ export const UsageEstimatesApi = {
    * @param  {string:'Marzo-2023'} referenceMonth
    * @returns Promise
    */
-  getDetailEstimate: async (paId: string, referenceMonth: string): Promise<Estimate> => {
-    const response = await apiClient.get<Estimate>(ESTIMATE_DETAIL(paId, referenceMonth));
+  getDetailEstimate: async (paId: string, referenceMonth: string): Promise<EstimateDetail> => {
+    const response = await apiClient.get<EstimateDetail>(ESTIMATE_DETAIL(paId, referenceMonth));
     return response.data;
   },
 

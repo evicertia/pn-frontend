@@ -1,5 +1,5 @@
 
-export interface Estimate {
+export interface PaInfo {
   paId: string;
   paName: string;
   taxId: string;
@@ -11,14 +11,24 @@ export interface Estimate {
   description: string;
   pec: string;
   mailAddress: string;
-  status: EstimateStatusEnum;
-  deadlineDate: string;
-  referenceMonth: string;
+}
+
+export interface Estimate {
   totalDigitalNotif: number;
   totalPaper890Notif: number;
   totalPaperNationalNotif: number;
   totalPaperInternationalNotif: number;
+}
+
+export interface EstimateDetail {
+  paInfo: PaInfo;
+  status: EstimateStatusEnum;
+  showEdit: boolean;
+  deadlineDate: string;
+  referenceMonth: string;
   lastModifiedTimestamp: string;
+  estimate: Estimate;
+
 }
 
 export const EstimateStatusEnum = {
@@ -68,33 +78,22 @@ export type Page<T> = {
   content: Array<T>;
 };
 
-export interface BillingTimeline {
-  sdiCode: string;
-  splitPayment: boolean;
-  description: string;
-  mailAddress: string;
+export interface Billings {
+  paInfo: PaInfo;
   deadlineDate: string;
   referenceYear: string;
   lastModifiedTimestamp: string;
   onboardingDate: string;
   status: EstimateStatusEnum;
+  showEdit: boolean;
+
+  list: Array<BillingDetail>;
 }
 
 export interface BillingDetail {
-  paId: string;
-  paName: string;
-  taxId: string;
-  address: string;
-  fiscalCode: string;
-  ipaCode: string;
-  pec: string;
   sdiCode: string;
   splitPayment: boolean;
   description: string;
   mailAddress: string;
-  deadlineDate: string;
-  referenceYear: string;
-  lastModifiedTimestamp: string;
-  onboardingDate: string;
-  status: EstimateStatusEnum;
+
 }
