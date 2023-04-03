@@ -1,9 +1,9 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {BillingDetail, BillingTimeline} from "../../models/UsageEstimation";
+import {BillingDetail} from "../../models/UsageEstimation";
 
 
 interface ProfilingState {
-  billings: Array<BillingTimeline>;
+  billings: Array<BillingDetail>;
   selected: BillingDetail | undefined;
 }
 

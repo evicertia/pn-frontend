@@ -29,6 +29,7 @@ export interface EstimateDetail {
   lastModifiedTimestamp: string;
   estimate: Estimate;
 
+  billing: BillingDetail;
 }
 
 export const EstimateStatusEnum = {
