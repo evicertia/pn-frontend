@@ -1,7 +1,7 @@
 import {compileRoute} from "@pagopa-pn/pn-commons";
 
 // PREFIXES
-const API_ESTIMATE_PREFIX = 'template';
+const API_ESTIMATE_PREFIX = 'pn-usage-estimates';
 
 // Segments
 const API_VERSION = 'v1';
@@ -30,7 +30,7 @@ export function ESTIMATE_PAGINATION_LIST(paId: string, page:number, tot:number){
   return compileRoute({
     prefix: API_ESTIMATE_PREFIX,
     path: API_ESTIMATES_FROM_PA_ID_PATH,
-    query:{
+    query: {
       [API_ESTIMATE_PA_ID_PARAMETER]: paId,
       [API_ESTIMATE_PAGE_PARAMETER]: page,
       [API_ESTIMATE_TOT_PARAMETER]: tot,
@@ -42,7 +42,7 @@ export function ESTIMATE_DETAIL(paId: string, referenceMonth: string){
   return compileRoute({
     prefix: API_ESTIMATE_PREFIX,
     path: API_ESTIMATE_DETAIL_PATH,
-    params:{
+    params: {
       [API_ESTIMATE_PA_ID_PARAMETER]: paId,
       [API_ESTIMATE_REFERENCE_MONTH_PARAMETER]: referenceMonth,
     }

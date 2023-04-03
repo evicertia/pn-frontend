@@ -1,5 +1,5 @@
 import {apiClient} from "../apiClients";
-import {Estimate, EstimateSearchTable, FilterRequestEstimate, InfoDownload, Page} from "../../models/EstimateUsage";
+import {Estimate, EstimateSearchTable, FilterRequestEstimate, InfoDownload, Page} from "../../models/UsageEstimation";
 import {ESTIMATE_DETAIL, ESTIMATE_FILE_DETAIL, ESTIMATE_FILES, ESTIMATE_PAGINATION_LIST} from "./usageestimates.routes";
 
 export const UsageEstimatesApi = {
