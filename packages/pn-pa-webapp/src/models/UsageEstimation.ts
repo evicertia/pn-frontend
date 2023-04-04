@@ -13,21 +13,21 @@ export interface PaInfo {
   mailAddress: string;
 }
 
-export interface Estimate {
+export interface EstimateDetail {
   totalDigitalNotif: number;
   totalPaper890Notif: number;
   totalPaperNationalNotif: number;
   totalPaperInternationalNotif: number;
 }
 
-export interface EstimateDetail {
+export interface EstimatePeriod {
   paInfo: PaInfo;
   status: EstimateStatusEnum;
   showEdit: boolean;
   deadlineDate: string;
   referenceMonth: string;
   lastModifiedTimestamp: string;
-  estimate: Estimate;
+  estimate: EstimateDetail;
 
   billing: BillingDetail;
 }

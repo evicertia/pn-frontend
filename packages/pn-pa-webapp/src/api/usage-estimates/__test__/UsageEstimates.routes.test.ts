@@ -2,8 +2,10 @@ import {
   ESTIMATE_DETAIL,
   ESTIMATE_FILE_DETAIL,
   ESTIMATE_FILES,
-  ESTIMATE_PAGINATION_LIST
+  ESTIMATE_PAGINATION_LIST,
+  UPDATE_ESTIMATE
 } from "../usageestimates.routes";
+import {StatusUpdateEnum} from "../../../models/UsageEstimation";
 
 const PA_ID = "1234";
 const REF_MONTH = "MARZO-2023"
@@ -14,6 +16,11 @@ describe('UsageEstimatesTest', function () {
   it('should compile pagination estimates', function () {
     const route = ESTIMATE_PAGINATION_LIST(PA_ID, 1, 10);
     expect(route).toEqual(`/pn-usage-estimates/v1/estimates?paId=${PA_ID}&page=${1}&tot=${10}`);
+  });
+
+  it('should compile update estimates', function () {
+    const route = UPDATE_ESTIMATE(PA_ID, REF_MONTH, StatusUpdateEnum.CREATED);
+    expect(route).toEqual(`/pn-usage-estimates/v1/${PA_ID}/estimate/${REF_MONTH}?status=${StatusUpdateEnum.CREATED}`);
   });
 
   it('should compile detail estimates', function () {

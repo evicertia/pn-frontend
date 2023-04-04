@@ -1,15 +1,19 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {Estimate, EstimateSearchTable} from "../../models/UsageEstimation";
+import {EstimatePeriod, EstimateSearchTable} from "../../models/UsageEstimation";
 
 
 interface UsageEstimationState {
   estimates: Array<EstimateSearchTable>;
-  selected: Estimate | undefined;
+  selected: EstimatePeriod | undefined;
+  loading: boolean;
+  error: string | undefined;
 }
 
 const initialState: UsageEstimationState = {
   estimates: [],
-  selected: undefined
+  selected: undefined,
+  loading: false,
+  error: undefined
 };
 
 
