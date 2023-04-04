@@ -1,15 +1,19 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {BillingDetail} from "../../models/UsageEstimation";
+import {Profiling, ProfilingDetail} from "../../models/UsageEstimation";
 
 
 interface ProfilingState {
-  billings: Array<BillingDetail>;
-  selected: BillingDetail | undefined;
+  profiling: Profiling | undefined;
+  selected: ProfilingDetail | undefined;
+  loading: boolean;
+  error: string | undefined;
 }
 
 const initialState: ProfilingState = {
-  billings: [],
-  selected: undefined
+  profiling: undefined,
+  selected: undefined,
+  loading: false,
+  error: undefined
 };
 
 

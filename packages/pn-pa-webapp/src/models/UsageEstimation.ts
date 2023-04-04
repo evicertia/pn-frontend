@@ -79,16 +79,18 @@ export type Page<T> = {
   content: Array<T>;
 };
 
-export interface Billings {
+export interface Profiling {
   paInfo: PaInfo;
-  deadlineDate: string;
-  referenceYear: string;
-  lastModifiedTimestamp: string;
-  onboardingDate: string;
-  status: EstimateStatusEnum;
-  showEdit: boolean;
+  profiles: Array<ProfilingDetail>;
 
-  list: Array<BillingDetail>;
+}
+
+export interface ProfilingDetail {
+  billing: BillingDetail;
+  status: EstimateStatusEnum;
+  deadlineDate?: string;
+  referenceYear: string;
+  showEdit: boolean;
 }
 
 export interface BillingDetail {
@@ -97,4 +99,9 @@ export interface BillingDetail {
   description: string;
   mailAddress: string;
 
+}
+
+export enum StatusUpdateEnum {
+  CREATED = "CREATED",
+  VALIDATED = "VALIDATED"
 }
