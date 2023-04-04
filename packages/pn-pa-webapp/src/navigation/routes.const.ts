@@ -12,6 +12,9 @@ export const API_KEYS = '/api-keys';
 export const NUOVA_API_KEY = `${API_KEYS}/nuova-api-key`;
 export const STATISTICHE = '/statistiche';
 
+export const ESTIMATE = '/estimante';
+export const PROFILING = '/profiling';
+
 export const USERS_SEGMENT = '/users';
 export const ID_PN_SEGMENT = 'prod-pn';
 export const GROUPS_SEGMENT = '/groups';

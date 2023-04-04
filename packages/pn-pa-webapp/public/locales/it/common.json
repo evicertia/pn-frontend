@@ -13,6 +13,8 @@
   },
   "menu": {
     "notifications": "Notifiche",
+    "estimate": "Stime",
+    "profiling": "Profilazione",
     "users": "Utenti",
     "groups": "Gruppi",
     "api-key": "API Key",

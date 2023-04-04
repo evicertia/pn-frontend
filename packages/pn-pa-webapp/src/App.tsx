@@ -46,6 +46,8 @@ const App = () => {
   });
   setUpInterceptor(store);
 
+  console.log(process.env.HOST);
+
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const loggedUserOrganizationParty = useAppSelector(
     (state: RootState) => state.userState.organizationParty
@@ -89,6 +91,8 @@ const App = () => {
           ),
         route: routes.APP_STATUS,
       },
+      { label: 'menu.estimate', icon: VpnKey, route: routes.ESTIMATE },
+      { label: 'menu.profiling', icon: VpnKey, route: routes.PROFILING },
     ];
 
     // As the basicMenuItems definition now accesses the MUI theme and the Redux store,
