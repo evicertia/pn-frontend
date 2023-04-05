@@ -46,8 +46,6 @@ const App = () => {
   });
   setUpInterceptor(store);
 
-  console.log(process.env.HOST);
-
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const loggedUserOrganizationParty = useAppSelector(
     (state: RootState) => state.userState.organizationParty

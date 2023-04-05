@@ -28,7 +28,6 @@ export interface EstimatePeriod {
   referenceMonth: string;
   lastModifiedTimestamp: string;
   estimate: EstimateDetail;
-
   billing: BillingDetail;
 }
 
