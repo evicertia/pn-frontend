@@ -1,6 +1,7 @@
 import {apiClient} from "../apiClients";
 import {
-  EstimateDetail, EstimatePeriod,
+  EstimateBodyRequest,
+  EstimatePeriod,
   EstimateSearchTable,
   FilterRequestEstimate,
   InfoDownload,
@@ -33,7 +34,7 @@ export const UsageEstimatesApi = {
    * @param status  CREATED or VALIDATED
    * @param body  estimate body updated
    */
-  updateEstimate: async (paId: string, referenceMonth: string, status: StatusUpdateEnum, body: EstimateDetail): Promise<string> => {
+  updateEstimate: async (paId: string, referenceMonth: string, status: StatusUpdateEnum, body: EstimateBodyRequest): Promise<string> => {
     await apiClient.post<void>(UPDATE_ESTIMATE(paId, referenceMonth, status), body);
     return "success";
   },

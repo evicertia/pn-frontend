@@ -9,6 +9,19 @@ export interface PaInfo {
   pec: string;
 }
 
+export interface EstimateBodyRequest {
+  totalDigitalNotif: number;
+  totalPaper890Notif: number;
+  totalPaperNationalNotif: number;
+  totalPaperInternationalNotif: number;
+  billing: {
+    sdiCode: string;
+    splitPayment: boolean;
+    description: string;
+    mailAddress: string;
+  };
+}
+
 export interface EstimateDetail {
   totalDigitalNotif: number;
   totalPaper890Notif: number;
