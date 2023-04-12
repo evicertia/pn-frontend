@@ -1,5 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {EstimatePeriod, EstimateSearchTable} from "../../models/UsageEstimation";
+import {getDetailEstimate} from "./actions";
 
 
 interface UsageEstimationState {
@@ -16,11 +17,21 @@ const initialState: UsageEstimationState = {
   error: undefined
 };
 
-
+/* eslint-disable functional/immutable-data */
 const usageEstimateSlice = createSlice({
   name: "usageEstimateSlice",
   initialState,
-  reducers: {}
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getDetailEstimate.fulfilled, (state, action) => {
+      state.selected = action.payload;
+    });
+    builder.addCase(getDetailEstimate.rejected, (state) => {
+      state.selected = undefined;
+      state.error = "ERROR with detail estimate";
+    });
+
+  }
 });
 
 export default usageEstimateSlice;

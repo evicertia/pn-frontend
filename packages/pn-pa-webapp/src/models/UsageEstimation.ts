@@ -6,11 +6,7 @@ export interface PaInfo {
   address: string;
   fiscalCode: string;
   ipaCode: string;
-  sdiCode: string;
-  splitPayment: boolean;
-  description: string;
   pec: string;
-  mailAddress: string;
 }
 
 export interface EstimateDetail {

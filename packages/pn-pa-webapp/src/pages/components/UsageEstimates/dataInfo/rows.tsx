@@ -1,109 +1,112 @@
 import {Typography} from "@mui/material";
 import {format} from "date-fns";
 import { EstimateStatusChip } from "../statusChip";
+import {BillingDetail, EstimateDetail, EstimatePeriod, PaInfo} from "../../../../models/UsageEstimation";
 import {RowDataInfo} from "./DataInfo";
 
-export const usageInfoPA: Array<RowDataInfo> = [
+export const usageInfoPA: Array<RowDataInfo<PaInfo>> = [
   {
     id: "paName",
-    label: "Soggetto aderente",
-    render: (data) => <Typography>{(data?.name) ? data.name : "-"}</Typography>
+    label: "label.subject-name",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.paName}</Typography>
   },
   {
     id: "businessName",
-    label: "Sede legale",
-    render: (data) => <Typography>{(data?.businessName) ? data.businessName : "-"}</Typography>
+    label: "label.business-name",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.address}</Typography>
   },
   {
     id: "taxId",
-    label: "Partita IVA",
-    render: (data) => <Typography>{(data?.taxId) ? data.taxId : "-"}</Typography>
+    label: "label.tax-id",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.taxId}</Typography>
   },
 
   {
     id: "ipaCode",
-    label: "Codice IPA",
-    render: (data) => <Typography>{(data?.ipaCode) ? data.ipaCode : "-"}</Typography>
-  },
-  {
-    id: "sdiCode",
-    label: "Codice SDI",
-    render: (data) => <Typography>{(data?.sdiCode) ? data.sdiCode : "-"}</Typography>
-  },
-  {
-    id: "splitPayment",
-    label: "Soggetto Split Payment",
-    render: (data) => <Typography>{(data?.splitPayment) ? "Si" : "No"}</Typography>
-  },
-  {
-    id: "otherInfo",
-    label: "Altre informazioni utili ai fini della fatturazione",
-    render: (data) => <Typography>{(data?.otherInfo) ? data.otherInfo : "-"}</Typography>
+    label: "label.ipa-code",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.ipaCode}</Typography>
   },
   {
     id: "pec",
-    label: "PEC",
-    render: (data) => <Typography>{(data?.pec) ? data.pec : "-"}</Typography>
-  },
-  {
-    id: "otherMail",
-    label: "Indirizzo email amministrativo di riferimento per contatti ",
-    render: (data) => <Typography>{(data?.otherMail) ? data.otherMail : "-"}</Typography>
+    label: "label.pec",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.pec}</Typography>
   },
 ];
 
-export const usagePeriod: Array<RowDataInfo> = [
+export const usagePeriod: Array<RowDataInfo<EstimatePeriod>> = [
   {
-    id: "paName",
-    label: "Nome PA",
-    render: (data) => <Typography>{data?.name}</Typography>
-  },{
     id: "reference",
-    label: "Periodo di riferimento",
-    render: (data) => <Typography>{data?.period}</Typography>
+    label: "label.reference-period",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.referenceMonth}</Typography>
   },{
     id: "deadlineDate",
-    label: "Data di scadenza",
-    render: (data) =><Typography>{(data?.deadlineDate) ? format(new Date(data.deadlineDate), "dd-MM-yyyy HH:mm") : "-"}</Typography>
+    label: "label.deadline-period",
+    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.deadlineDate) ? format(new Date(data.deadlineDate), "dd/MM/yyyy") : "-"}</Typography>
   },{
     id: "status",
-    label: "Stato",
+    label: "label.status-period",
     render: (data) => <EstimateStatusChip data={data.status}/>
   },{
     id: "insertDate",
-    label: "Data inserimento",
-    render: (data) => <Typography>{(data?.insertDate) ? format(new Date(data.insertDate), "dd-MM-yyyy HH:mm") : "-"}</Typography>
+    label: "label.start-date-period",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.lastModifiedTimestamp) ? format(new Date(data.lastModifiedTimestamp), "dd/MM/yyyy HH:mm") : "-"}</Typography>
   },
 ];
 
-export const usageEstimations: Array<RowDataInfo> = [
+export const usageBillingDataPA: Array<RowDataInfo<BillingDetail>> = [
+  {
+    id: "sdiCode",
+    label: "label.sdi-code",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.sdiCode) ? data.sdiCode : "-"}</Typography>
+  },
+  {
+    id: "splitPayment",
+    label: "label.split-payment-profiling",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.splitPayment) ? "Si" : "No"}</Typography>
+  },
+  {
+    id: "mailAddress",
+    label: "label.email-profiling",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.mailAddress) ? data.mailAddress : "-"}</Typography>
+  },
+  {
+    id: "description",
+    label: "label.other-description-profiling",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.description) ? data.description : "-"}</Typography>
+  },
+];
+
+export const usageEstimations: Array<RowDataInfo<EstimateDetail>> = [
   {
     id: "totalDigitalNotif",
-    label: "Numero notifiche per via digitale",
-    render: (data) => <Typography>{data?.name}</Typography>
+    label: "label.digital-notif-estimate",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalDigitalNotif}</Typography>
   },{
-    id: "name",
-    label: "Numero di notifiche per via analogica tramite Raccomandata A/R",
-    render: (data) => <Typography>{data?.period}</Typography>
+    id: "totalPaperNationalNotif",
+    label: "label.analog-notif-estimate",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalPaperNationalNotif}</Typography>
   },{
-    id: "name",
-    label: "Numero di notifiche per via analogica L. 890/19",
-    render: (data) =><Typography>{(data?.expiredDate) ? format(new Date(data.expiredDate), "dd-MM-yyyy HH:mm") : "-"}</Typography>
+    id: "totalPaperInternationalNotif",
+    label: "label.analog-inter-notif-estimate",
+    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalPaperInternationalNotif}</Typography>
   },{
-    id: "name",
-    label: "Totale notifiche digitali",
-    render: (data) => <Typography>{data.num}</Typography>
+    id: "totalPaperInternationalNotif",
+    label: "label.analog-890-notif-estimate",
+    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalPaper890Notif}</Typography>
   },{
-    id: "name",
-    label: "Totale notifiche analogiche per territorio nazionale",
-    render: (data) => <Typography>{data.num}</Typography>
+    id: "totDigitalNotif",
+    label: "label.total-digital-notif",
+    labelWeight: "bold",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalDigitalNotif}</Typography>
   },{
-    id: "name",
-    label: "Totale notifiche analogiche per territorio diverso da nazionale",
-    render: (data) => <Typography>{data.num}</Typography>
+    id: "totAnalogNotif",
+    label: "label.total-analog-notif",
+    labelWeight: "bold",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalPaperNationalNotif + data.totalPaperInternationalNotif + data.totalPaper890Notif}</Typography>
   },{
-    id: "name",
-    label: "Totale notifiche da processare",
-    render: (data) => <Typography>{data.num}</Typography>
+    id: "totalNotif",
+    label: "label.total-notif",
+    labelWeight: "bold",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalPaperNationalNotif + data.totalPaperInternationalNotif + data.totalPaper890Notif + data.totalDigitalNotif}</Typography>
   },
 ];

@@ -3,17 +3,18 @@ import {EstimateStatusEnum} from "../../../../models/UsageEstimation";
 
 
 export function EstimateStatusChip(props:{data:EstimateStatusEnum}) {
-  if (props.data === "CREATED") {
-      return (<Chip sx={{bgcolor: '#ffff00'}} label={"IN AGGIORNAMENTO"}/>);
+
+  if (props.data === EstimateStatusEnum.Created) {
+      return (<Chip color={"warning"} label={"IN AGGIORNAMENTO"}/>);
   }
-  if (props.data === "VALIDATED") {
-    return <Chip sx={{bgcolor: '#95f202'}}  label={"CONSOLIDATO"}/>;
+  if (props.data === EstimateStatusEnum.Validated) {
+    return <Chip color={"success"} label={"CONSOLIDATO"}/>;
   }
-  if (props.data === "IN_PROGRESS") {
-    return <Chip  sx={{bgcolor: '#81d4fa'}} label={"IN CORSO"}/>;
+  if (props.data === EstimateStatusEnum.InProgress) {
+    return <Chip color={"primary"} label={"IN CORSO"}/>;
   }
-  if (props.data === "ENDED") {
-    return <Chip label={"TERMINATA"}/>;
+  if (props.data === EstimateStatusEnum.Ended) {
+    return <Chip color={"error"} label={"ASSENTE"}/>;
   }
   return <Chip label={"-"}/>;
 }

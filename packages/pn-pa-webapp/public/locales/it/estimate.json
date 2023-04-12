@@ -1,4 +1,37 @@
 {
   "titleEstimate": "Dettagli Stime",
-  "subtitleEstimate": "In questa sezione potrai visualizzare le previsioni di stima sui volumi delle notifiche per la tua PA"
+  "subtitleEstimate": "In questa sezione potrai visualizzare le previsioni di stima sui volumi delle notifiche per la tua PA",
+  "userInfoSelectEstimate": "Seleziona il mese d'interesse dalla timeline a destra",
+  "historyEstimate": "Storico",
+  "paInfoTitle": "INFORMAZIONI",
+  "periodTitle": "PERIODO",
+  "profiling-title": "DATI AGGIUNTIVI PER LA FATTURAZIONE",
+  "usage-estimate-title": "PREVISIONI",
+  "message-edit": "Puoi ancora modificare fino alla data di scadenza",
+  "label": {
+    "digital-notif-estimate": "Numero di notifiche per via digitale",
+    "analog-notif-estimate": "Numero di notifiche nazionali per via analogica tramite A/R",
+    "analog-inter-notif-estimate": "Numero di notifiche internazionali per via analogica tramite A/R",
+    "analog-890-notif-estimate": "Numero di notifiche per via analogica L. 890/19",
+    "total-digital-notif": "Totale notifiche digitali",
+    "total-analog-notif": "Totale notifiche analogiche",
+    "total-notif": "Totale notifiche",
+    "email-profiling": "Indirizzo email amministrativo",
+    "split-payment-profiling": "Soggetto Split Payment",
+    "other-description-profiling": "Altre informazioni utili alla fatturazione",
+    "email": "Email",
+    "sdi-code": "Codice SDI",
+    "reference-period": "Periodo di riferimento",
+    "deadline-period": "Data di scadenza",
+    "status-period": "Stato",
+    "start-date-period": "Data inserimento",
+    "subject-name": "Soggetto aderente",
+    "business-name": "Sede legale",
+    "tax-id": "Partita IVA",
+    "ipa-code": "Codice IPA",
+    "pec": "PEC",
+    "select-split-payment": "Seleziona una voce",
+    "yes": "Si",
+    "none": "No"
+  }
 }
