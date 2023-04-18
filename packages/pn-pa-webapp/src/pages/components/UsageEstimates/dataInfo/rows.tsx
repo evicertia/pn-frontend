@@ -27,6 +27,11 @@ export const usageInfoPA: Array<RowDataInfo<PaInfo>> = [
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.ipaCode}</Typography>
   },
   {
+    id: "sdiCode",
+    label: "label.sdi-code",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.sdiCode) ? data.sdiCode : "-"}</Typography>
+  },
+  {
     id: "pec",
     label: "label.pec",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.pec}</Typography>
@@ -49,16 +54,12 @@ export const usagePeriod: Array<RowDataInfo<EstimatePeriod>> = [
   },{
     id: "insertDate",
     label: "label.start-date-period",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.lastModifiedTimestamp) ? format(new Date(data.lastModifiedTimestamp), "dd/MM/yyyy HH:mm") : "-"}</Typography>
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.lastModifiedDate) ? format(new Date(data.lastModifiedDate), "dd/MM/yyyy HH:mm") : "-"}</Typography>
   },
 ];
 
 export const usageBillingDataPA: Array<RowDataInfo<BillingDetail>> = [
-  {
-    id: "sdiCode",
-    label: "label.sdi-code",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.sdiCode) ? data.sdiCode : "-"}</Typography>
-  },
+
   {
     id: "splitPayment",
     label: "label.split-payment-profiling",
@@ -81,32 +82,33 @@ export const usageEstimations: Array<RowDataInfo<EstimateDetail>> = [
     id: "totalDigitalNotif",
     label: "label.digital-notif-estimate",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalDigitalNotif}</Typography>
-  },{
+  },
+  {
     id: "totalPaperNationalNotif",
     label: "label.analog-notif-estimate",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalPaperNationalNotif}</Typography>
-  },{
-    id: "totalPaperInternationalNotif",
-    label: "label.analog-inter-notif-estimate",
-    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalPaperInternationalNotif}</Typography>
-  },{
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalAnalogNotif}</Typography>
+  },
+  {
     id: "totalPaperInternationalNotif",
     label: "label.analog-890-notif-estimate",
-    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalPaper890Notif}</Typography>
-  },{
+    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{data.total890Notif}</Typography>
+  },
+  {
     id: "totDigitalNotif",
     label: "label.total-digital-notif",
     labelWeight: "bold",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalDigitalNotif}</Typography>
-  },{
+  },
+  {
     id: "totAnalogNotif",
     label: "label.total-analog-notif",
     labelWeight: "bold",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalPaperNationalNotif + data.totalPaperInternationalNotif + data.totalPaper890Notif}</Typography>
-  },{
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.total890Notif + data.totalAnalogNotif}</Typography>
+  },
+  {
     id: "totalNotif",
     label: "label.total-notif",
     labelWeight: "bold",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalPaperNationalNotif + data.totalPaperInternationalNotif + data.totalPaper890Notif + data.totalDigitalNotif}</Typography>
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.total890Notif + data.totalAnalogNotif + data.totalDigitalNotif}</Typography>
   },
 ];

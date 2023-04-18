@@ -7,26 +7,22 @@ export interface PaInfo {
   fiscalCode: string;
   ipaCode: string;
   pec: string;
+  sdiCode: string;
 }
 
 export interface EstimateBodyRequest {
   totalDigitalNotif: number;
-  totalPaper890Notif: number;
-  totalPaperNationalNotif: number;
-  totalPaperInternationalNotif: number;
-  billing: {
-    sdiCode: string;
-    splitPayment: boolean;
-    description: string;
-    mailAddress: string;
-  };
+  total890Notif: number;
+  totalAnalogNotif: number;
+  splitPayment: boolean;
+  description: string;
+  mailAddress: string;
 }
 
 export interface EstimateDetail {
   totalDigitalNotif: number;
-  totalPaper890Notif: number;
-  totalPaperNationalNotif: number;
-  totalPaperInternationalNotif: number;
+  total890Notif: number;
+  totalAnalogNotif: number;
 }
 
 export interface EstimatePeriod {
@@ -35,7 +31,7 @@ export interface EstimatePeriod {
   showEdit: boolean;
   deadlineDate: string;
   referenceMonth: string;
-  lastModifiedTimestamp: string;
+  lastModifiedDate: string;
   estimate: EstimateDetail;
   billing: BillingDetail;
 }
@@ -50,7 +46,7 @@ export type EstimateStatusEnum = typeof EstimateStatusEnum[keyof typeof Estimate
 
 export interface EstimateSearchTable {
   referenceMonth: string;
-  lastModifiedTimestamp: string;
+  lastModifiedDate: string;
   deadlineDate: string;
   status: EstimateStatusEnum;
 }

@@ -24,25 +24,23 @@ export const getDetailEstimate = createAsyncThunk<EstimatePeriod, DetailEstimate
         address: "Via Aldo Moro",
         fiscalCode: "ABCDFG89ER33DD",
         ipaCode: "1234gh",
+        sdiCode: "1234SDI",
         pec: "milano.comune@pec.it",
       } as PaInfo,
       status: EstimateStatusEnum.DRAFT,
       showEdit: true,
       deadlineDate: "2023-05-15T03:24:00",
       referenceMonth: params.referenceMonth,
-      lastModifiedTimestamp: "2023-04-17T03:24:00",
+      lastModifiedDate: "2023-04-17T03:24:00",
       estimate: {
         totalDigitalNotif: 10,
-        totalPaper890Notif: 72,
-        totalPaperNationalNotif: 56,
-        totalPaperInternationalNotif: 14,
+        total890Notif: 72,
+        totalAnalogNotif: 56
       } as EstimateDetail,
       billing: {
-        sdiCode: "1234SDI",
         splitPayment: true,
         description: "",
         mailAddress: "milano.comune@gmail.com",
-
       } as BillingDetail,
     } as EstimatePeriod
   ))
