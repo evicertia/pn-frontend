@@ -16,6 +16,7 @@ import { PNRole } from '../models/user';
 import AppStatus from '../pages/AppStatus.page';
 import {ProfilingPage} from "../pages/Profiling.page";
 import {EstimatePage} from "../pages/Estimate.page";
+import {EstimateEditPage} from "../pages/EstimateEdit.page";
 import * as routes from './routes.const';
 import SessionGuard from './SessionGuard';
 import RouteGuard from './RouteGuard';
@@ -53,6 +54,8 @@ function Router() {
               <Route path={routes.API_KEYS} element={<ApiKeys />} />
               <Route path={routes.NUOVA_API_KEY} element={<NewApiKey />} />
               <Route path={routes.STATISTICHE} element={<Statistics />} />
+              <Route path={routes.ESTIMATE} element={<EstimatePage />} />
+              <Route path={routes.ESTIMATE_EDIT} element={<EstimateEditPage />} />
               <Route path={routes.ESTIMATE} element={<EstimatePage />} />
               <Route path={routes.PROFILING} element={<ProfilingPage />} />
               <Route path="/" element={<Navigate to={routes.DASHBOARD} />} />

@@ -13,6 +13,8 @@ export const NUOVA_API_KEY = `${API_KEYS}/nuova-api-key`;
 export const STATISTICHE = '/statistiche';
 
 export const ESTIMATE = '/estimate';
+export const ESTIMATE_DETAIL = `${ESTIMATE}/reference-month/:referenceMonth`;
+export const ESTIMATE_EDIT = `${ESTIMATE}/reference-month/:referenceMonth/edit`;
 export const PROFILING = '/profiling';
 
 export const USERS_SEGMENT = '/users';
