@@ -1,20 +1,25 @@
-import {Chip} from "@mui/material";
+import {Chip, Tooltip} from "@mui/material";
+import {useTranslation} from "react-i18next";
 import {EstimateStatusEnum} from "../../../../models/UsageEstimation";
 
 
 export function EstimateStatusChip(props:{data:EstimateStatusEnum}) {
+  const { t } = useTranslation("estimate");
 
-  if (props.data === EstimateStatusEnum.Created) {
-      return (<Chip color={"warning"} label={"IN AGGIORNAMENTO"}/>);
+  if (props.data === EstimateStatusEnum.DRAFT) {
+      return <Tooltip title={t("draft-label-tooltip")}>
+        <Chip label={t("draft-label-chip")} />
+      </Tooltip>;
   }
-  if (props.data === EstimateStatusEnum.Validated) {
-    return <Chip color={"success"} label={"CONSOLIDATO"}/>;
+  if (props.data === EstimateStatusEnum.VALIDATED) {
+    return <Tooltip title={t("validated-label-tooltip")}>
+      <Chip color={"success"} label={t("validated-label-chip")} />
+    </Tooltip>;
   }
-  if (props.data === EstimateStatusEnum.InProgress) {
-    return <Chip color={"primary"} label={"IN CORSO"}/>;
-  }
-  if (props.data === EstimateStatusEnum.Ended) {
-    return <Chip color={"error"} label={"ASSENTE"}/>;
+  if (props.data === EstimateStatusEnum.ABSENT) {
+    return <Tooltip title={t("absent-label-tooltip")}>
+      <Chip color={"error"} label={t("absent-label-chip")} />
+    </Tooltip>;
   }
   return <Chip label={"-"}/>;
 }

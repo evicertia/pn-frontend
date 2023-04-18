@@ -41,19 +41,18 @@ export interface EstimatePeriod {
 }
 
 export const EstimateStatusEnum = {
-  Created: 'CREATED',
-  Validated: 'VALIDATED',
-  InProgress: 'IN_PROGRESS',
-  Ended: 'ENDED'
+  DRAFT: 'DRAFT',
+  VALIDATED: 'VALIDATED',
+  ABSENT: 'ABSENT',
 } as const;
 
 export type EstimateStatusEnum = typeof EstimateStatusEnum[keyof typeof EstimateStatusEnum];
 
 export interface EstimateSearchTable {
-  referenceMonth?: string;
-  lastModifiedTimestamp?: string;
-  status?: EstimateStatusEnum;
-  checkPDND?: boolean;
+  referenceMonth: string;
+  lastModifiedTimestamp: string;
+  deadlineDate: string;
+  status: EstimateStatusEnum;
 }
 
 export interface InfoDownload {
@@ -110,6 +109,6 @@ export interface BillingDetail {
 }
 
 export enum StatusUpdateEnum {
-  CREATED = "CREATED",
+  DRAFT = "DRAFT",
   VALIDATED = "VALIDATED"
 }

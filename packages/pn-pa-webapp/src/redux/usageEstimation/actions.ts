@@ -26,7 +26,7 @@ export const getDetailEstimate = createAsyncThunk<EstimatePeriod, DetailEstimate
         ipaCode: "1234gh",
         pec: "milano.comune@pec.it",
       } as PaInfo,
-      status: EstimateStatusEnum.Validated,
+      status: EstimateStatusEnum.DRAFT,
       showEdit: true,
       deadlineDate: "2023-05-15T03:24:00",
       referenceMonth: params.referenceMonth,
