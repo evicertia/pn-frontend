@@ -19,8 +19,8 @@ describe('UsageEstimatesTest', function () {
   });
 
   it('should compile update estimates', function () {
-    const route = UPDATE_ESTIMATE(PA_ID, REF_MONTH, StatusUpdateEnum.CREATED);
-    expect(route).toEqual(`/pn-usage-estimates/v1/${PA_ID}/estimate/${REF_MONTH}?status=${StatusUpdateEnum.CREATED}`);
+    const route = UPDATE_ESTIMATE(PA_ID, REF_MONTH, StatusUpdateEnum.DRAFT);
+    expect(route).toEqual(`/pn-usage-estimates/v1/${PA_ID}/estimate/${REF_MONTH}?status=${StatusUpdateEnum.DRAFT}`);
   });
 
   it('should compile detail estimates', function () {
