@@ -38,6 +38,10 @@
     "yes": "Si",
     "none": "No"
   },
+  "button": {
+    "edit-label": "Modifica",
+    "help-request-label": "Richiedi aiuto"
+  },
   "status": {
     "draft-label-tooltip": "Stime non ancora convalidate",
     "draft-label-chip": "Bozza",

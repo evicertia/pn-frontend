@@ -7,7 +7,7 @@ export interface RowDataInfo<T> {
   id: string;
   type: "DIVIDER" | "ROW";
   label: string | undefined;
-  labelWeight ?: "normal" | "bold" ;
+  labelWeight ?: string;
   labelVariant ?: "body1" | "subtitle1" | "subtitle2";
   render ?: (data: T) => ReactNode;
 
