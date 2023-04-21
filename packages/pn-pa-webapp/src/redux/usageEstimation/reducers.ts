@@ -1,18 +1,23 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {EstimatePeriod, EstimateSearchTable, Page} from "../../models/UsageEstimation";
-import {getDetailEstimate} from "./actions";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {EstimatePeriod, FilterRequest, HistoryEstimates} from "../../models/UsageEstimation";
+import {getAllEstimate, getDetailEstimate, updateEstimate} from "./actions";
 
 
 interface UsageEstimationState {
-  estimates: Page<EstimateSearchTable>;
+  historyEstimates: HistoryEstimates;
   selected: EstimatePeriod | undefined;
+  pagination: FilterRequest;
   loading: boolean;
   error: string | undefined;
 }
 
 const initialState: UsageEstimationState = {
-  estimates: {} as Page<EstimateSearchTable>,
+  historyEstimates: {} as HistoryEstimates,
   selected: undefined,
+  pagination: {
+    page: 1,
+    tot: 10,
+  },
   loading: false,
   error: undefined
 };
@@ -21,8 +26,26 @@ const initialState: UsageEstimationState = {
 const usageEstimateSlice = createSlice({
   name: "usageEstimateSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    setPagination: (state, action: PayloadAction<FilterRequest>) => {
+      state.pagination = action.payload;
+    }
+  },
   extraReducers: (builder) => {
+    builder.addCase(getAllEstimate.pending, (state,) => {
+      state.loading = true;
+      state.error = undefined;
+    });
+    builder.addCase(getAllEstimate.fulfilled, (state, action) => {
+      state.loading = false;
+      state.historyEstimates = action.payload;
+    });
+    builder.addCase(getAllEstimate.rejected, (state) => {
+      state.historyEstimates = {} as HistoryEstimates;
+      state.loading = false;
+      state.error = "ERROR with history estimate";
+    });
+
     builder.addCase(getDetailEstimate.pending, (state, action) => {
       state.loading = true;
       state.selected = action.payload;
@@ -35,6 +58,19 @@ const usageEstimateSlice = createSlice({
       state.selected = undefined;
       state.loading = false;
       state.error = "ERROR with detail estimate";
+    });
+
+    builder.addCase(updateEstimate.pending, (state) => {
+      state.loading = true;
+      state.error = undefined;
+    });
+    builder.addCase(updateEstimate.fulfilled, (state, action) => {
+      state.loading = false;
+      state.selected = action.payload;
+    });
+    builder.addCase(updateEstimate.rejected, (state) => {
+      state.loading = false;
+      state.error = "ERROR with update estimate";
     });
 
   }

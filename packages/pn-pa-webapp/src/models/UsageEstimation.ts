@@ -36,6 +36,11 @@ export interface EstimatePeriod {
   billing: BillingDetail;
 }
 
+export interface FilterRequest {
+  page: number;
+  tot: number;
+}
+
 export const EstimateStatusEnum = {
   DRAFT: 'DRAFT',
   VALIDATED: 'VALIDATED',
@@ -49,6 +54,11 @@ export interface EstimateSearchTable {
   lastModifiedDate: string;
   deadlineDate: string;
   status: EstimateStatusEnum;
+}
+
+export interface HistoryEstimates {
+  actual: EstimateSearchTable;
+  history : Page<EstimateSearchTable>;
 }
 
 export interface InfoDownload {

@@ -1,15 +1,15 @@
-import {Grid, Typography, Card} from "@mui/material";
+import {Grid, Typography, Card, Divider} from "@mui/material";
 import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
 
 
-
-
 export interface RowDataInfo<T> {
   id: string;
-  label: string;
+  type: "DIVIDER" | "ROW";
+  label: string | undefined;
   labelWeight ?: "normal" | "bold" ;
-  render: (data: T) => ReactNode;
+  labelVariant ?: "body1" | "subtitle1" | "subtitle2";
+  render ?: (data: T) => ReactNode;
 
 }
 
@@ -43,16 +43,23 @@ export function DataInfo<T>(props: DataInfoProps<T>){
         <Grid container data-testid={'dataInfo'} mt={1}>
           {
             props.rows.map(row => (
-              <Grid key={row.id} container alignItems={"center"} width="1" mt={1}>
-                <Grid item lg={6} xs={12}>
-                  <Typography variant="body2" fontWeight={(row?.labelWeight) ? row.labelWeight : "normal"} >
-                    {t(row.label, row.label)}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} xs={12}>
-                  {row.render(props.data)}
-                </Grid>
-              </Grid>
+
+                (row.type === "DIVIDER") ?
+                  <Grid key={row.id} container alignItems={"center"} width="1" mt={1.3}>
+                    <Divider key={row.id} sx={{width:"100%"}} />
+                  </Grid>
+                :
+                  <Grid key={row.id} container alignItems={"center"} width="1" mt={1}>
+                    <Grid item lg={6} xs={12}>
+                      <Typography variant={(row?.labelVariant) ? row.labelVariant : "body2"} fontWeight={(row?.labelWeight) ? row.labelWeight : "normal"} >
+                        {(row.label) ? t(row?.label) : "-"}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} xs={12}>
+                      {row?.render?.(props.data)}
+                    </Grid>
+                  </Grid>
+
             ))
           }
         </Grid>

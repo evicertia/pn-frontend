@@ -4,7 +4,7 @@ import {EstimateStatusEnum} from "../../../../models/UsageEstimation";
 
 
 export function EstimateStatusChip(props:{data:EstimateStatusEnum}) {
-  const { t } = useTranslation("estimate");
+  const { t } = useTranslation("estimate", {keyPrefix:"status"});
 
   if (props.data === EstimateStatusEnum.DRAFT) {
       return <Tooltip title={t("draft-label-tooltip")}>

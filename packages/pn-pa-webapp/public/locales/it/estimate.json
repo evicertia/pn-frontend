@@ -1,14 +1,18 @@
 {
+
   "titleEstimate": "Dettagli Stime",
-  "subtitleEstimate": "In questa sezione potrai visualizzare le previsioni di stima sui volumi delle notifiche per la tua PA",
   "userInfoSelectEstimate": "Seleziona il mese d'interesse dalla timeline a destra",
+  "subtitleEstimate": "In questa sezione potrai visualizzare le previsioni di stima sui volumi delle notifiche per la tua PA",
   "historyEstimate": "Storico",
-  "paInfoTitle": "INFORMAZIONI",
-  "periodTitle": "PERIODO",
-  "profiling-title": "DATI AGGIUNTIVI PER LA FATTURAZIONE",
+  "pa-info-title": "INFORMAZIONI",
+  "period-title": "PERIODO",
+  "billing-title": "DATI AGGIUNTIVI PER LA FATTURAZIONE",
   "usage-estimate-title": "PREVISIONI",
   "message-edit": "Puoi ancora modificare fino alla data di scadenza",
   "label": {
+    "estimate-root": "Stime",
+    "estimate-detail": "Dettagli stime",
+    "estimate-detail-info": "In questa sezione potrai visualizzare le previsioni di stima sui volumi delle notifiche per la tua PA",
     "digital-notif-estimate": "Numero di notifiche per via digitale",
     "analog-notif-estimate": "Numero di notifiche nazionali per via analogica tramite A/R",
     "analog-inter-notif-estimate": "Numero di notifiche internazionali per via analogica tramite A/R",
@@ -33,5 +37,13 @@
     "select-split-payment": "Seleziona una voce",
     "yes": "Si",
     "none": "No"
+  },
+  "status": {
+    "draft-label-tooltip": "Stime non ancora convalidate",
+    "draft-label-chip": "Bozza",
+    "validated-label-tooltip": "Stime convalidate e non modificabili",
+    "validated-label-chip": "Convalidate",
+    "absent-label-tooltip": "Stime non inserite o mai convalidate",
+    "absent-label-chip": "Assente"
   }
 }

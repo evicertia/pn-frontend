@@ -2,10 +2,8 @@ import {apiClient} from "../apiClients";
 import {
   EstimateBodyRequest,
   EstimatePeriod,
-  EstimateSearchTable,
-  FilterRequestEstimate,
-  InfoDownload,
-  Page, StatusUpdateEnum
+  FilterRequestEstimate, HistoryEstimates,
+  InfoDownload, StatusUpdateEnum
 } from "../../models/UsageEstimation";
 import {
   ESTIMATE_DETAIL,
@@ -21,8 +19,8 @@ export const UsageEstimatesApi = {
    * @returns Promise
    * @param params
    */
-  getAllEstimate: async (params: FilterRequestEstimate): Promise<Page<EstimateSearchTable>> => {
-    const response = await apiClient.get<Page<EstimateSearchTable>>(ESTIMATE_PAGINATION_LIST(params.paId, params.page, params.tot));
+  getAllEstimate: async (params: FilterRequestEstimate): Promise<HistoryEstimates> => {
+    const response = await apiClient.get<HistoryEstimates>(ESTIMATE_PAGINATION_LIST(params.paId, params.page, params.tot));
     return response.data;
   },
 
@@ -31,19 +29,19 @@ export const UsageEstimatesApi = {
    * @returns Promise
    * @param paId
    * @param referenceMonth format = Marzo-2023
-   * @param status  CREATED or VALIDATED
+   * @param status  DRAFT or VALIDATED
    * @param body  estimate body updated
    */
-  updateEstimate: async (paId: string, referenceMonth: string, status: StatusUpdateEnum, body: EstimateBodyRequest): Promise<string> => {
-    await apiClient.post<void>(UPDATE_ESTIMATE(paId, referenceMonth, status), body);
-    return "success";
+  updateEstimate: async (paId: string, referenceMonth: string, status: StatusUpdateEnum, body: EstimateBodyRequest): Promise<EstimatePeriod> => {
+    const response = await apiClient.post<EstimatePeriod>(UPDATE_ESTIMATE(paId, referenceMonth, status), body);
+    return response.data;
   },
 
 
   /**
    * Get detail estimate from PA-ID and reference Month
    * @param  {string} paId
-   * @param  {string:'Marzo-2023'} referenceMonth
+   * @param  {string:'MAR-2023'} referenceMonth
    * @returns Promise
    */
   getDetailEstimate: async (paId: string, referenceMonth: string): Promise<EstimatePeriod> => {
