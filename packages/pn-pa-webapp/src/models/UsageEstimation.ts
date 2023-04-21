@@ -21,8 +21,8 @@ export interface EstimateBodyRequest {
 
 export interface EstimateDetail {
   totalDigitalNotif: number;
-  total890Notif: number;
   totalAnalogNotif: number;
+  total890Notif: number;
 }
 
 export interface EstimatePeriod {
