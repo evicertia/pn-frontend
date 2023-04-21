@@ -38,6 +38,10 @@
     "yes": "Si",
     "none": "No"
   },
+  "button": {
+    "edit-label": "Modifica",
+    "help-request-label": "Richiedi aiuto"
+  },
   "status": {
     "draft-label-tooltip": "Stime non ancora convalidate",
     "draft-label-chip": "Bozza",
@@ -45,7 +49,6 @@
     "validated-label-chip": "Convalidate",
     "absent-label-tooltip": "Stime non inserite o mai convalidate",
     "absent-label-chip": "Assente"
-    "pec": "PEC"
   },
 
   "edit-estimate": {

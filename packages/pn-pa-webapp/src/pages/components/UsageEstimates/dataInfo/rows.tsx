@@ -95,19 +95,19 @@ export const usageEstimations: Array<RowDataInfo<EstimateDetail>> = [
     id: "totalDigitalNotif",
     label: "label.digital-notif-estimate",
     type: "ROW",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalDigitalNotif}</Typography>
+    render: (data) => <Typography variant="body2" textAlign={"end"} sx={{fontWeight: "bold"}}>{data.totalDigitalNotif}</Typography>
   },
   {
     id: "totalPaperNationalNotif",
     label: "label.analog-notif-estimate",
     type: "ROW",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.totalAnalogNotif}</Typography>
+    render: (data) => <Typography variant="body2" textAlign={"end"} sx={{fontWeight: "bold"}}>{data.totalAnalogNotif}</Typography>
   },
   {
     id: "totalPaperInternationalNotif",
     label: "label.analog-890-notif-estimate",
     type: "ROW",
-    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{data.total890Notif}</Typography>
+    render: (data) =><Typography variant="body2"  textAlign={"end"} sx={{fontWeight: "bold"}}>{data.total890Notif}</Typography>
   },
   {
     id: "divider-total",
@@ -120,21 +120,21 @@ export const usageEstimations: Array<RowDataInfo<EstimateDetail>> = [
     type: "ROW",
     labelWeight: "bold",
     labelVariant: "subtitle1",
-    render: (data) => <Typography variant="subtitle1" sx={{fontWeight: "bold"}}>{data.total890Notif + data.totalAnalogNotif + data.totalDigitalNotif}</Typography>
+    render: (data) => <Typography variant="subtitle1" textAlign={"end"} sx={{fontWeight: "bold"}}>{data.total890Notif + data.totalAnalogNotif + data.totalDigitalNotif}</Typography>
   },
   {
     id: "totDigitalNotif",
     label: "label.total-digital-notif",
     type: "ROW",
-    labelWeight: "bold",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "700"}}>{data.totalDigitalNotif}</Typography>
+    labelWeight: "600",
+    render: (data) => <Typography variant="body2" textAlign={"end"} sx={{fontWeight: "600"}}>{data.totalDigitalNotif}</Typography>
   },
   {
     id: "totAnalogNotif",
     label: "label.total-analog-notif",
     type: "ROW",
-    labelWeight: "bold",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "700"}}>{data.total890Notif + data.totalAnalogNotif}</Typography>
+    labelWeight: "600",
+    render: (data) => <Typography variant="body2" textAlign={"end"} sx={{fontWeight: "600"}}>{data.total890Notif + data.totalAnalogNotif}</Typography>
   },
 
 ];
