@@ -1,9 +1,10 @@
 import {
-  Card,
+  Card, Divider,
   Grid,
   Stack,
   TextField,
-  Typography} from "@mui/material";
+  Typography
+} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useIsMobile} from "@pagopa-pn/pn-commons";
 import {ChangeEvent, Fragment} from "react";
@@ -84,7 +85,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           fullWidth={isMobile}
           sx={{ marginBottom: isMobile ? '20px' : '0' }}
         />
-
+        <Divider variant="middle" />
         <Grid container>
           <Grid container width="1" mt={1}>
             <Grid item lg={6} xs={12}>

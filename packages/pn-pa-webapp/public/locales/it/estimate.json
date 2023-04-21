@@ -44,7 +44,7 @@
     "validated-label-tooltip": "Stime convalidate e non modificabili",
     "validated-label-chip": "Convalidate",
     "absent-label-tooltip": "Stime non inserite o mai convalidate",
-    "absent-label-chip": "Assente"
+    "absent-label-chip": "Assente",
     "pec": "PEC"
   },
 
