@@ -8,7 +8,7 @@ import {
   useIsMobile,
   ApiErrorWrapper,
 } from '@pagopa-pn/pn-commons';
-import { Box, Button, Typography } from '@mui/material';
+import {Box, Button, Typography} from '@mui/material';
 import * as routes from '../navigation/routes.const';
 import { RootState } from '../redux/store';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -17,55 +17,33 @@ import { trackEventByType } from '../utils/mixpanel';
 import { TrackEventType } from '../utils/events';
 import {ESTIMATE_ACTIONS, getAllEstimate} from "../redux/usageEstimation/actions";
 import HistoryTable from './components/UsageEstimates/historyTable/HistoryTable';
-import MobileNotifications from './components/UsageEstimates/historyTable/HistoryTable';
 import MobileHistoryTable from "./components/UsageEstimates/historyTable/MobileHistoryTable";
 
 export function EstimatePage ()  {
   const dispatch = useAppDispatch();
-  const historyEstimates = useAppSelector(state => state.usageEstimateState.historyEstimates.history.content);
+  const historyEstimates = useAppSelector(state => state.usageEstimateState.historyEstimates);
   const pagination = useAppSelector((state: RootState) => state.usageEstimateState.pagination);
-  const  referenceMonth: useAppSelector((state: RootState) => state.usageEstimateState.historyEstimates.actual.referenceMonth);
-  const  lastModifiedDate:useAppSelector((state: RootState) => state.usageEstimateState.historyEstimates.actual.lastModifiedDate);
-  const deadlineDate:useAppSelector((state: RootState) => state.usageEstimateState.historyEstimates.actual.deadlineDate);
-  const historyStatus:useAppSelector((state: RootState) => state.usageEstimateState.historyEstimates.actual.status);
-
+  const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const navigate = useNavigate();
 
   const isMobile = useIsMobile();
-  const { t } = useTranslation(['estimate']);
-  const totalElements =
-      pagination.page *
-      (pagination.tot);
-  const pagesToShow: Array<number> = calculatePages(
-      pagination.page,
-      totalElements,
-      Math.min(pagination.tot, 3),
-      pagination.page + 1
-  );
+  const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
 
 
 
   const goToDetail = () => {
     trackEventByType(TrackEventType.ESTIMATE_GO_TO_DETAIL);
-    navigate(routes.ESTIMATE_DETAIL);
+    navigate(routes.GET_DETAIL_ESTIMATE_PATH("GIU-2023"));
   };
 
 
-
-  //  need change
   const fetchHistory= useCallback( () => {
-    const params = {
-      paId:"",
-      page: pagination.page,
-      tot: pagination.tot,
-    };
     void dispatch(getAllEstimate(
         {
-          ...params,
-          page: pagination.page,
-          tot: pagination.tot,
+          paId:loggedUser.organization.id,
+          ...pagination
         }));
-  },[pagination.page, pagination.tot]);
+  },[pagination]);
 
 
 
@@ -83,6 +61,7 @@ export function EstimatePage ()  {
     dispatch(setPagination({ size: paginationData.size, page: paginationData.page }));
   };
 
+
   return (
       <Box p={3}>
         <Typography variant="h4" mb={isMobile ? 3 : undefined}>
@@ -92,12 +71,6 @@ export function EstimatePage ()  {
           <Typography variant="body1" sx={{ marginBottom: isMobile ? 3 : undefined }}>
             {t('subtitle-history')}
           </Typography>
-            <Card>
-                "referenceMonth": {referenceMonth}
-                "lastModifiedDate": {lastModifiedDate}
-                "deadlineDate": {deadlineDate}
-                "status": {historyStatus}
-            </Card>
           <Button
               variant="contained"
               onClick={goToDetail}
@@ -108,30 +81,43 @@ export function EstimatePage ()  {
           </Button>
         </Box>
         <ApiErrorWrapper apiId={ESTIMATE_ACTIONS.GET_ALL_ESTIMATE} reloadAction={() => fetchHistory()} mt={3}>
-          {isMobile ? (
-              <MobileHistoryTable
-                  estimates={historyEstimates}
-              />
-          ) : (
-              <HistoryTable
-                  estimates={historyEstimates}
-              />
-          )}
-          {historyEstimates.length > 0 && (
+            {
+              (historyEstimates?.content) ?
+                (isMobile) ? (
+                  <MobileHistoryTable
+                    estimates={historyEstimates.content}
+                  />
+                ) : (
+                  <HistoryTable
+                    estimates={historyEstimates.content}
+                  />
+                )
+
+                : null
+            }
+
+
+          {historyEstimates?.history && (
               <CustomPagination
                   paginationData={{
-                    size: pagination.tot,
-                    page: pagination.page,
-                    totalElements,
+                    size: historyEstimates.history.size,
+                    page: historyEstimates.history.number,
+                    totalElements: historyEstimates.history.totalElements,
                   }}
                   onPageRequest={handleChangePage}
                   eventTrackingCallbackPageSize={handleEventTrackingCallbackPageSize}
-                  pagesToShow={pagesToShow}
+                  pagesToShow={calculatePages(
+                    historyEstimates.history.number,
+                    historyEstimates.history.totalElements,
+                    Math.min(historyEstimates.history.size, 3),
+                    historyEstimates.history.number + 1
+                  )}
                   sx={{ padding: '0 10px' }}
               />
           )}
         </ApiErrorWrapper>
       </Box>
   );
-};
-  export default HistoryTable;
+}
+
+export default HistoryTable;

@@ -10,10 +10,9 @@ import {
 } from '@pagopa-pn/pn-commons';
 import { ButtonNaked } from '@pagopa/mui-italia';
 
-import { trackEventByType } from '../../../../utils/mixpanel';
-import { TrackEventType } from '../../../../utils/events';
 import * as routes from '../../../../navigation/routes.const';
-import {EstimateSearchTable} from "../../../../models/UsageEstimation";
+import {EstimateSearchTable, EstimateStatusEnum} from "../../../../models/UsageEstimation";
+import {EstimateStatusChip} from "../statusChip";
 
 
 type Props = {
@@ -22,14 +21,14 @@ type Props = {
 
 const MobileHistoryTable = (
     { estimates}: Props) => {
-    const { t } = useTranslation(['estimate']);
+    const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
     const navigate = useNavigate();
 
 
     const cardHeader: [CardElement, CardElement] = [
         //  Parameters with only value but not description
         {
-            id: 'reference-month',
+            id: 'referenceMonth',
             label: t('history-table.reference-month'),
             getLabel(value: string) {
                 return value;
@@ -42,8 +41,8 @@ const MobileHistoryTable = (
         {
             id: 'status',
             label: t('history-table.status'),
-            getLabel(value: string) {
-                return value;
+            getLabel(value: EstimateStatusEnum) {
+                return <EstimateStatusChip data={value}/>;
             },
             gridProps: {
                 xs: 12,
@@ -54,7 +53,7 @@ const MobileHistoryTable = (
 
     const cardBody: Array<CardElement> = [
         {
-            id: 'last-modified-date',
+            id: 'lastModifiedDate',
             label: t('history-table.last-modified-date'),
             getLabel(value: string) {
                 return value;
@@ -62,7 +61,7 @@ const MobileHistoryTable = (
             notWrappedInTypography: true,
         },
         {
-            id: 'deadline-date',
+            id: 'deadlineDate',
             label: t('history-table.deadline-date'),
             getLabel(value: string) {
                 return value;
@@ -73,25 +72,25 @@ const MobileHistoryTable = (
 
     // Navigation handlers
     const handleRowClick = (row: Item) => {
-        navigate(routes.GET_DETTAGLIO_NOTIFICA_PATH(row.iun as string));
-        trackEventByType(TrackEventType.NOTIFICATION_TABLE_ROW_INTERACTION);
+        navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id));
+        // trackEventByType(TrackEventType.NOTIFICATION_TABLE_ROW_INTERACTION);
     };
 
     const cardActions: Array<CardAction> = [
         {
-            id: 'go-to-detail',
+            id: 'referenceMonth',
             component: (
                 <ButtonNaked endIcon={<ArrowForwardIcon />} color="primary">
-                    {t('table.show-detail')}
+                    {t('show-detail')}
                 </ButtonNaked>
             ),
             onClick: handleRowClick,
         },
     ];
 
-    const cardData: Array<Item> = estimates.map((n: EstimateSearchTable, i: number) => ({
+    const cardData: Array<Item> = estimates.map((n: EstimateSearchTable) => ({
         ...n,
-        id: i.toString(),
+        id: n.referenceMonth,
     }));
 
 

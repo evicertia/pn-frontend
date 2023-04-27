@@ -6,7 +6,8 @@ import {
     ItemsTable
 } from '@pagopa-pn/pn-commons';
 
-import {EstimateSearchTable, HistoryColumn} from '../../../../models/UsageEstimation';
+import {EstimateSearchTable, EstimateStatusEnum, HistoryColumn} from '../../../../models/UsageEstimation';
+import {EstimateStatusChip} from "../statusChip";
 
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
 
 const HistoryTable =
     ({ estimates}: Props) => {
-    const { t } = useTranslation(['estimate']);
+    const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
 
 
 
@@ -31,7 +32,7 @@ const HistoryTable =
         },
         {
             id: 'lastModifiedDate',
-            label: t('history-table.lastModifiedDate'),
+            label: t('history-table.last-modified-date'),
             width: '13%',
             sortable: false, // TODO: will be re-enabled in PN-1124
             getCellLabel(value: string) {
@@ -41,7 +42,7 @@ const HistoryTable =
         },
         {
             id: 'deadlineDate',
-            label: t('history-table.deadlineDate'),
+            label: t('history-table.deadline-date'),
             width: '23%',
             getCellLabel(value: string) {
                 return value;
@@ -52,16 +53,16 @@ const HistoryTable =
             id: 'status',
             label: t('history-table.status'),
             width: '20%',
-            getCellLabel(value: string) {
-                return value;
+            getCellLabel(value: EstimateStatusEnum) {
+                return <EstimateStatusChip data={value}/>;
             },
         }
 
     ];
 
-    const rows: Array<Item> = estimates.map((n: EstimateSearchTable, i: number) => ({
+    const rows: Array<Item> = estimates.map((n: EstimateSearchTable) => ({
         ...n,
-        id: i.toString(),
+        id: n.referenceMonth,
     }));
 
 

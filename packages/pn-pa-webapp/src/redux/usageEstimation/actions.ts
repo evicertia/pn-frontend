@@ -35,7 +35,6 @@ export const getAllEstimate = createAsyncThunk<HistoryEstimates, FilterRequestEs
 
 export const getDetailEstimate = createAsyncThunk<EstimatePeriod, DetailEstimateParams>(
   ESTIMATE_ACTIONS.GET_DETAIL_ESTIMATE,
-
   performThunkAction((params: DetailEstimateParams) => UsageEstimatesApi.getDetailEstimate(params.paId, params.referenceMonth))
 );
 

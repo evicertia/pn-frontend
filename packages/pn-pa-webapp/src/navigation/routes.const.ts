@@ -41,4 +41,5 @@ export const GET_DETTAGLIO_NOTIFICA_PATH = (id: string) => `${DASHBOARD}/${id}${
 export const NOT_ACCESSIBLE = '/non-accessibile';
 
 
+export const GET_DETAIL_ESTIMATE_PATH = (referenceMonth: string) => `${ESTIMATE}/${referenceMonth}`;
 export const GET_EDIT_ESTIMATE_PATH = (referenceMonth: string) => `${ESTIMATE}/${referenceMonth}${EDIT}`;

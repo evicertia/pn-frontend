@@ -85,12 +85,12 @@
       "bill-title": "DATI AGGIUNTIVI PER LA FATTURAZIONE",
       "usage-estimate-title": "PREVISIONI"
     }
-  }
   },
-table-history:{
+  "estimate-history": {
   "title-history": "Stime",
   "subtitle-history": "Qui trovi lo storico di tutte le stime. Puoi modificare la stima nello stato bozza qui sotto.",
   "edit-button-lable": "Modifica",
+  "show-detail": "Mostra dettagli",
   "history-table": {
     "reference-month": "Mese di riferimento",
     "last-modified-date": "Data ultima modifica",
@@ -101,6 +101,6 @@ table-history:{
       "validated": "Convalidato",
       "absent": "Assente"
     }
-  }}
-
+  }
+ }
 }
