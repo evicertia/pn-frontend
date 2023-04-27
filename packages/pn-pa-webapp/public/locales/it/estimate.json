@@ -45,5 +45,21 @@
     "validated-label-chip": "Convalidate",
     "absent-label-tooltip": "Stime non inserite o mai convalidate",
     "absent-label-chip": "Assente"
+  },
+
+  "title-history": "Stime",
+  "subtitle-history": "Qui trovi lo storico di tutte le stime. Puoi modificare la stima nello stato bozza qui sotto.",
+  "edit-button-lable": "Modifica",
+  "history-table": {
+    "reference-month": "Mese di riferimento",
+    "last-modified-date": "Data ultima modifica",
+    "deadline-date": "Data di scadenza",
+    "status": "Stato",
+    "status-enum": {
+      "draft": "In aggiornamento",
+      "validated": "Convalidato",
+      "absent": "Assente"
+    }
   }
+
 }

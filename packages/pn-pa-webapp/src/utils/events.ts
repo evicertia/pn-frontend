@@ -46,6 +46,9 @@ export enum TrackEventType {
   USER_NAV_ITEM = 'USER_NAV_ITEM',
   FOOTER_ACCESSIBILITY = 'FOOTER_ACCESSIBILITY',
   FOOTER_LANG_SWITCH = 'FOOTER_LANG_SWITCH',
+
+  HISTORY_TABLE_PAGINATION="HISTORY_TABLE_PAGINATION",
+  ESTIMATE_GO_TO_DETAIL ="ESTIMATE_GO_TO_DETAIL",
 }
 
 export const events: EventsType = {
@@ -228,5 +231,9 @@ export const events: EventsType = {
   [TrackEventType.FOOTER_LANG_SWITCH]: {
     category: 'footer',
     action: 'click on app language option',
+  },
+  [TrackEventType.HISTORY_TABLE_PAGINATION]: {
+    category: 'notifications',
+    action: 'table pagination',
   },
 };

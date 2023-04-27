@@ -1,4 +1,5 @@
 
+
 export interface PaInfo {
   paId: string;
   paName: string;
@@ -118,3 +119,10 @@ export enum StatusUpdateEnum {
   DRAFT = "DRAFT",
   VALIDATED = "VALIDATED"
 }
+
+
+export type HistoryColumn =
+    | 'referenceMonth'
+    | 'lastModifiedDate'
+    | 'deadlineDate'
+    | 'status';

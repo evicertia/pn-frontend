@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {performThunkAction} from "@pagopa-pn/pn-commons";
+import { performThunkAction} from "@pagopa-pn/pn-commons";
 import {
   BillingDetail,
   EstimateBodyRequest, EstimateDetail,
