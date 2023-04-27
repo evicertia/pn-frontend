@@ -82,14 +82,14 @@ export function EstimatePage ()  {
         </Box>
         <ApiErrorWrapper apiId={ESTIMATE_ACTIONS.GET_ALL_ESTIMATE} reloadAction={() => fetchHistory()} mt={3}>
             {
-              (historyEstimates?.content) ?
+              (historyEstimates?.history?.content) ?
                 (isMobile) ? (
                   <MobileHistoryTable
-                    estimates={historyEstimates.content}
+                    estimates={historyEstimates.history.content}
                   />
                 ) : (
                   <HistoryTable
-                    estimates={historyEstimates.content}
+                    estimates={historyEstimates.history.content}
                   />
                 )
 

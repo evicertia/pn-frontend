@@ -51,6 +51,7 @@ export const EstimateStatusEnum = {
 export type EstimateStatusEnum = typeof EstimateStatusEnum[keyof typeof EstimateStatusEnum];
 
 export interface EstimateSearchTable {
+
   referenceMonth: string;
   lastModifiedDate: string;
   deadlineDate: string;
@@ -60,7 +61,7 @@ export interface EstimateSearchTable {
 export interface HistoryEstimates {
   actual: EstimateSearchTable;
   history : Page<EstimateSearchTable>;
-  content: Array<EstimateSearchTable>;
+
 }
 
 export interface InfoDownload {
