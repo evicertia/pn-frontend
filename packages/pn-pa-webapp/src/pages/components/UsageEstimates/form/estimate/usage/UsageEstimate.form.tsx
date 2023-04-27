@@ -86,39 +86,45 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           sx={{ marginBottom: isMobile ? '20px' : '0' }}
         />
         <Divider variant="middle" />
-        <Grid container>
-          <Grid container width="1" mt={1}>
-            <Grid item lg={6} xs={12}>
-              <Typography variant="body2" fontWeight={"bold"} >
-                {t('edit-estimate.form.total-digital-notif')}
-              </Typography>
-            </Grid>
-            <Grid item lg={6} xs={12}>
-              { formikInstance.values.totalDigitalNotif }
-            </Grid>
-            <Grid item lg={6} xs={12}>
-              <Typography variant="body2" fontWeight={"bold"} >
-                {t('edit-estimate.form.total-analog-notif')}
-              </Typography>
-            </Grid>
-            <Grid item lg={6} xs={12}>
-              {
-                (formikInstance.values.total890Notif as number) +
-                (formikInstance.values.totalAnalogNotif as number)
-              }
-            </Grid>
-            <Grid item lg={6} xs={12}>
-              <Typography variant="body2" fontWeight={"bold"} >
-                {t('edit-estimate.form.total-notif')}
-              </Typography>
-            </Grid>
-            <Grid item lg={6} xs={12}>
-              {
-                (formikInstance.values.totalDigitalNotif as number) +
-                (formikInstance.values.total890Notif as number) +
-                (formikInstance.values.totalAnalogNotif as number)
-              }
-            </Grid>
+        <Grid container alignItems={"center"} width="1" mt={1}>
+          <Grid item lg={6} xs={12}>
+            <Typography variant="subtitle1" fontWeight={"bold"} >
+              {t('edit-estimate.form.total-notif')}
+            </Typography>
+          </Grid>
+          <Grid item lg={6} xs={12}>
+            <Typography variant="subtitle1" fontWeight={"bold"} textAlign={"end"}>
+            {
+              (formikInstance.values.totalDigitalNotif as number) +
+              (formikInstance.values.total890Notif as number) +
+              (formikInstance.values.totalAnalogNotif as number)
+            }
+            </Typography>
+          </Grid>
+          <Grid item lg={6} xs={12}>
+            <Typography variant="body2" fontWeight={"600"} >
+              {t('edit-estimate.form.total-digital-notif')}
+            </Typography>
+          </Grid>
+          <Grid item lg={6} xs={12}>
+            <Typography variant="body2" fontWeight={"600"} textAlign={"end"}>
+            {
+              formikInstance.values.totalDigitalNotif
+            }
+            </Typography>
+          </Grid>
+          <Grid item lg={6} xs={12}>
+            <Typography variant="body2" fontWeight={"600"} >
+              {t('edit-estimate.form.total-analog-notif')}
+            </Typography>
+          </Grid>
+          <Grid item lg={6} xs={12}>
+            <Typography variant="body2" fontWeight={"600"} textAlign={"end"}>
+            {
+              (formikInstance.values.total890Notif as number) +
+              (formikInstance.values.totalAnalogNotif as number)
+            }
+            </Typography>
           </Grid>
         </Grid>
       </Stack>

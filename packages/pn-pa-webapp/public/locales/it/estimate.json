@@ -62,7 +62,9 @@
     "button": {
       "go-back-edit": "Indietro",
       "save-edit": "Salva",
-      "abort-edit": "Consolida"
+      "abort-edit": "Consolida",
+      "help-request": "Richiedi aiuto",
+      "edit": "Modifica"
     },
     "form": {
       "sdi-code": "Codice SDI",

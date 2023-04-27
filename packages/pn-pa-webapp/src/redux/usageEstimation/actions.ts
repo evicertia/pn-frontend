@@ -1,11 +1,10 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {performThunkAction} from "@pagopa-pn/pn-commons";
 import {
-  BillingDetail,
-  EstimateBodyRequest, EstimateDetail,
-  EstimatePeriod, EstimateStatusEnum,
+  EstimateBodyRequest,
+  EstimatePeriod,
   FilterRequestEstimate,
-  HistoryEstimates, PaInfo,
+  HistoryEstimates,
   StatusUpdateEnum
 } from "../../models/UsageEstimation";
 import {UsageEstimatesApi} from "../../api/usage-estimates/UsageEstimates.api";
@@ -36,38 +35,8 @@ export const getAllEstimate = createAsyncThunk<HistoryEstimates, FilterRequestEs
 
 export const getDetailEstimate = createAsyncThunk<EstimatePeriod, DetailEstimateParams>(
   ESTIMATE_ACTIONS.GET_DETAIL_ESTIMATE,
-  performThunkAction((params: DetailEstimateParams) => Promise.resolve(
-    {
-      paInfo: {
-        paId: params.paId,
-        paName: "Comune di Milano",
-        taxId: "12345678910",
-        address: "Via Aldo Moro",
-        fiscalCode: "ABCDFG89ER33DD",
-        ipaCode: "1234gh",
-        pec: "milano.comune@pec.it",
-        sdiCode: "1234SDI",
 
-      } as PaInfo,
-      status: EstimateStatusEnum.DRAFT,
-      showEdit: true,
-      deadlineDate: "2023-05-15T03:24:00",
-      referenceMonth: params.referenceMonth,
-      lastModifiedDate: "2023-04-17T03:24:00",
-      estimate: {
-        totalDigitalNotif: 10,
-        total890Notif: 72,
-        totalAnalogNotif: 56,
-      } as EstimateDetail,
-      billing: {
-        splitPayment: true,
-        description: "",
-        mailAddress: "milano.comune@gmail.com",
-
-      } as BillingDetail,
-    } as EstimatePeriod
-  ))
-  // performThunkAction((params: DetailEstimateParams) => UsageEstimatesApi.getDetailEstimate(params.paId, params.referenceMonth))
+  performThunkAction((params: DetailEstimateParams) => UsageEstimatesApi.getDetailEstimate(params.paId, params.referenceMonth))
 );
 
 export const updateEstimate = createAsyncThunk<EstimatePeriod, UpdateEstimateParams>(

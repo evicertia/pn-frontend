@@ -3,12 +3,13 @@ import {Fragment, useCallback, useEffect} from "react";
 import EmailIcon from "@mui/icons-material/Email";
 import {useTranslation} from "react-i18next";
 import {Box, Button, Stack, Typography} from "@mui/material";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import * as routes from "../navigation/routes.const";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {getDetailEstimate} from "../redux/usageEstimation/actions";
 import {RootState} from "../redux/store";
 import {EstimateStatusEnum} from "../models/UsageEstimation";
+import {GET_EDIT_ESTIMATE_PATH} from "../navigation/routes.const";
 import {DataInfo} from "./components/UsageEstimates/dataInfo/DataInfo";
 import {
   usageBillingDataPA,
@@ -63,7 +64,10 @@ export function EstimateDetailPage(){
       <Typography variant="body1">
         {t('label.estimate-detail-info', { ns: 'estimate' })}
       </Typography>
-      <ButtonsEstimateDetail status={selected?.status}/>
+      {
+        referenceMonth && <ButtonsEstimateDetail status={selected?.status} referenceMonth={referenceMonth}/>
+      }
+
     </Box>
   </Fragment>);
 
@@ -83,10 +87,21 @@ export function EstimateDetailPage(){
         {
           (selected) ?
             <Fragment>
-              <DataInfo title={t("pa-info-title")} data={selected.paInfo} rows={usageInfoPA}/>
-              <DataInfo title={t("period-title")} data={selected} rows={usagePeriod}/>
-              <DataInfo title={t("usage-estimate-title")} data={selected.estimate} rows={usageEstimations}/>
-              <DataInfo title={t("billing-title")} data={selected.billing} rows={usageBillingDataPA}/>
+              <DataInfo title={t("pa-info-title")}
+                        data={selected.paInfo}
+                        rows={usageInfoPA}/>
+
+              <DataInfo title={t("period-title")}
+                        data={selected}
+                        rows={usagePeriod}/>
+
+              <DataInfo title={t("usage-estimate-title")}
+                        data={selected.estimate}
+                        rows={usageEstimations}/>
+
+              <DataInfo title={t("billing-title")}
+                        data={selected.billing}
+                        rows={usageBillingDataPA}/>
             </Fragment>
             : null
         }
@@ -96,9 +111,9 @@ export function EstimateDetailPage(){
   </Fragment>;
 }
 
-const ButtonsEstimateDetail = (params : {status?: EstimateStatusEnum}) => {
+const ButtonsEstimateDetail = (params : {status?: EstimateStatusEnum; referenceMonth: string}) => {
   const { t } = useTranslation(['estimate', 'common', 'notifiche']);
-
+  const navigate = useNavigate();
 
   if (!params.status) {
     return null;
@@ -108,15 +123,21 @@ const ButtonsEstimateDetail = (params : {status?: EstimateStatusEnum}) => {
     return <>
       <Button
         variant="contained"
-        onClick={()=>{}}
-        data-testid="newNotificationBtn"
+        onClick={()=> navigate(GET_EDIT_ESTIMATE_PATH(params.referenceMonth))}
+        data-testid="editEstimateBtn"
       >
-        {t('new-notification-button', "Modifica")}
+        {t('edit-estimate.button.edit', {ns: "estimate"})}
       </Button>
     </>;
   }
   
   return <>
-    
+    <Button
+      variant="contained"
+      onClick={()=>{}}
+      data-testid="helpRequestBtn"
+    >
+      {t('edit-estimate.button.help-request', {ns: "estimate"})}
+    </Button>
   </>;
 };
