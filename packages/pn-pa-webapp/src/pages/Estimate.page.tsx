@@ -18,11 +18,17 @@ import { TrackEventType } from '../utils/events';
 import {ESTIMATE_ACTIONS, getAllEstimate} from "../redux/usageEstimation/actions";
 import HistoryTable from './components/UsageEstimates/historyTable/HistoryTable';
 import MobileNotifications from './components/UsageEstimates/historyTable/HistoryTable';
+import MobileHistoryTable from "./components/UsageEstimates/historyTable/MobileHistoryTable";
 
 export function EstimatePage ()  {
   const dispatch = useAppDispatch();
   const historyEstimates = useAppSelector(state => state.usageEstimateState.historyEstimates.history.content);
   const pagination = useAppSelector((state: RootState) => state.usageEstimateState.pagination);
+  const  referenceMonth: useAppSelector((state: RootState) => state.usageEstimateState.historyEstimates.actual.referenceMonth);
+  const  lastModifiedDate:useAppSelector((state: RootState) => state.usageEstimateState.historyEstimates.actual.lastModifiedDate);
+  const deadlineDate:useAppSelector((state: RootState) => state.usageEstimateState.historyEstimates.actual.deadlineDate);
+  const historyStatus:useAppSelector((state: RootState) => state.usageEstimateState.historyEstimates.actual.status);
+
   const navigate = useNavigate();
 
   const isMobile = useIsMobile();
@@ -86,6 +92,12 @@ export function EstimatePage ()  {
           <Typography variant="body1" sx={{ marginBottom: isMobile ? 3 : undefined }}>
             {t('subtitle-history')}
           </Typography>
+            <Card>
+                "referenceMonth": {referenceMonth}
+                "lastModifiedDate": {lastModifiedDate}
+                "deadlineDate": {deadlineDate}
+                "status": {historyStatus}
+            </Card>
           <Button
               variant="contained"
               onClick={goToDetail}
@@ -97,7 +109,7 @@ export function EstimatePage ()  {
         </Box>
         <ApiErrorWrapper apiId={ESTIMATE_ACTIONS.GET_ALL_ESTIMATE} reloadAction={() => fetchHistory()} mt={3}>
           {isMobile ? (
-              <MobileNotifications
+              <MobileHistoryTable
                   estimates={historyEstimates}
               />
           ) : (

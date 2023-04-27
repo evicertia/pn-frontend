@@ -87,7 +87,7 @@
     }
   }
   },
-
+table-history:{
   "title-history": "Stime",
   "subtitle-history": "Qui trovi lo storico di tutte le stime. Puoi modificare la stima nello stato bozza qui sotto.",
   "edit-button-lable": "Modifica",
@@ -101,6 +101,6 @@
       "validated": "Convalidato",
       "absent": "Assente"
     }
-  }
+  }}
 
 }
