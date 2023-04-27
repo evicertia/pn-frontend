@@ -13,8 +13,10 @@ export const NUOVA_API_KEY = `${API_KEYS}/nuova-api-key`;
 export const STATISTICHE = '/statistiche';
 
 export const ESTIMATE = '/estimate';
-export const ESTIMATE_DETAIL = `${ESTIMATE}/reference-month/:referenceMonth`;
-export const ESTIMATE_EDIT = `${ESTIMATE}/reference-month/:referenceMonth/edit`;
+export const ESTIMATE_DETAIL = `${ESTIMATE}/:referenceMonth`;
+
+const EDIT = "/edit";
+export const ESTIMATE_EDIT = `${ESTIMATE}/:referenceMonth${EDIT}`;
 export const PROFILING = '/profiling';
 
 export const USERS_SEGMENT = '/users';
@@ -37,3 +39,6 @@ export const GROUPS = (idOrganization: string) =>
 
 export const GET_DETTAGLIO_NOTIFICA_PATH = (id: string) => `${DASHBOARD}/${id}${NOTIFICA}`;
 export const NOT_ACCESSIBLE = '/non-accessibile';
+
+
+export const GET_EDIT_ESTIMATE_PATH = (referenceMonth: string) => `${ESTIMATE}/${referenceMonth}${EDIT}`;
