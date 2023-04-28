@@ -39,6 +39,7 @@ const usageEstimateSlice = createSlice({
     builder.addCase(getAllEstimate.fulfilled, (state, action) => {
       state.loading = false;
       state.historyEstimates = action.payload;
+
     });
     builder.addCase(getAllEstimate.rejected, (state) => {
       state.historyEstimates = {} as HistoryEstimates;
