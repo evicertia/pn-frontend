@@ -4,7 +4,10 @@ import {Grid, Stack} from "@mui/material";
 import * as yup from "yup";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "@mui/lab";
-import {EstimatePeriod} from "../../../../../models/UsageEstimation";
+import {EstimatePeriod, StatusUpdateEnum} from "../../../../../models/UsageEstimation";
+import {updateEstimate} from "../../../../../redux/usageEstimation/actions";
+import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
+import {RootState} from "../../../../../redux/store";
 import {BillForm} from "./bill/Bill.form";
 import {UsageEstimateForm} from "./usage/UsageEstimate.form";
 import {UsageEstimatesInitialValue} from "./props/Estimate.props";
@@ -12,12 +15,10 @@ import {UsageEstimatesInitialValue} from "./props/Estimate.props";
 
 export function EstimateForm(props: {selected: EstimatePeriod}) {
   const {t} = useTranslation(['estimate']);
+  const dispatch = useAppDispatch();
+  const loggedUser = useAppSelector((state: RootState) => state.userState.user);
 
   const validationSchema = yup.object({
-    splitPayment: yup
-      .bool()
-      .oneOf([true, false], t('edit-estimate.form.split-payment'))
-      .required(t('edit-estimate.form.mandatory')),
     mailAddress: yup.string()
       .email(t('edit-estimate.form.mailAddress-error'))
       .required(t('edit-estimate.form.mandatory')),
@@ -34,6 +35,17 @@ export function EstimateForm(props: {selected: EstimatePeriod}) {
     validationSchema,
     onSubmit: (values) => {
       console.log(values);
+      const estimateBodyRequest = {
+        totalDigitalNotif: values.totalDigitalNotif,
+        total890Notif: values.total890Notif,
+        totalAnalogNotif: values.totalAnalogNotif,
+        splitPayment: values.splitPayment,
+        description: values.description,
+        mailAddress: values.mailAddress
+      };
+
+      void dispatch(updateEstimate({paId: loggedUser.organization.id, referenceMonth: props.selected.referenceMonth,
+        status: StatusUpdateEnum.DRAFT, body: estimateBodyRequest}));
     },
   });
 

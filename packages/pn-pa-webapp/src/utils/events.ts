@@ -46,9 +46,11 @@ export enum TrackEventType {
   USER_NAV_ITEM = 'USER_NAV_ITEM',
   FOOTER_ACCESSIBILITY = 'FOOTER_ACCESSIBILITY',
   FOOTER_LANG_SWITCH = 'FOOTER_LANG_SWITCH',
-
-  HISTORY_TABLE_PAGINATION="HISTORY_TABLE_PAGINATION",
+  ESTIMATE_HISTORY_TABLE_PAGINATION="ESTIMATE_HISTORY_TABLE_PAGINATION",
   ESTIMATE_GO_TO_DETAIL ="ESTIMATE_GO_TO_DETAIL",
+  ESTIMATE_EXIT_WARNING = 'ESTIMATE_EXIT_WARNING',
+  ESTIMATE_EXIT_FLOW = 'ESTIMATE_EXIT_FLOW',
+  ESTIMATE_EXIT_CANCEL = 'ESTIMATE_EXIT_CANCEL',
 }
 
 export const events: EventsType = {
@@ -232,8 +234,24 @@ export const events: EventsType = {
     category: 'footer',
     action: 'click on app language option',
   },
-  [TrackEventType.HISTORY_TABLE_PAGINATION]: {
+  [TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION]: {
+    category: 'estimate',
+    action: 'history table pagination',
+  },
+  [TrackEventType.ESTIMATE_GO_TO_DETAIL]: {
+    category: 'estimate',
+    action: 'go to estimate detail',
+  },
+  [TrackEventType.ESTIMATE_EXIT_WARNING]: {
     category: 'notifications',
-    action: 'table pagination',
+    action: 'confirm cancel send notification',
+  },
+  [TrackEventType.ESTIMATE_EXIT_FLOW]: {
+    category: 'notifications',
+    action: 'cancel send notification',
+  },
+  [TrackEventType.ESTIMATE_EXIT_CANCEL]: {
+    category: 'notifications',
+    action: 'abort cancel notification',
   },
 };

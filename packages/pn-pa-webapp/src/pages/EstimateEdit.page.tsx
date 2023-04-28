@@ -1,5 +1,5 @@
 import {Box, Typography, Grid, Stack} from "@mui/material";
-import {PnBreadcrumb, TitleBox, useIsMobile} from "@pagopa-pn/pn-commons";
+import {TitleBox, Prompt, useIsMobile, PnBreadcrumb, ApiError} from '@pagopa-pn/pn-commons';
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import {Fragment, useEffect} from "react";
@@ -8,11 +8,15 @@ import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import * as routes from "../navigation/routes.const";
 import {EstimateStatusEnum} from "../models/UsageEstimation";
 import {getDetailEstimate} from "../redux/usageEstimation/actions";
+import {trackEventByType} from "../utils/mixpanel";
+import {TrackEventType} from "../utils/events";
+import {RootState} from "../redux/store";
 import {EstimateForm} from "./components/UsageEstimates/form/estimate/Estimate.form";
 
 
 export function EstimateEditPage() {
-  const selectedEstimate = useAppSelector(state => state.usageEstimateState.selected);
+  const {selected, error} = useAppSelector(state => state.usageEstimateState);
+  const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const isMobile = useIsMobile();
   const { t } = useTranslation(['estimate']);
   const navigate = useNavigate();
@@ -21,25 +25,38 @@ export function EstimateEditPage() {
   const direction = isMobile ? 'column-reverse' : 'row';
   const spacing = isMobile ? 3 : 0;
 
-  const navigateToEstimate = () => {
-    navigate(routes.ESTIMATE);
-    console.log("navigateToEstimate");
-  };
 
   const fetchDetail = (() => {
-    void dispatch(getDetailEstimate({paId: "12345ADS", referenceMonth: "MAR-2023"}));
+    void dispatch(getDetailEstimate({paId: loggedUser.organization.id,
+      referenceMonth: (selected != null) ? selected.referenceMonth : ""}));
   });
 
   useEffect(() => {
     fetchDetail();
   }, []);
 
-  if (!selectedEstimate || selectedEstimate.status !== EstimateStatusEnum.DRAFT) {
-    navigateToEstimate();
-    console.log("navigateToEstimate");
-  }
+  useEffect(() => {
+    console.log(selected);
+    console.log(error);
+    if ( (selected != null) && (selected.status !== EstimateStatusEnum.DRAFT) ) {
+      navigate(routes.ESTIMATE);
+      console.log("navigateToEstimate");
+    }
+  }, [selected]);
 
-  const properBreadcrumb = (
+  const handleEventTrackingCallbackPromptOpened = () => {
+    trackEventByType(TrackEventType.ESTIMATE_EXIT_WARNING);
+  };
+
+  const handleEventTrackingCallbackCancel = () => {
+    trackEventByType(TrackEventType.ESTIMATE_EXIT_CANCEL);
+  };
+
+  const handleEventTrackingCallbackConfirm = () => {
+    trackEventByType(TrackEventType.ESTIMATE_EXIT_FLOW);
+  };
+
+  const breadcrumb = (
     <PnBreadcrumb
       linkRoute={routes.ESTIMATE}
       linkLabel={
@@ -53,9 +70,9 @@ export function EstimateEditPage() {
     />
   );
 
-  const breadcrumb = (
+  const heading = (
     <Fragment>
-      {properBreadcrumb}
+      {breadcrumb}
       <TitleBox
         variantTitle="h4"
         title={t('edit-estimate.label.title')}
@@ -68,24 +85,35 @@ export function EstimateEditPage() {
     </Fragment>
   );
 
-
   return (
-    <>
+    (error) ?
       <Box sx={{ p: { xs: 3, lg: 0 } }}>
-        {isMobile && breadcrumb}
-        <Grid
-          container
-          direction={direction}
-          spacing={spacing}
-        >
-        <Grid item lg={12} xs={12} sx={{ p: { xs: 0, lg: 3 } }}>
-          {!isMobile && breadcrumb}
-          <Stack sx={{ marginTop: 3}} spacing={3}>
-            {selectedEstimate && <EstimateForm selected={selectedEstimate}/>}
-          </Stack>
-        </Grid>
-      </Grid>
+        {heading}
+        <ApiError onClick={() => fetchDetail()} mt={3}/>
       </Box>
-    </>
+    :
+      <Prompt
+        title={t('edit-estimate.prompt.title')}
+        message={t('edit-estimate.prompt.message')}
+        eventTrackingCallbackPromptOpened={handleEventTrackingCallbackPromptOpened}
+        eventTrackingCallbackCancel={handleEventTrackingCallbackCancel}
+        eventTrackingCallbackConfirm={handleEventTrackingCallbackConfirm}
+      >
+        <Box sx={{ p: { xs: 3, lg: 0 } }}>
+          {isMobile && heading}
+          <Grid
+            container
+            direction={direction}
+            spacing={spacing}
+          >
+            <Grid item lg={12} xs={12} sx={{ p: { xs: 0, lg: 3 } }}>
+              {!isMobile && heading}
+              <Stack sx={{ marginTop: 3}} spacing={3}>
+                {selected && <EstimateForm selected={selected}/>}
+              </Stack>
+            </Grid>
+          </Grid>
+        </Box>
+      </Prompt>
   );
 }

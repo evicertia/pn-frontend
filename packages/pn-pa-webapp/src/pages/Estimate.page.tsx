@@ -59,11 +59,11 @@ export function EstimatePage ()  {
   }, [fetchHistory]);
 
   const handleEventTrackingCallbackPageSize = (pageSize: number) => {
-    trackEventByType(TrackEventType.HISTORY_TABLE_PAGINATION, {pageSize});
+    trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION, {pageSize});
   };
 
   const handleChangePage = (paginationData: PaginationData) => {
-    trackEventByType(TrackEventType.HISTORY_TABLE_PAGINATION);
+    trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION);
     dispatch(setPagination({ size: paginationData.size, page: paginationData.page }));
   };
 

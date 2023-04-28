@@ -84,6 +84,10 @@
       "total-notif": "Totale notifiche",
       "bill-title": "DATI AGGIUNTIVI PER LA FATTURAZIONE",
       "usage-estimate-title": "PREVISIONI"
+    },
+    "prompt": {
+      "title": "Vuoi davvero uscire?",
+      "message": "Se esci, i dati inseriti andranno persi."
     }
   },
   "estimate-history": {
