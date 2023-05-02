@@ -28,7 +28,6 @@ export function EstimatePage ()  {
   const historyEstimates = useAppSelector(state => state.usageEstimateState.historyEstimates);
   const pagination = useAppSelector((state: RootState) => state.usageEstimateState.pagination);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
-  const actual=  useAppSelector((state: RootState) => state.usageEstimateState.historyEstimates.actual);
 
   const navigate = useNavigate();
 
@@ -52,8 +51,6 @@ export function EstimatePage ()  {
   },[pagination]);
 
 
-
-
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
@@ -66,8 +63,6 @@ export function EstimatePage ()  {
     trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION);
     dispatch(setPagination({ size: paginationData.size, page: paginationData.page }));
   };
-
-
 
 
   return (
@@ -91,35 +86,40 @@ export function EstimatePage ()  {
 
         </Box>
 
-          <Card sx={{ minWidth: 275 }}>
+        {
+          (historyEstimates?.actual?.referenceMonth) ?
+
+            <Card sx={{ minWidth: 275 }}>
               <CardContent>
 
-                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                      {actual.referenceMonth}
-                  </Typography>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  {historyEstimates.actual.referenceMonth}
+                </Typography>
 
-                  <Typography variant="body2" color="text.secondary">
-                      Data ultima modifica
-                  </Typography>
-                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                      {actual.lastModifiedDate}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                      Data di scadenza
-                  </Typography>
-                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                      {actual.deadlineDate}
-                  </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Data ultima modifica
+                </Typography>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  {historyEstimates.actual.lastModifiedDate}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Data di scadenza
+                </Typography>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  {historyEstimates.actual.deadlineDate}
+                </Typography>
 
-                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                      <EstimateStatusChip data= {actual.status} />
-                  </Typography>
-
-
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                  <EstimateStatusChip data= {historyEstimates.actual.status} />
+                </Typography>
 
               </CardContent>
+            </Card>
 
-          </Card>
+            : null
+        }
+
+
 
         <ApiErrorWrapper apiId={ESTIMATE_ACTIONS.GET_ALL_ESTIMATE} reloadAction={() => fetchHistory()} mt={3}>
             {
