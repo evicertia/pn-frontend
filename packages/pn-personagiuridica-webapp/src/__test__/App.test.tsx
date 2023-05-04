@@ -1,12 +1,12 @@
 /* eslint-disable functional/no-let */
+import React from 'react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { act, screen } from '@testing-library/react';
 import { Suspense } from 'react';
 import * as redux from 'react-redux';
 
 /* eslint-disable import/order */
-import { axe, render } from './test-utils';
+import { render, act, screen } from './test-utils';
 import App from '../App';
 import i18n from '../i18n';
 import * as sidemenuActions from '../redux/sidemenu/actions';
@@ -37,7 +37,7 @@ const initialState = (token: string) => ({
         family_name: 'mocked-family-name',
         email: 'mocked-user@mocked-domain.com',
         sessionToken: token,
-        organizzation: {
+        organization: {
           id: 'mocked-id',
           name: 'mocked-organizzation',
           roles: [
@@ -52,7 +52,6 @@ const initialState = (token: string) => ({
     },
     generalInfoState: {
       pendingDelegators: 0,
-      delegators: [],
     },
   },
 });
@@ -72,9 +71,8 @@ const initialState = (token: string) => ({
  * Carlos, 2022.08.10
  */
 describe('App', () => {
-  // let result: RenderResult | undefined;
   let mockUseDispatchFn: jest.Mock;
-  // let mockSidemenuInformationActionFn: jest.Mock;
+  let mockSidemenuInformationActionFn: jest.Mock;
   let mockDomicileInfoActionFn: jest.Mock;
   let axiosMock: MockAdapter;
 
@@ -82,7 +80,7 @@ describe('App', () => {
     axiosMock = new MockAdapter(axios);
     axiosMock.onAny().reply(200);
 
-    // mockSidemenuInformationActionFn = jest.fn();
+    mockSidemenuInformationActionFn = jest.fn();
     mockDomicileInfoActionFn = jest.fn();
     mockUseDispatchFn = jest.fn(() => (action: any, state: any) => {
       console.log({ action, state });
@@ -90,7 +88,7 @@ describe('App', () => {
 
     // mock actions
     const getSidemenuInfoActionSpy = jest.spyOn(sidemenuActions, 'getSidemenuInformation');
-    // getSidemenuInfoActionSpy.mockImplementation(mockSidemenuInformationActionFn as any);
+    getSidemenuInfoActionSpy.mockImplementation(mockSidemenuInformationActionFn as any);
     const getDomicileInfoActionSpy = jest.spyOn(sidemenuActions, 'getDomicileInfo');
     getDomicileInfoActionSpy.mockImplementation(mockDomicileInfoActionFn as any);
     const useDispatchSpy = jest.spyOn(redux, 'useDispatch');
@@ -131,9 +129,8 @@ describe('App', () => {
 
     it('Dispatches proper actions when session token is not empty', async () => {
       await act(async () => void render(<App />, initialState('mocked-session-token')));
-
-      expect(mockUseDispatchFn).toBeCalledTimes(2);
-      // expect(mockSidemenuInformationActionFn).toBeCalledTimes(1);
+      expect(mockUseDispatchFn).toBeCalledTimes(3);
+      expect(mockSidemenuInformationActionFn).toBeCalledTimes(1);
       expect(mockDomicileInfoActionFn).toBeCalledTimes(1);
     });
   });

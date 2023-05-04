@@ -23,6 +23,7 @@ import {
   NotificationDetailOtherDocument,
   NotificationRelatedDowntimes,
   GetNotificationDowntimeEventsParams,
+  useHasPermissions,
 } from '@pagopa-pn/pn-commons';
 
 import * as routes from '../navigation/routes.const';
@@ -42,8 +43,10 @@ import {
   resetState,
   clearDowntimeLegalFactData,
 } from '../redux/notification/reducers';
+import { PNRole } from '../redux/auth/types';
 import NotificationPayment from '../component/Notifications/NotificationPayment';
 import LoadingPageWrapper from '../component/LoadingPageWrapper/LoadingPageWrapper';
+import DomicileBanner from '../component/DomicileBanner/DomicileBanner';
 import { trackEventByType } from '../utils/mixpanel';
 import { TrackEventType } from '../utils/events';
 
@@ -81,9 +84,9 @@ const NotificationDetail = () => {
   const navigate = useNavigate();
 
   const currentUser = useAppSelector((state: RootState) => state.userState.user);
-  const delegatorsFromStore = useAppSelector(
-    (state: RootState) => state.generalInfoState.delegators
-  );
+  const role = currentUser.organization?.roles ? currentUser.organization?.roles[0] : null;
+
+  const userHasAdminPermissions = useHasPermissions(role ? [role.role] : [], [PNRole.ADMIN]);
   const notification = useAppSelector((state: RootState) => state.notificationState.notification);
   const downtimeEvents = useAppSelector(
     (state: RootState) => state.notificationState.downtimeEvents
@@ -168,11 +171,21 @@ const NotificationDetail = () => {
     }
   };
 
-  const legalFactDownloadHandler = (legalFact: LegalFactId) => {
-    dispatch(resetLegalFactState());
-    void dispatch(
-      getReceivedNotificationLegalfact({ iun: notification.iun, legalFact, mandateId })
-    );
+  // legalFact can be either a LegalFactId, or a NotificationDetailOtherDocument 
+  // (generated from details.generatedAarUrl in ANALOG_FAILURE_WORKFLOW timeline elements).
+  // Cfr. comment in the definition of INotificationDetailTimeline in pn-commons/src/types/NotificationDetail.ts.
+  const legalFactDownloadHandler = (legalFact: LegalFactId | NotificationDetailOtherDocument) => {
+    if ((legalFact as LegalFactId).key) {
+      dispatch(resetLegalFactState());
+      void dispatch(
+        getReceivedNotificationLegalfact({ iun: notification.iun, legalFact: legalFact as LegalFactId, mandateId })
+      );
+    } else if ((legalFact as NotificationDetailOtherDocument).documentId) {
+      const otherDocument = legalFact as NotificationDetailOtherDocument;
+      void dispatch(
+        getReceivedNotificationOtherDocument({ iun: notification.iun, otherDocument, mandateId })
+      );
+    }
   };
 
   const isCancelled = notification.notificationStatus === NotificationStatus.CANCELLED;
@@ -199,7 +212,7 @@ const NotificationDetail = () => {
         getReceivedNotification({
           iun: id,
           currentUserTaxId: currentUser.fiscal_number,
-          delegatorsFromStore,
+          delegatorsFromStore: [],
           mandateId,
         })
       ).then(() => setPageReady(true));
@@ -298,6 +311,7 @@ const NotificationDetail = () => {
                     mandateId={mandateId}
                   />
                 )}
+                {userHasAdminPermissions && <DomicileBanner />}
                 <Paper sx={{ p: 3 }} className="paperContainer">
                   <NotificationDetailDocuments
                     title={t('detail.acts', { ns: 'notifiche' })}

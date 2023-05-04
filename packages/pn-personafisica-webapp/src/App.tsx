@@ -16,7 +16,8 @@ import { ProductSwitchItem } from '@pagopa/mui-italia';
 import {
   AppMessage,
   AppResponseMessage,
-  AppRouteType,
+  // momentarily commented for pn-5157
+  // AppRouteType,
   appStateActions,
   errorFactoryManager,
   initLocalization,
@@ -33,7 +34,6 @@ import * as routes from './navigation/routes.const';
 import Router from './navigation/routes';
 import { logout } from './redux/auth/actions';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { MIXPANEL_TOKEN, PAGOPA_HELP_EMAIL, VERSION } from './utils/constants';
 import { RootState, store } from './redux/store';
 import { Delegation } from './redux/delegation/types';
 import { getDomicileInfo, getSidemenuInformation } from './redux/sidemenu/actions';
@@ -44,6 +44,7 @@ import { PFAppErrorFactory } from './utils/AppError/PFAppErrorFactory';
 import { goToLoginPortal } from './navigation/navigation.utility';
 import { setUpInterceptor } from './api/interceptors';
 import { getCurrentAppStatus } from './redux/appStatus/actions';
+import { getConfiguration } from "./services/configuration.service";
 
 // TODO: get products list from be (?)
 const productsList: Array<ProductSwitchItem> = [
@@ -60,7 +61,9 @@ const App = () => {
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation(['common', 'notifiche']);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
-  const { tosConsent, fetchedTos, privacyConsent, fetchedPrivacy } = useAppSelector((state: RootState) => state.userState);
+  const { tosConsent, fetchedTos, privacyConsent, fetchedPrivacy } = useAppSelector(
+    (state: RootState) => state.userState
+  );
   const { pendingDelegators, delegators } = useAppSelector(
     (state: RootState) => state.generalInfoState
   );
@@ -69,6 +72,7 @@ const App = () => {
   const { pathname } = useLocation();
   const path = pathname.split('/');
   const source = path[path.length - 1];
+  const { MIXPANEL_TOKEN, PAGOPA_HELP_EMAIL, VERSION } = getConfiguration();
 
   const sessionToken = loggedUser.sessionToken;
   const jwtUser = useMemo(
@@ -233,8 +237,9 @@ const App = () => {
 
   const handleUserLogout = () => {
     void dispatch(logout());
-
-    goToLoginPortal(AppRouteType.PF);
+    // momentarily commented for pn-5157
+    // goToLoginPortal(AppRouteType.PF);
+    goToLoginPortal();
   };
 
   return (

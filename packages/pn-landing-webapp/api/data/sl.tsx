@@ -39,11 +39,11 @@ import {
   PAGOPA_HELP_EMAIL,
   PAGOPA_HOME,
   PARTNER_AND_INTERMEDIARIES_PATH,
-  PN_URL
+  PN_PF_URL
 } from "@utils/constants";
 
 const onReadClick = () => {
-  window.open(PN_URL, "_blank");
+  window.open(PN_PF_URL, "_blank");
 };
 
 const navigation: INavigationBarProps = {
@@ -51,10 +51,11 @@ const navigation: INavigationBarProps = {
   chip: "Beta",
   pf: "Državljani",
   pa: "Odvetnik",
+  faq: 'FAQ',
 };
 
 // eslint-disable-next-line no-extra-boolean-cast
-const heroCta = !!PN_URL
+const heroCta = !!PN_PF_URL
   ? {
     label: "Preberi svoja obvestila",
     title: "Preberi svoja obvestila",
@@ -830,12 +831,5 @@ export const slAppData: IAppData = {
     showcases: pfShowcases,
     walkthrough: pfWalkthrough,
     horizontalNav: pfHorizontalNav,
-  },
-  co: {
-    hero: coHero,
-    infoblocks: coInfoBlocks,
-    showcases: coShowcases,
-    walkthrough: coWalkthrough,
-    horizontalNav: coHorizontalNav,
-  },
+  }
 };

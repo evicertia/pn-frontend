@@ -25,6 +25,8 @@ type Props<ColumnId> = {
   sort?: Sort<ColumnId>;
   /** The function to be invoked if the user change sorting */
   onChangeSorting?: (s: Sort<ColumnId>) => void;
+  /** Table title used in aria-label */
+  ariaTitle?: string;
 };
 
 function ItemsTable<ColumnId extends string>({
@@ -32,8 +34,9 @@ function ItemsTable<ColumnId extends string>({
   rows,
   sort,
   onChangeSorting,
+  ariaTitle,
 }: Props<ColumnId>) {
-  const createSortHandler = (property: ColumnId) => () => {
+  const sortHandler = (property: ColumnId) => () => {
     if (sort && onChangeSorting) {
       const isAsc = sort.orderBy === property && sort.order === 'asc';
       onChangeSorting({ order: isAsc ? 'desc' : 'asc', orderBy: property });
@@ -64,13 +67,18 @@ function ItemsTable<ColumnId extends string>({
       <TableContainer sx={{ marginBottom: '10px' }}>
         <Table
           stickyHeader
-          aria-label={getLocalizedOrDefaultLabel('common', 'table.aria-label', 'Tabella di item')}
-          data-cy="table(notifications)"
+          aria-label={
+            ariaTitle
+              ? ariaTitle
+              : getLocalizedOrDefaultLabel('common', 'table.aria-label', 'Tabella di item')
+          }
+          data-testid="table(notifications)"
         >
-          <TableHead>
-            <TableRow>
+          <TableHead role="rowgroup">
+            <TableRow role="row">
               {columns.map((column) => (
                 <TableCell
+                  scope="col"
                   key={column.id}
                   align={column.align}
                   sx={{
@@ -84,7 +92,7 @@ function ItemsTable<ColumnId extends string>({
                     <TableSortLabel
                       active={sort.orderBy === column.id}
                       direction={sort.orderBy === column.id ? sort.order : 'asc'}
-                      onClick={createSortHandler(column.id)}
+                      onClick={sortHandler(column.id)}
                     >
                       {column.label}
                       {sort.orderBy === column.id && (
@@ -100,32 +108,42 @@ function ItemsTable<ColumnId extends string>({
               ))}
             </TableRow>
           </TableHead>
-          <TableBody sx={{ backgroundColor: 'background.paper' }}>
-            {rows.map((row) => (
-              <TableRow key={row.id} data-cy="table(notifications).row">
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    sx={{
-                      width: column.width,
-                      borderBottom: 'none',
-                      cursor: column.onClick ? 'pointer' : 'auto',
-                    }}
-                    align={column.align}
-                  >
-                    {column.onClick && (
-                      <ButtonNaked
-                        tabIndex={column.disableAccessibility ? -1 : 0}
-                        sx={buttonNakedInheritStyle}
-                        onClick={() => column.onClick && column.onClick(row, column)}
-                      >
-                        {column.getCellLabel(row[column.id as keyof Notification], row)}
-                      </ButtonNaked>
-                    )}
-                    {!column.onClick &&
-                      column.getCellLabel(row[column.id as keyof Notification], row)}
-                  </TableCell>
-                ))}
+          <TableBody sx={{ backgroundColor: 'background.paper' }} role="rowgroup">
+            {rows.map((row, index) => (
+              <TableRow
+                key={row.id}
+                data-testid="table(notifications).row"
+                role="row"
+                aria-rowindex={index + 1}
+              >
+                {columns.map((column) => {
+                  const cellValue = column.getCellLabel(row[column.id as keyof Notification], row);
+                  return (
+                    <TableCell
+                      key={column.id}
+                      role="cell"
+                      sx={{
+                        width: column.width,
+                        borderBottom: 'none',
+                        cursor: column.onClick ? 'pointer' : 'auto',
+                      }}
+                      align={column.align}
+                    >
+                      {cellValue && column.onClick && (
+                        <ButtonNaked
+                          tabIndex={column.disableAccessibility ? -1 : 0}
+                          sx={buttonNakedInheritStyle}
+                          onClick={() => column.onClick && column.onClick(row, column)}
+                        >
+                          {cellValue}
+                        </ButtonNaked>
+                      )}
+                      {cellValue && !column.onClick && (
+                        <Box tabIndex={column.disableAccessibility ? -1 : 0}>{cellValue}</Box>
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))}
           </TableBody>

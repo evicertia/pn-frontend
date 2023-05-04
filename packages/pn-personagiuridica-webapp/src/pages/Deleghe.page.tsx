@@ -1,54 +1,35 @@
-import { useEffect, useState } from 'react';
-import { Box, Stack } from '@mui/material';
-import {
-  AppResponse,
-  AppResponsePublisher,
-  CodeModal,
-  TitleBox,
-  useIsMobile,
-} from '@pagopa-pn/pn-commons';
-import { Trans, useTranslation } from 'react-i18next';
+import { useCallback, useEffect, useState } from 'react';
+import { Box, Tab, Tabs } from '@mui/material';
 
+import { TitleBox, TabPanel } from '@pagopa-pn/pn-commons';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { RootState } from '../redux/store';
+import { closeRevocationModal, resetState } from '../redux/delegation/reducers';
 import {
-  rejectDelegation,
-  revokeDelegation,
-  getDelegates,
   getDelegators,
-  acceptDelegation,
+  getGroups,
+  getDelegatesByCompany,
+  getDelegatorsNames,
+  revokeDelegation,
+  rejectDelegation,
 } from '../redux/delegation/actions';
-import { closeAcceptModal, closeRevocationModal, resetState } from '../redux/delegation/reducers';
-import ConfirmationModal from '../component/Deleghe/ConfirmationModal';
-import MobileDelegates from '../component/Deleghe/MobileDelegates';
-import MobileDelegators from '../component/Deleghe/MobileDelegators';
-import Delegates from '../component/Deleghe/Delegates';
-import Delegators from '../component/Deleghe/Delegators';
-import { getSidemenuInformation } from '../redux/sidemenu/actions';
-import { trackEventByType } from '../utils/mixpanel';
-import { TrackEventType } from '../utils/events';
+import { RootState } from '../redux/store';
 import LoadingPageWrapper from '../component/LoadingPageWrapper/LoadingPageWrapper';
+import DelegatesByCompany from '../component/Deleghe/DelegatesByCompany';
+import DelegationsOfTheCompany from '../component/Deleghe/DelegationsOfTheCompany';
+import ConfirmationModal from '../component/Deleghe/ConfirmationModal';
 
 const Deleghe = () => {
-  const isMobile = useIsMobile();
   const { t } = useTranslation(['deleghe']);
+  const [pageReady, setPageReady] = useState(false);
+  const [value, setValue] = useState(0);
   const { id, open, type } = useAppSelector(
     (state: RootState) => state.delegationsState.modalState
   );
-  const {
-    id: acceptId,
-    open: acceptOpen,
-    name: acceptName,
-    error: acceptError,
-  } = useAppSelector((state: RootState) => state.delegationsState.acceptModalState);
-  const [pageReady, setPageReady] = useState(false);
-
-  const [errorText, setErrorText] = useState('');
-
   const dispatch = useAppDispatch();
 
-  const handleCloseModal = () => {
-    dispatch(closeRevocationModal());
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
   };
 
   const handleConfirmClick = () => {
@@ -58,93 +39,68 @@ const Deleghe = () => {
       void dispatch(rejectDelegation(id));
     }
   };
-
-  const handleCloseAcceptModal = () => {
-    dispatch(closeAcceptModal());
+  const handleCloseModal = () => {
+    dispatch(closeRevocationModal());
   };
 
-  const handleAccept = async (code: Array<string>) => {
-    await dispatch(acceptDelegation({ id: acceptId, code: code.join('') }));
-    void dispatch(getDelegators());
-    void dispatch(getSidemenuInformation);
-    trackEventByType(TrackEventType.DELEGATION_DELEGATOR_ACCEPT);
-  };
-
-  const retrieveData = async () => {
-    await dispatch(getDelegates());
-    await dispatch(getDelegators());
+  const retrieveData = useCallback(() => {
+    void dispatch(getDelegatesByCompany());
+    void dispatch(getDelegators({ size: 10 }));
+    void dispatch(getGroups());
+    void dispatch(getDelegatorsNames());
     setPageReady(true);
-  };
+  }, []);
 
   useEffect(() => {
-    void retrieveData();
+    retrieveData();
     return () => {
       dispatch(resetState());
     };
   }, []);
 
-  const handleAcceptDelegationError = (errorResponse: AppResponse) => {
-    const error = errorResponse.errors ? errorResponse.errors[0] : null;
-    setErrorText(error?.message.content || '');
-  };
-
-  useEffect(() => {
-    AppResponsePublisher.error.subscribe('acceptDelegation', handleAcceptDelegationError);
-
-    return () =>
-      AppResponsePublisher.error.unsubscribe('acceptDelegation', handleAcceptDelegationError);
-  }, []);
-
   return (
     <LoadingPageWrapper isInitialized={pageReady}>
-      <Box p={3}>
-        <CodeModal
-          title={t('deleghe.accept_title')}
-          subtitle={t('deleghe.accept_description', { name: acceptName })}
-          open={acceptOpen}
-          initialValues={new Array(5).fill('')}
-          handleClose={handleCloseAcceptModal}
-          cancelCallback={handleCloseAcceptModal}
-          cancelLabel={t('button.indietro', { ns: 'common' })}
-          confirmCallback={handleAccept}
-          confirmLabel={t('deleghe.accept')}
-          codeSectionTitle={t('deleghe.verification_code')}
-          hasError={acceptError}
-          // errorMessage={t('deleghe.invalid_code')}
-          errorMessage={errorText}
-        />
-        <ConfirmationModal
-          open={open}
-          title={
-            type === 'delegates'
-              ? t('deleghe.revocation_question')
-              : t('deleghe.rejection_question')
-          }
-          onCloseLabel={t('button.annulla', { ns: 'common' })}
-          handleClose={handleCloseModal}
-          onConfirm={handleConfirmClick}
-          onConfirmLabel={
-            type === 'delegates' ? t('deleghe.confirm_revocation') : t('deleghe.confirm_rejection')
-          }
-        />
-        <Box mb={8}>
+      <ConfirmationModal
+        open={open}
+        title={
+          type === 'delegates' ? t('deleghe.revocation_question') : t('deleghe.rejection_question')
+        }
+        onCloseLabel={t('button.annulla', { ns: 'common' })}
+        handleClose={handleCloseModal}
+        onConfirm={handleConfirmClick}
+        onConfirmLabel={
+          type === 'delegates' ? t('deleghe.confirm_revocation') : t('deleghe.confirm_rejection')
+        }
+      />
+      <Box
+        sx={{
+          width: '100%',
+          justifyContent: 'center',
+        }}
+      >
+        <Box mb={2} p={3}>
           <TitleBox title={t('deleghe.title')} variantTitle={'h4'}>
-            <Trans ns={'deleghe'} i18nKey="deleghe.description" t={t}>
-              deleghe.description
-            </Trans>
+            {t('deleghe.description')}
           </TitleBox>
         </Box>
-        {isMobile ? (
-          <Stack direction="column" spacing={8}>
-            <MobileDelegates />
-            <MobileDelegators />
-          </Stack>
-        ) : (
-          <>
-            <Delegates />
-            <Delegators />
-          </>
-        )}
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', mx: 3 }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label={t('deleghe.tab_aria_label')}
+            centered
+            variant="fullWidth"
+          >
+            <Tab data-testid="tab1" label={t('deleghe.tab_delegati')} />
+            <Tab data-testid="tab2" label={t('deleghe.tab_deleghe')} />
+          </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+          <DelegatesByCompany />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <DelegationsOfTheCompany></DelegationsOfTheCompany>
+        </TabPanel>
       </Box>
     </LoadingPageWrapper>
   );

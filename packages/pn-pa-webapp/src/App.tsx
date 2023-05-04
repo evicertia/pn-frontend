@@ -33,12 +33,13 @@ import { getMenuItems } from './utils/role.utility';
 
 import * as routes from './navigation/routes.const';
 import { getCurrentAppStatus } from './redux/appStatus/actions';
-import { PAGOPA_HELP_EMAIL, SELFCARE_BASE_URL, VERSION, MIXPANEL_TOKEN } from './utils/constants';
 import { TrackEventType } from './utils/events';
 import { trackEventByType } from './utils/mixpanel';
 import './utils/onetrust';
 import { PAAppErrorFactory } from './utils/AppError/PAAppErrorFactory';
 import { setUpInterceptor } from './api/interceptors';
+import { getConfiguration } from './services/configuration.service';
+
 
 const App = () => {
   useUnload(() => {
@@ -61,6 +62,8 @@ const App = () => {
   const role = loggedUser.organization?.roles[0];
   const idOrganization = loggedUser.organization?.id;
   const sessionToken = loggedUser.sessionToken;
+
+  const configuration = useMemo(() => getConfiguration(), []);
 
   const menuItems = useMemo(() => {
     const basicMenuItems: Array<SideMenuItem> = [
@@ -128,7 +131,7 @@ const App = () => {
       {
         id: '1',
         title: t('header.reserved-area'),
-        productUrl: `${SELFCARE_BASE_URL as string}/dashboard/${idOrganization}`,
+        productUrl: `${configuration.SELFCARE_BASE_URL as string}/dashboard/${idOrganization}`,
         linkType: 'external',
       },
       {
@@ -166,7 +169,7 @@ const App = () => {
     errorFactoryManager.factory = new PAAppErrorFactory((path, ns) => t(path, { ns }));
   }, []);
 
-  useTracking(MIXPANEL_TOKEN, process.env.NODE_ENV);
+  useTracking(configuration.MIXPANEL_TOKEN, process.env.NODE_ENV);
 
   useEffect(() => {
     if (idOrganization) {
@@ -209,7 +212,7 @@ const App = () => {
   const handleAssistanceClick = () => {
     trackEventByType(TrackEventType.CUSTOMER_CARE_MAILTO, { source: 'postlogin' });
     /* eslint-disable-next-line functional/immutable-data */
-    window.location.href = `mailto:${PAGOPA_HELP_EMAIL}`;
+    window.location.href = `mailto:${configuration.PAGOPA_HELP_EMAIL}`;
   };
 
   const changeLanguageHandler = async (langCode: string) => {
@@ -221,7 +224,7 @@ const App = () => {
       dispatch(
         appStateActions.addSuccess({
           title: 'Current version',
-          message: `v${VERSION}`,
+          message: `v${configuration.APP_VERSION}`,
         })
       ),
   });

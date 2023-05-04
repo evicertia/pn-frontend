@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { formatToSlicedISOString } from '@pagopa-pn/pn-commons';
+import { RecipientType, formatToSlicedISOString } from '@pagopa-pn/pn-commons';
 import { DelegationsApi } from '../../api/delegations/Delegations.api';
 import { ExternalRegistriesAPI } from '../../api/external-registries/External-registries.api';
 import { CreateDelegationResponse, NewDelegationFormProps } from '../delegation/types';
@@ -12,10 +12,15 @@ export const createDelegation = createAsyncThunk<CreateDelegationResponse, NewDe
   async (data, { rejectWithValue }) => {
     const payload = {
       delegate: {
-        firstName: data.nome,
-        lastName: data.cognome,
+        displayName:
+          data.selectPersonaFisicaOrPersonaGiuridica === RecipientType.PF
+            ? `${data.nome} ${data.cognome}`
+            : data.ragioneSociale,
+        firstName: data.nome || undefined,
+        lastName: data.cognome || undefined,
         fiscalCode: data.codiceFiscale,
-        person: data.selectPersonaFisicaOrPersonaGiuridica === 'pf',
+        companyName: data.ragioneSociale || undefined,
+        person: data.selectPersonaFisicaOrPersonaGiuridica === RecipientType.PF,
       },
       visibilityIds:
         data.selectTuttiEntiOrSelezionati === 'tuttiGliEnti'

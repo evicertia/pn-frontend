@@ -11,17 +11,18 @@ import {
   getNextDay,
   formatToTimezoneString,
   ApiErrorWrapper,
+  useHasPermissions,
 } from '@pagopa-pn/pn-commons';
 
-import { useParams } from 'react-router-dom';
 import { DASHBOARD_ACTIONS, getReceivedNotifications } from '../redux/dashboard/actions';
-import { setMandateId, setPagination, setSorting } from '../redux/dashboard/reducers';
+import { setPagination, setSorting } from '../redux/dashboard/reducers';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { RootState } from '../redux/store';
 import DesktopNotifications from '../component/Notifications/DesktopNotifications';
 import MobileNotifications from '../component/Notifications/MobileNotifications';
 import LoadingPageWrapper from '../component/LoadingPageWrapper/LoadingPageWrapper';
-import { Delegator } from '../redux/delegation/types';
+import DomicileBanner from '../component/DomicileBanner/DomicileBanner';
+import { PNRole } from '../redux/auth/types';
 import { trackEventByType } from '../utils/mixpanel';
 import { TrackEventType } from '../utils/events';
 import { NotificationColumn } from '../models/Notifications';
@@ -29,24 +30,18 @@ import { NotificationColumn } from '../models/Notifications';
 const Notifiche = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation(['notifiche']);
-  const { mandateId } = useParams();
   const [pageReady, setPageReady] = useState(false);
 
   const { notifications, filters, sort, pagination } = useAppSelector(
     (state: RootState) => state.dashboardState
   );
-  const { delegators } = useAppSelector((state: RootState) => state.generalInfoState);
-  const currentDelegator = delegators.find(
-    (delegation: Delegator) => delegation.mandateId === mandateId
-  );
-  const organization =  useAppSelector((state: RootState) => state.userState.user.organization);
+  const organization = useAppSelector((state: RootState) => state.userState.user.organization);
+  const role = organization?.roles ? organization?.roles[0] : null;
+
+  const userHasAdminPermissions = useHasPermissions(role ? [role.role] : [], [PNRole.ADMIN]);
 
   const isMobile = useIsMobile();
-  const pageTitle = currentDelegator
-    ? t('delegatorTitle', {
-        name: currentDelegator.delegator ? currentDelegator.delegator.displayName : '',
-      })
-    : t('title', { recipient: organization.name });
+  const pageTitle = t('title', { recipient: organization.name });
 
   const pageSubTitle = t('subtitle', { recipient: organization.name });
   // back end return at most the next three pages
@@ -97,16 +92,13 @@ const Notifiche = () => {
   };
 
   useEffect(() => {
-    if (filters.mandateId !== currentDelegator?.mandateId) {
-      dispatch(setMandateId(currentDelegator?.mandateId));
-      return;
-    }
     fetchNotifications();
-  }, [fetchNotifications, currentDelegator]);
+  }, [fetchNotifications]);
 
   return (
     <LoadingPageWrapper isInitialized={pageReady}>
       <Box p={3}>
+        {userHasAdminPermissions && <DomicileBanner />}
         <TitleBox
           variantTitle="h4"
           title={pageTitle}
@@ -123,14 +115,12 @@ const Notifiche = () => {
               notifications={notifications}
               sort={sort}
               onChangeSorting={handleChangeSorting}
-              currentDelegator={currentDelegator}
             />
           ) : (
             <DesktopNotifications
               notifications={notifications}
               sort={sort}
               onChangeSorting={handleChangeSorting}
-              currentDelegator={currentDelegator}
             />
           )}
           {notifications.length > 0 && (

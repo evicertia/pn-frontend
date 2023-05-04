@@ -47,7 +47,7 @@ const multiTimeline = (digital1IsOK: boolean, sendDeliveredTo1 = false) => {
       "details": {
         "digitalAddress": { "type": "PEC", "address": "manudido99@gmail.com" },
         "recIndex": 0, "digitalAddressSource": "PLATFORM", "retryNumber": 0,
-        "eventCode": "C001",
+        "deliveryDetailCode": "C001",
         "notificationDate": "2023-01-26T13:56:06.224667703Z", "sendingReceipts": [{}],  "shouldRetry": false,
       }
     },
@@ -86,7 +86,7 @@ const multiTimeline = (digital1IsOK: boolean, sendDeliveredTo1 = false) => {
       "details": {
         "digitalAddress": { "type": "PEC", "address": "toto86@gmail.com" },
         "recIndex": 1, "digitalAddressSource": "PLATFORM", "retryNumber": 1,
-        "eventCode": "C001",
+        "deliveryDetailCode": "C001",
         "notificationDate": "2023-01-26T13:57:12.224667703Z", "sendingReceipts": [{}], "shouldRetry": false
       }
     },
@@ -157,7 +157,6 @@ const multiTimeline = (digital1IsOK: boolean, sendDeliveredTo1 = false) => {
           "at": "", "address": "Via Roma 145", "addressDetails": "", "zip": "98036", 
           "municipality": "Graniti", "province": "Messina"
         },
-        "analogCost": 1
       }
     },
     {
@@ -171,7 +170,7 @@ const multiTimeline = (digital1IsOK: boolean, sendDeliveredTo1 = false) => {
           "at": "", "address": "Via Roma 145", "addressDetails": "", "zip": "98036", 
           "municipality": "Graniti", "province": "Messina"
         },
-        "productType": "RN_RS", "analogCost": 1100
+        "productType": "RN_RS"
       }
     },
   ];
@@ -211,8 +210,7 @@ const multiTimeline = (digital1IsOK: boolean, sendDeliveredTo1 = false) => {
         "physicalAddress": {
           "at": "", "address": "via prova 45", "addressDetails": "", "zip": "20121", 
           "municipality": "milano", "province": "milano"
-        },
-        "analogCost": 1
+        }
       }
     },
     {
@@ -226,7 +224,7 @@ const multiTimeline = (digital1IsOK: boolean, sendDeliveredTo1 = false) => {
           "at": "", "address": "via prova 45", "addressDetails": "", "zip": "20121", 
           "municipality": "milano", "province": "milano"
         },
-        "productType": "RN_RS", "analogCost": 1100
+        "productType": "RN_RS"
       }
     },
   ]

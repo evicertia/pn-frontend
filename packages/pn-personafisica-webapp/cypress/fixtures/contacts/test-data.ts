@@ -76,7 +76,7 @@ export default {
       title: 'Altri recapiti',
       subtitle:
         'Se vuoi che le notifiche di alcuni enti siano indirizzate a dei recapiti diversi puoi indicarli qui, in sostituzione di quelli principali.',
-      senderPlaceholder: 'Ente*',
+      senderPlaceholder: 'Ente',
       addrTypePlaceholder: 'Indirizzo PEC',
       pecPlaceholder: 'Indirizzo PEC*',
       mailPlaceholder: 'Indirizzo mail*',
@@ -92,8 +92,8 @@ export default {
         'Inseriscilo qui sotto per confermare {{value}}. Il codice è valido per 10 minuti.',
       insertCode: 'Inserisci codice',
       help: 'Non l’hai ricevuto? Controlla che {{value}} sia corretto o generane uno nuovo.',
-      errorTitle: 'Il codice inserito non è corretto',
-      errorMessage: 'Prova a reinserirlo, oppure genera un nuovo codice.',
+      errorTitle: 'Il codice è sbagliato',
+      errorMessage: 'Controllalo e inseriscilo di nuovo, oppure generane un altro.',
     },
   },
   data: {

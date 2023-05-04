@@ -2,6 +2,7 @@ import { ErrorInfo, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import AltRouteIcon from '@mui/icons-material/AltRoute';
 import MarkunreadMailboxIcon from '@mui/icons-material/MarkunreadMailbox';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -14,7 +15,8 @@ import { PartyEntity, ProductSwitchItem } from '@pagopa/mui-italia';
 import {
   AppMessage,
   AppResponseMessage,
-  AppRouteType,
+  // momentarily commented for pn-5157
+  // AppRouteType,
   appStateActions,
   errorFactoryManager,
   initLocalization,
@@ -22,6 +24,7 @@ import {
   ResponseEventDispatcher,
   SideMenu,
   SideMenuItem,
+  useHasPermissions,
   useMultiEvent,
   useTracking,
   useUnload,
@@ -31,12 +34,13 @@ import * as routes from './navigation/routes.const';
 import Router from './navigation/routes';
 import { logout } from './redux/auth/actions';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { MIXPANEL_TOKEN, PAGOPA_HELP_EMAIL, VERSION, SELFCARE_BASE_URL } from './utils/constants';
 import { RootState, store } from './redux/store';
 import {
   getDomicileInfo,
+  getSidemenuInformation,
   // getSidemenuInformation
 } from './redux/sidemenu/actions';
+import { PNRole } from './redux/auth/types';
 import { trackEventByType } from './utils/mixpanel';
 import { TrackEventType } from './utils/events';
 import './utils/onetrust';
@@ -44,14 +48,18 @@ import { PGAppErrorFactory } from './utils/AppError/PGAppErrorFactory';
 import { goToLoginPortal } from './navigation/navigation.utility';
 import { setUpInterceptor } from './api/interceptors';
 import { getCurrentAppStatus } from './redux/appStatus/actions';
-
+import { getConfiguration } from './services/configuration.service';
 
 const App = () => {
+  const { MIXPANEL_TOKEN, PAGOPA_HELP_EMAIL, VERSION } = getConfiguration();
   setUpInterceptor(store);
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation(['common', 'notifiche']);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
-  const { tosConsent, fetchedTos, privacyConsent, fetchedPrivacy } = useAppSelector((state: RootState) => state.userState);
+  const { tosConsent, fetchedTos, privacyConsent, fetchedPrivacy } = useAppSelector(
+    (state: RootState) => state.userState
+  );
+  const { pendingDelegators } = useAppSelector((state: RootState) => state.generalInfoState);
   const currentStatus = useAppSelector((state: RootState) => state.appStatus.currentStatus);
   const { pathname } = useLocation();
   const path = pathname.split('/');
@@ -70,23 +78,28 @@ const App = () => {
 
   const isPrivacyPage = path[1] === 'privacy-tos';
   const organization = loggedUser.organization;
-  const role = loggedUser.organization?.roles[0];
+  const role = loggedUser.organization?.roles ? loggedUser.organization?.roles[0] : null;
+
+  const userHasAdminPermissions = useHasPermissions(role ? [role.role] : [], [PNRole.ADMIN]);
 
   // TODO: get products list from be (?)
-  const productsList: Array<ProductSwitchItem> = useMemo(() => [
-    {
-      id: '1',
-      title: t('header.product.organization-dashboard'),
-      productUrl: `${SELFCARE_BASE_URL}/dashboard/${organization?.id}`,
-      linkType: 'external',
-    },
-    {
-      id: '0',
-      title: t('header.product.notification-platform'),
-      productUrl: '',
-      linkType: 'internal',
-    },
-  ], [t, organization?.id]);
+  const productsList: Array<ProductSwitchItem> = useMemo(
+    () => [
+      {
+        id: '1',
+        title: t('header.product.organization-dashboard'),
+        productUrl: routes.PROFILE(organization?.id),
+        linkType: 'external',
+      },
+      {
+        id: '0',
+        title: t('header.product.notification-platform'),
+        productUrl: '',
+        linkType: 'internal',
+      },
+    ],
+    [t, organization?.id]
+  );
 
   useUnload(() => {
     trackEventByType(TrackEventType.APP_UNLOAD);
@@ -103,8 +116,10 @@ const App = () => {
 
   useEffect(() => {
     if (sessionToken !== '') {
-      void dispatch(getDomicileInfo());
-      // void dispatch(getSidemenuInformation());
+      if (userHasAdminPermissions) {
+        void dispatch(getDomicileInfo());
+        void dispatch(getSidemenuInformation());
+      }
       void dispatch(getCurrentAppStatus());
     }
   }, [sessionToken]);
@@ -125,7 +140,6 @@ const App = () => {
       children: notificationMenuItems,
       notSelectable: notificationMenuItems && notificationMenuItems.length > 0,
     },
-    { label: t('menu.contacts'), icon: MarkunreadMailboxIcon, route: routes.RECAPITI },
     {
       label: t('menu.app-status'),
       // ATTENTION - a similar logic to choose the icon and its color is implemented in AppStatusBar (in pn-commons)
@@ -142,6 +156,22 @@ const App = () => {
       route: routes.APP_STATUS,
     },
   ];
+
+  if (userHasAdminPermissions) {
+    /* eslint-disable-next-line functional/immutable-data */
+    menuItems.splice(1, 0, {
+      label: t('menu.deleghe'),
+      icon: () => <AltRouteIcon />,
+      route: routes.DELEGHE,
+      rightBadgeNotification: pendingDelegators ? pendingDelegators : undefined,
+    });
+    /* eslint-disable-next-line functional/immutable-data */
+    menuItems.splice(2, 0, {
+      label: t('menu.contacts'),
+      icon: MarkunreadMailboxIcon,
+      route: routes.RECAPITI,
+    });
+  }
 
   const selfcareMenuItems: Array<SideMenuItem> = [
     { label: t('menu.users'), icon: People, route: routes.USERS(organization?.id) },
@@ -203,8 +233,9 @@ const App = () => {
 
   const handleUserLogout = () => {
     void dispatch(logout());
-
-    goToLoginPortal(AppRouteType.PG);
+    // momentarily commented for pn-5157
+    // goToLoginPortal(AppRouteType.PG);
+    goToLoginPortal();
   };
 
   return (

@@ -21,7 +21,7 @@ import {
   ErrorMessage,
   DisclaimerModal,
 } from '@pagopa-pn/pn-commons';
-
+import { ButtonNaked } from '@pagopa/mui-italia';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { CourtesyChannelType, LegalChannelType } from '../../models/contacts';
 import { RootState } from '../../redux/store';
@@ -82,6 +82,7 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
 
   const [open, setOpen] = useState(false);
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
+  const [pecValidationOpen, setPecValidationOpen] = useState(false);
   const [codeNotValid, setCodeNotValid] = useState(false);
   const dispatch = useAppDispatch();
   const [modalProps, setModalProps] = useState(initialProps);
@@ -97,7 +98,7 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
 
   const handleConfirm = () => {
     setIsConfirmationModalVisible(false);
-    handleCodeVerification();
+    handleDisclaimerVisibilityFirst();
   };
 
   const handleDiscard = () => {
@@ -143,7 +144,8 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
         if (noCallback) {
           return;
         }
-        if (res && res.code === 'verified') {
+
+        if (res && res.pecValid) {
           // contact has already been verified
           // show success message
           dispatch(
@@ -155,21 +157,12 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
             })
           );
           handleClose('validated');
+        }
+        if (res && !res.pecValid) {
+          handleClose('validated');
+          setPecValidationOpen(true);
         } else {
-          // if senderId !== 'default' they are a special contact => don't show disclaimer
-          // if modalProps.digitalDomicileType === LegalChannelType.PEC it's a legal contact => don't show disclaimer
-          // if modalProps.digitalDomicileType !== LegalChannelType.PEC and senderId === 'default' it's a
-          // courtesy contact => show disclaimer
-          if (
-            modalProps.digitalDomicileType === LegalChannelType.PEC ||
-            modalProps.senderId !== 'default'
-          ) {
-            // open verification code dialog
-            setOpen(true);
-          } else {
-            // open disclaimer dialog
-            setDisclaimerOpen(true);
-          }
+          setOpen(true);
         }
       });
   };
@@ -207,11 +200,28 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
 
   useEffect(() => {
     if (!_.isEqual(modalProps, initialProps) && !contactAlreadyExists()) {
-      handleCodeVerification();
+      handleDisclaimerVisibilityFirst();
     } else if (contactAlreadyExists()) {
       setIsConfirmationModalVisible(true);
     }
   }, [modalProps]);
+
+  const handleDisclaimerVisibilityFirst = () => {
+    // if senderId !== 'default' they are a special contact => don't show disclaimer
+    // if modalProps.digitalDomicileType === LegalChannelType.PEC it's a legal contact => don't show disclaimer
+    // if modalProps.digitalDomicileType !== LegalChannelType.PEC and senderId === 'default' it's a
+    // courtesy contact => show disclaimer
+    if (
+      modalProps.digitalDomicileType === LegalChannelType.PEC ||
+      modalProps.senderId !== 'default'
+    ) {
+      // open verification code dialog
+      handleCodeVerification();
+    } else {
+      // open disclaimer dialog
+      setDisclaimerOpen(true);
+    }
+  };
 
   const handleAddressUpdateError = useCallback(
     (responseError: AppResponse) => {
@@ -255,6 +265,7 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
         <DisclaimerModal
           onConfirm={() => {
             setDisclaimerOpen(false);
+            handleCodeVerification();
             setOpen(true);
           }}
           onCancel={() => setDisclaimerOpen(false)}
@@ -285,15 +296,14 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
                 {t(`${modalProps.labelRoot}.${modalProps.labelType}-new-code`, { ns: 'recapiti' })}
                 &nbsp;
               </Typography>
-              <Typography
-                variant="body2"
-                display="inline"
-                color="primary"
+              <ButtonNaked
                 onClick={() => handleCodeVerification(undefined, true)}
-                sx={{ cursor: 'pointer' }}
+                sx={{verticalAlign: 'unset'}}
               >
-                {t(`${modalProps.labelRoot}.new-code-link`, { ns: 'recapiti' })}.
-              </Typography>
+                <Typography color="primary">
+                  {t(`${modalProps.labelRoot}.new-code-link`, { ns: 'recapiti' })}.
+                </Typography>
+              </ButtonNaked>
             </Box>
           }
           cancelLabel={t('button.annulla')}
@@ -301,8 +311,6 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
           cancelCallback={() => handleClose('cancelled')}
           confirmCallback={(values: Array<string>) => handleCodeVerification(values.join(''))}
           hasError={codeNotValid}
-          // errorTitle={t(`${modalProps.labelRoot}.wrong-code`, { ns: 'recapiti' })}
-          // errorMessage={t(`${modalProps.labelRoot}.wrong-code-message`, { ns: 'recapiti' })}
           errorTitle={errorMessage?.title}
           errorMessage={errorMessage?.content}
         />
@@ -326,6 +334,19 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
             {t('button.annulla')}
           </Button>
           <Button onClick={handleConfirm} variant="contained">
+            {t('button.conferma')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={pecValidationOpen}>
+        <DialogTitle id="dialog-title" sx={{ pt: 4, px: 4 }}>
+          {t('legal-contacts.validation-progress-title', { ns: 'recapiti' })}
+        </DialogTitle>
+        <DialogContent sx={{ px: 4 }}>
+          {t('legal-contacts.validation-progress-content', { ns: 'recapiti' })}
+        </DialogContent>
+        <DialogActions sx={{ pb: 4, px: 4 }}>
+          <Button onClick={() => setPecValidationOpen(false)} variant="contained">
             {t('button.conferma')}
           </Button>
         </DialogActions>

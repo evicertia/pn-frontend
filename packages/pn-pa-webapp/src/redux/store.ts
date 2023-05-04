@@ -1,8 +1,8 @@
 import { appStateReducer } from '@pagopa-pn/pn-commons';
 import { configureStore } from '@reduxjs/toolkit';
 import logger from 'redux-logger';
-import { LOG_REDUX_ACTIONS } from '../utils/constants';
 import { trackingMiddleware } from '../utils/mixpanel';
+import { getConfiguration } from '../services/configuration.service';
 import appStatusSlice from './appStatus/reducers';
 import userSlice from './auth/reducers';
 import dashboardSlice from './dashboard/reducers';
@@ -14,7 +14,6 @@ import statisticsSlice from "./statistics/reducers";
 import profilingSlice from "./profiling/reducers";
 import usageEstimateSlice from "./usageEstimation/reducers";
 
-const additionalMiddlewares = [LOG_REDUX_ACTIONS ? logger : undefined, trackingMiddleware];
 
 export const appReducers = {
   appState: appStateReducer,
@@ -30,8 +29,10 @@ export const appReducers = {
   usageEstimateState: usageEstimateSlice.reducer
 };
 
-export const createStore = () =>
-  configureStore({
+const createStore = (logReduxActions?: boolean) =>{
+  const mustLogActions = logReduxActions ?? getConfiguration().LOG_REDUX_ACTIONS;
+  const additionalMiddlewares = [mustLogActions ? logger : undefined, trackingMiddleware];
+  return configureStore({
     reducer: appReducers,
     middleware: (getDefaultMiddleware) =>
       additionalMiddlewares.reduce(
@@ -39,10 +40,19 @@ export const createStore = () =>
         getDefaultMiddleware({ serializableCheck: false })
       ),
   });
+};
 
-export const store = createStore();
+// eslint-disable-next-line functional/no-let
+export let store: ReturnType<typeof createStore>;
+
+export function initStore(logReduxActions?: boolean): void {
+  // eslint-disable-next-line prefer-const
+  store = createStore(logReduxActions);
+}
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
+// export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<ReturnType<typeof createStore>['getState']>;
+
+// export type AppDispatch = typeof store.dispatch;
+export type AppDispatch = ReturnType<typeof createStore>['dispatch'];

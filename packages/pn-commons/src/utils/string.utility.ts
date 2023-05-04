@@ -25,6 +25,7 @@ export const dataRegex = {
   lettersAndNumbers: /^[A-Za-z0-9]+$/,
   // this for string that have numbers, characters, - and _
   lettersNumbersAndDashs: /^[A-Za-z0-9-_]+$/,
+  htmlPageUrl: /^(?:http|https):\/\/[A-Za-z0-9.\-/]+$/i,
   simpleServer: /^[A-Za-z0-9.\-/]+$/, // the server part of an URL, no protocol, no query params
   token: /^[A-Za-z0-9\-._~+/]+$/, // cfr. https://stackoverflow.com/questions/50031993/what-characters-are-allowed-in-an-oauth2-access-token
   fiscalCode:
@@ -35,6 +36,7 @@ export const dataRegex = {
   isoDate: /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d{1,3})?)Z$/,
   taxonomyCode: /^(\d{6}[A-Z]{1})$/,
   denomination: /^([\x20-\xFF]{1,80})$/,
+  denominationSearch: /([\x20-\xFF]*)/g, 
   noticeCode: /^\d{18}$/,
 
   email:

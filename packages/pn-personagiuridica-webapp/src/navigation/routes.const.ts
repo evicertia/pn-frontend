@@ -3,12 +3,11 @@ import {
   TOS_LINK_RELATIVE_PATH as TERMS_OF_SERVICE,
   AppRouteParams,
 } from '@pagopa-pn/pn-commons';
-import { SELFCARE_BASE_URL } from '../utils/constants';
+import { getConfiguration } from "../services/configuration.service";
 
 export const NOTIFICHE = '/notifiche';
 export const NOTIFICHE_DELEGATO = `${NOTIFICHE}-delegato`;
 export const DELEGHE = '/deleghe';
-export const PROFILO = '/profilo';
 const NOTIFICA = '/dettaglio';
 export const DETTAGLIO_NOTIFICA = `${NOTIFICHE}/:id${NOTIFICA}`;
 export const DETTAGLIO_NOTIFICA_DELEGATO = `${NOTIFICHE_DELEGATO}/:id${NOTIFICA}`;
@@ -31,10 +30,16 @@ const GROUPS_SEGMENT = '/groups';
  * @param idOrganization
  */
 export const USERS = (idOrganization: string) =>
-  `${SELFCARE_BASE_URL}${DASHBOARD}/${idOrganization}${USERS_SEGMENT}`;
+  `${getConfiguration().SELFCARE_BASE_URL}${DASHBOARD}/${idOrganization}${USERS_SEGMENT}`;
 
 /** GROUPS navigation link to SelfCare "Gruppi" section for SEND
  * @param idOrganization
  */
 export const GROUPS = (idOrganization: string) =>
-  `${SELFCARE_BASE_URL}${DASHBOARD}/${idOrganization}${GROUPS_SEGMENT}`;
+  `${getConfiguration().SELFCARE_BASE_URL}${DASHBOARD}/${idOrganization}${GROUPS_SEGMENT}`;
+
+/** PROFILE navigation link to PNPG "Profilo" section for SEND
+ * @param idOrganization
+ */
+export const PROFILE = (idOrganization: string) =>
+  `${getConfiguration().SELFCARE_BASE_URL}${DASHBOARD}/${idOrganization}`;
