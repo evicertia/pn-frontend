@@ -243,15 +243,15 @@ export const events: EventsType = {
     action: 'go to estimate detail',
   },
   [TrackEventType.ESTIMATE_EXIT_WARNING]: {
-    category: 'notifications',
+    category: 'estimate',
     action: 'confirm cancel send notification',
   },
   [TrackEventType.ESTIMATE_EXIT_FLOW]: {
-    category: 'notifications',
+    category: 'estimate',
     action: 'cancel send notification',
   },
   [TrackEventType.ESTIMATE_EXIT_CANCEL]: {
-    category: 'notifications',
+    category: 'estimate',
     action: 'abort cancel notification',
   },
 };

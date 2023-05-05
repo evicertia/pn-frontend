@@ -1,4 +1,4 @@
-import {Fragment} from "react";
+import {Fragment, useState} from "react";
 import {useFormik} from "formik";
 import {Grid, Stack} from "@mui/material";
 import * as yup from "yup";
@@ -13,9 +13,15 @@ import {UsageEstimateForm} from "./usage/UsageEstimate.form";
 import {UsageEstimatesInitialValue} from "./props/Estimate.props";
 
 
-export function EstimateForm(props: {selected: EstimatePeriod}) {
+interface EstimateFormProps {
+  selected: EstimatePeriod;
+  onEstimateValidated?: () => void;
+}
+
+export function EstimateForm(props: EstimateFormProps) {
   const {t} = useTranslation(['estimate']);
   const dispatch = useAppDispatch();
+  const [btnType, setBtnType] = useState(StatusUpdateEnum.DRAFT);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
 
   const validationSchema = yup.object({
@@ -45,7 +51,13 @@ export function EstimateForm(props: {selected: EstimatePeriod}) {
       };
 
       void dispatch(updateEstimate({paId: loggedUser.organization.id, referenceMonth: props.selected.referenceMonth,
-        status: StatusUpdateEnum.DRAFT, body: estimateBodyRequest}));
+        status: btnType, body: estimateBodyRequest}))
+        .unwrap()
+        .then(()=> {
+          if(btnType === StatusUpdateEnum.VALIDATED) {
+            props.onEstimateValidated?.();
+          }
+      });
     },
   });
 
@@ -55,8 +67,13 @@ export function EstimateForm(props: {selected: EstimatePeriod}) {
       <BillForm formikInstance={formik} />
       <Grid item container direction="row" justifyContent="flex-end" >
         <Stack direction={"row"} spacing={2}>
-          <LoadingButton variant={"outlined"} type="submit">{t('edit-estimate.button.save-edit')}</LoadingButton>
-          <LoadingButton variant={"contained"} type="submit">{t('edit-estimate.button.abort-edit')}</LoadingButton>
+          {(props.selected.status === StatusUpdateEnum.DRAFT)
+            ?
+              <LoadingButton variant={"outlined"} type="submit" onClick={()=>setBtnType(StatusUpdateEnum.DRAFT)}>{t('edit-estimate.button.save-edit')}</LoadingButton>
+            :
+              null
+          }
+          <LoadingButton variant={"contained"} type="submit" onClick={()=>setBtnType(StatusUpdateEnum.VALIDATED)}>{t('edit-estimate.button.abort-edit')}</LoadingButton>
         </Stack>
       </Grid>
     </form>

@@ -24,6 +24,14 @@ export function BillForm({formikInstance}: EstimateFormProps){
     await formikInstance.setFieldTouched(e.target.id, true, false);
   };
 
+  const handleChangeCheckValue = async (e: ChangeEvent) => {
+    const target = e.target as any;
+    console.log(target);
+    console.log(target.checked);
+    formikInstance.handleChange(e);
+    await formikInstance.setFieldTouched(target, true, false);
+  };
+
   return <Fragment>
     <Card
       sx={{
@@ -74,10 +82,10 @@ export function BillForm({formikInstance}: EstimateFormProps){
                   <Checkbox
                     id="splitPayment"
                     name="splitPayment"
-                    onChange={handleChangeTouched}
-                    checked={formikInstance.values.splitPayment}
+                    onChange={handleChangeCheckValue}
                     size="small"
                     sx={{ marginBottom: isMobile ? '20px' : '0' }}
+                    checked={formikInstance.values.splitPayment}
                   />
                 }
               />

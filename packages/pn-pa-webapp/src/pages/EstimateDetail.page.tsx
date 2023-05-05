@@ -65,7 +65,7 @@ export function EstimateDetailPage(){
         {t('label.estimate-detail-info', { ns: 'estimate' })}
       </Typography>
       {
-        referenceMonth && <ButtonsEstimateDetail status={selected?.status} referenceMonth={referenceMonth}/>
+        referenceMonth && <ButtonsEstimateDetail status={selected?.status} referenceMonth={referenceMonth} showEdit={selected?.showEdit}/>
       }
 
     </Box>
@@ -111,7 +111,7 @@ export function EstimateDetailPage(){
   </Fragment>;
 }
 
-const ButtonsEstimateDetail = (params : {status?: EstimateStatusEnum; referenceMonth: string}) => {
+const ButtonsEstimateDetail = (params : {status?: EstimateStatusEnum; referenceMonth: string; showEdit?: boolean}) => {
   const { t } = useTranslation(['estimate', 'common', 'notifiche']);
   const navigate = useNavigate();
 
@@ -119,7 +119,8 @@ const ButtonsEstimateDetail = (params : {status?: EstimateStatusEnum; referenceM
     return null;
   }
 
-  if (params.status === EstimateStatusEnum.DRAFT) {
+  if (params.status === EstimateStatusEnum.DRAFT ||
+    (params.status === EstimateStatusEnum.VALIDATED && (params.showEdit === null || params.showEdit)) ) {
     return <>
       <Button
         variant="contained"
@@ -131,13 +132,5 @@ const ButtonsEstimateDetail = (params : {status?: EstimateStatusEnum; referenceM
     </>;
   }
   
-  return <>
-    <Button
-      variant="contained"
-      onClick={()=>{}}
-      data-testid="helpRequestBtn"
-    >
-      {t('edit-estimate.button.help-request', {ns: "estimate"})}
-    </Button>
-  </>;
+  return null;
 };
