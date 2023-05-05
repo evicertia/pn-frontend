@@ -46,7 +46,7 @@ export function EstimateForm(props: EstimateFormProps) {
         total890Notif: values.total890Notif,
         totalAnalogNotif: values.totalAnalogNotif,
         splitPayment: values.splitPayment,
-        description: values.description,
+        description: (!values.description || values.description === null) ? "" : values.description,
         mailAddress: values.mailAddress
       };
 
