@@ -26,10 +26,8 @@ export function BillForm({formikInstance}: EstimateFormProps){
 
   const handleChangeCheckValue = async (e: ChangeEvent) => {
     const target = e.target as any;
-    console.log(target);
-    console.log(target.checked);
     formikInstance.handleChange(e);
-    await formikInstance.setFieldTouched(target, true, false);
+    await formikInstance.setFieldValue("splitPayment", target.checked);
   };
 
   return <Fragment>
