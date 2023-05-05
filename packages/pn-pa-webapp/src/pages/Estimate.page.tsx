@@ -10,6 +10,7 @@ import {
   ApiErrorWrapper,
 } from '@pagopa-pn/pn-commons';
 import {Box, Button, Typography,Card} from '@mui/material';
+import {EstimateSearchTable} from '../models/UsageEstimation';
 import * as routes from '../navigation/routes.const';
 import { RootState } from '../redux/store';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -22,18 +23,17 @@ import MobileHistoryTable from "./components/UsageEstimates/historyTable/MobileH
 import {EstimateStatusChip} from "./components/UsageEstimates/statusChip";
 
 
-
 export function EstimatePage ()  {
   const dispatch = useAppDispatch();
   const historyEstimates = useAppSelector(state => state.usageEstimateState.historyEstimates);
   const pagination = useAppSelector((state: RootState) => state.usageEstimateState.pagination);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
-
   const navigate = useNavigate();
 
   const isMobile = useIsMobile();
   const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
 
+  const createActual = (elem : EstimateSearchTable) =>  Array.of(elem);
 
 
   const goToDetail = () => {
@@ -63,6 +63,8 @@ export function EstimatePage ()  {
     trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION);
     dispatch(setPagination({ size: paginationData.size, page: paginationData.page }));
   };
+
+
 
 
   return (
@@ -118,6 +120,19 @@ export function EstimatePage ()  {
 
             : null
         }
+
+          {
+              (historyEstimates?.actual?.referenceMonth) ?
+
+                  <Card sx={{ minWidth: 275 }}>
+                      <CardContent>
+                     <HistoryTable
+                      estimates={ createActual(historyEstimates.actual)}
+                        />
+                      </CardContent>
+                 </Card>
+              :null
+          }
 
 
 
