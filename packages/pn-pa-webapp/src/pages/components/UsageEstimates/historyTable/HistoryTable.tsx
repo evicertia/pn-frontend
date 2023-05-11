@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
+import {useNavigate} from "react-router-dom";
 import {
     Column,
     Item,
@@ -9,6 +10,9 @@ import {
 import {EstimateSearchTable, EstimateStatusEnum, HistoryColumn} from '../../../../models/UsageEstimation';
 import {EstimateStatusChip} from "../statusChip";
 import {getFormattedDateTime, localeStringRefenceMonth} from "../../../../utils/utility";
+import * as routes from "../../../../navigation/routes.const";
+import {trackEventByType} from "../../../../utils/mixpanel";
+import {TrackEventType} from "../../../../utils/events";
 
 
 type Props = {
@@ -18,8 +22,13 @@ type Props = {
 const HistoryTable =
     ({ estimates}: Props) => {
     const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
+    const navigate = useNavigate();
 
-
+    const handleRowClick = (row: Item) => {
+        navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id as string));
+        // log event
+        trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_ROW_INTERACTION);
+    };
 
     const columns: Array<Column<HistoryColumn>> = [
         {
@@ -28,6 +37,9 @@ const HistoryTable =
             width: '11%',
             getCellLabel(value: string) {
                 return localeStringRefenceMonth(value);
+            },
+            onClick(row: Item) {
+                handleRowClick(row);
             },
             disableAccessibility: true,
         },
@@ -39,6 +51,9 @@ const HistoryTable =
             getCellLabel(value: string) {
                 return getFormattedDateTime(value);
             },
+            onClick(row: Item) {
+                handleRowClick(row);
+            },
             disableAccessibility: true
         },
         {
@@ -47,6 +62,9 @@ const HistoryTable =
             width: '23%',
             getCellLabel(value: string) {
                 return getFormattedDateTime(value);
+            },
+            onClick(row: Item) {
+                handleRowClick(row);
             },
             disableAccessibility: true,
         },

@@ -83,22 +83,10 @@ export function EstimatePage ()  {
               data-testid="edit-button-lable"
               sx={{ marginBottom: isMobile ? 3 : undefined }}
           >
-            {t('edit-button-lable')}
+            {t('edit-button-label')}
           </Button>
 
         </Box>
-
-
-
-          {
-            /*
-              (historyEstimates?.actual?.referenceMonth) ?
-                //modificare campi actual
-                  <CurrentEstimate actual={""}/>
-
-          :null
-           */
-          }
 
 
 

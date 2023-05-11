@@ -11,6 +11,7 @@ import {getDetailEstimate} from "../redux/usageEstimation/actions";
 import {trackEventByType} from "../utils/mixpanel";
 import {TrackEventType} from "../utils/events";
 import {RootState} from "../redux/store";
+import {getFormattedDateTime, localeStringRefenceMonth} from "../utils/utility";
 import {GET_DETAIL_ESTIMATE_PATH} from "../navigation/routes.const";
 import {EstimateForm} from "./components/UsageEstimates/form/estimate/Estimate.form";
 
@@ -48,6 +49,22 @@ export function EstimateEditPage() {
     trackEventByType(TrackEventType.ESTIMATE_EXIT_FLOW);
   };
 
+  const getTitle = () => {
+    if(selected?.referenceMonth !== undefined) {
+      return t('edit-estimate.label.title') + localeStringRefenceMonth(selected?.referenceMonth);
+    } else {
+      return "";
+    }
+  };
+
+  const getAbstract = () => {
+    if(selected?.deadlineDate !== undefined) {
+      return t('edit-estimate.label.abstract') + getFormattedDateTime(selected?.deadlineDate, t('edit-estimate.label.date-time-format'));
+    } else {
+      return "";
+    }
+  };
+
   const breadcrumb = (
     <PnBreadcrumb
       linkRoute={routes.ESTIMATE}
@@ -67,12 +84,12 @@ export function EstimateEditPage() {
       {breadcrumb}
       <TitleBox
         variantTitle="h4"
-        title={t('edit-estimate.label.title')}
+        title={getTitle()}
         sx={{ pt: 3, mb: 2 }}
         mbTitle={0}
       ></TitleBox>
       <Typography variant="body1" mb={{ xs: 3, md: 4 }}>
-        {t('edit-estimate.label.abstract')}
+        {getAbstract()}
       </Typography>
     </Fragment>
   );

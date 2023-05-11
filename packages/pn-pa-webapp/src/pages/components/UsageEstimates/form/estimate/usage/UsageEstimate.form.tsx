@@ -21,6 +21,9 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
   };
 
   return <Fragment>
+    <Typography variant="body1">
+      {t("edit-estimate.label.mandatory-fields")}
+    </Typography>
     <Card
       sx={{
         width: "100%",
@@ -28,14 +31,11 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
         backgroundColor: "background.paper",
         mb: 2
       }}>
-      <Stack sx={{width: 1}} spacing={2}>
+      <Stack sx={{width: 1}} spacing={3}>
         <Grid item container>
           <Typography
             color="text.primary"
-            variant="overline"
-            fontWeight={700}
-            textTransform="uppercase"
-            fontSize={14}
+            variant="h4"
           >
             {t("edit-estimate.form.usage-estimate-title")}
           </Typography>
@@ -101,7 +101,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
             }
             </Typography>
           </Grid>
-          <Grid item lg={6} xs={12}>
+          <Grid item lg={6} xs={12} mt={2}>
             <Typography variant="body2" fontWeight={"600"} >
               {t('edit-estimate.form.total-digital-notif')}
             </Typography>
@@ -113,7 +113,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
             }
             </Typography>
           </Grid>
-          <Grid item lg={6} xs={12}>
+          <Grid item lg={6} xs={12} mt={1}>
             <Typography variant="body2" fontWeight={"600"} >
               {t('edit-estimate.form.total-analog-notif')}
             </Typography>

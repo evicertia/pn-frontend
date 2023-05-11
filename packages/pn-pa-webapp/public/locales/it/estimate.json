@@ -20,7 +20,7 @@
     "total-digital-notif": "Totale notifiche digitali",
     "total-analog-notif": "Totale notifiche analogiche",
     "total-notif": "Totale notifiche",
-    "email-profiling": "Indirizzo email amministrativo",
+    "email-profiling": "Indirizzo e-mail amministrativo",
     "split-payment-profiling": "Soggetto Split Payment",
     "other-description-profiling": "Altre informazioni utili alla fatturazione",
     "email": "Email",
@@ -56,13 +56,21 @@
     "label": {
       "breadcrumb-root": "Stime",
       "breadcrumb-leaf": "Modifica stima",
-      "title": "Modifica stima",
-      "abstract": "In questa sezione è possibile modificare le previsioni di stima sui volumi delle notifiche ed i relativi dati di fatturazione per la tua PA"
+      "title": "Stima per il mese di ",
+      "abstract": "Per inviare la stima, inserisci i dati richiesti. Puoi salvare una bozza e procedere con l'invio in un secondo momento. La stima è modificabile fino al ",
+      "mandatory-fields": "*Campi obbligatori",
+      "radio-split-payment-yes": "Sì",
+      "radio-split-payment-no": "No",
+      "send-dialog-title": "Vuoi inviare la stima per il mese di ",
+      "send-dialog-message": "La stima sarà modificata fino alla data di scadenza.",
+      "date-time-format": "alle ore"
     },
     "button": {
       "go-back-edit": "Indietro",
-      "save-edit": "Salva",
-      "abort-edit": "Consolida",
+      "save-edit": "Salva bozza",
+      "abort-edit": "Annulla",
+      "send-edit": "Invia stima",
+      "update-edit": "Aggiorna stima",
       "help-request": "Richiedi aiuto",
       "edit": "Modifica"
     },
@@ -70,20 +78,20 @@
       "sdi-code": "Codice SDI",
       "sdi-code-placeholder": "Codice SDI",
       "mandatory": "Obbligatorio",
-      "split-payment": "Soggetto Split Payment",
-      "mailAddress": "Indirizzo email",
-      "mailAddress-error": "Indirizzo email non valido",
-      "mailAddress-placeholder": "Indirizzo email amministrativo",
+      "split-payment": "Soggetto Split Payment*",
+      "mailAddress": "Indirizzo e-mail",
+      "mailAddress-error": "Indirizzo e-mail non valido",
+      "mailAddress-placeholder": "Indirizzo e-mail amministrativo",
       "description-other-info": "Altre informazioni utili alla fatturazione",
       "description-placeholder": "Max 256 caratteri",
-      "digital-notif-estimate": "Numero di notifiche per via digitale",
-      "analog-notif-estimate": "Numero di notifiche per via analogica",
-      "analog-890-notif-estimate": "Numero di notifiche per via analogica L. 890/19",
-      "total-digital-notif": "Totale notifiche digitali",
-      "total-analog-notif": "Totale notifiche analogiche",
-      "total-notif": "Totale notifiche",
-      "bill-title": "DATI AGGIUNTIVI PER LA FATTURAZIONE",
-      "usage-estimate-title": "PREVISIONI"
+      "digital-notif-estimate": "Digitali",
+      "analog-notif-estimate": "Analogiche con raccomandata",
+      "analog-890-notif-estimate": "Analogiche con 890",
+      "total-digital-notif": "Per via digitale",
+      "total-analog-notif": "Per via analogica",
+      "total-notif": "Totale notifiche stimate",
+      "bill-title": "Dati aggiuntivi per la fatturazione",
+      "usage-estimate-title": "Numero di notifiche stimate"
     },
     "prompt": {
       "title": "Vuoi davvero uscire?",
@@ -91,20 +99,20 @@
     }
   },
   "estimate-history": {
-  "title-history": "Stime",
-  "subtitle-history": "Qui trovi lo storico di tutte le stime.",
-  "edit-button-lable": "Modifica",
-  "show-detail": "Mostra dettagli",
-  "history-table": {
-    "reference-month": "Mese di riferimento",
-    "last-modified-date": "Data ultima modifica",
-    "deadline-date": "Data di scadenza",
-    "status": "Stato",
-    "status-enum": {
-      "draft": "In aggiornamento",
-      "validated": "Convalidato",
-      "absent": "Assente"
+    "title-history": "Stime",
+    "subtitle-history": "Qui trovi lo storico di tutte le stime.",
+    "edit-button-label": "Modifica",
+    "show-detail": "Mostra dettagli",
+    "history-table": {
+      "reference-month": "Mese di riferimento",
+      "last-modified-date": "Data ultima modifica",
+      "deadline-date": "Data di scadenza",
+      "status": "Stato",
+      "status-enum": {
+        "draft": "In aggiornamento",
+        "validated": "Convalidato",
+        "absent": "Assente"
+      }
     }
   }
- }
 }

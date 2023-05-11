@@ -24,15 +24,18 @@ export type EstimateFormProps = {
 };
 
 export const UsageEstimatesInitialValue = (estimate?: EstimateDetail, billing?: BillingDetail): FormikValues => {
-  const initEstimate = (estimate) ? estimate : {
-    totalDigitalNotif: 0,
-    totalAnalogNotif: 0,
-    total890Notif: 0
+
+  const initEstimate = {
+    totalDigitalNotif: estimate?.totalDigitalNotif ? estimate?.totalDigitalNotif : 0,
+    totalAnalogNotif: estimate?.totalAnalogNotif ? estimate?.totalAnalogNotif : 0,
+    total890Notif: estimate?.total890Notif ? estimate?.total890Notif : 0,
   };
-  const initBilling = (billing) ? billing : {
-    splitPayment: false,
-    mailAddress: "",
-    description: ""
+
+  const initBilling = {
+    splitPayment: billing?.splitPayment ? billing?.splitPayment : false,
+    mailAddress: billing?.mailAddress ? billing?.mailAddress : "",
+    description: billing?.description ? billing?.description : "",
   };
+
   return {...initEstimate, ...initBilling};
 };

@@ -1,16 +1,23 @@
 import {Fragment, useState} from "react";
-import {useFormik} from "formik";
+import {useFormik,
+  // useFormikContext
+} from "formik";
 import {Grid, Stack} from "@mui/material";
+// import { useNavigate} from "react-router-dom";
 import * as yup from "yup";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "@mui/lab";
+// import * as routes from "../../../../../navigation/routes.const";
 import {EstimatePeriod, StatusUpdateEnum} from "../../../../../models/UsageEstimation";
 import {updateEstimate} from "../../../../../redux/usageEstimation/actions";
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
 import {RootState} from "../../../../../redux/store";
+import {localeStringRefenceMonth} from "../../../../../utils/utility";
 import {BillForm} from "./bill/Bill.form";
 import {UsageEstimateForm} from "./usage/UsageEstimate.form";
 import {UsageEstimatesInitialValue} from "./props/Estimate.props";
+import {SendEstimateDialog} from "./dialog/SendEstimateDialog";
+
 
 
 interface EstimateFormProps {
@@ -69,13 +76,73 @@ export function EstimateForm(props: EstimateFormProps) {
         <Stack direction={"row"} spacing={2}>
           {(props.selected.status === StatusUpdateEnum.DRAFT)
             ?
-              <LoadingButton variant={"outlined"} type="submit" onClick={()=>setBtnType(StatusUpdateEnum.DRAFT)}>{t('edit-estimate.button.save-edit')}</LoadingButton>
+              <LoadingButton variant={"outlined"} type="submit" onClick={() => setBtnType(StatusUpdateEnum.DRAFT)}>{t('edit-estimate.button.save-edit')}</LoadingButton>
             :
               null
           }
-          <LoadingButton variant={"contained"} type="submit" onClick={()=>setBtnType(StatusUpdateEnum.VALIDATED)}>{t('edit-estimate.button.abort-edit')}</LoadingButton>
+          <ButtonSendEstimate refMonth={props.selected.referenceMonth} estimateStatus={props.selected.status} setBtnType={setBtnType} submit={formik.handleSubmit}/>
         </Stack>
       </Grid>
     </form>
   </Fragment>;
 }
+
+
+interface ButtonProps {
+  refMonth: string;
+  estimateStatus: StatusUpdateEnum;
+  setBtnType: (event: StatusUpdateEnum) => void;
+  submit: () => void;
+}
+
+const ButtonSendEstimate = (props: ButtonProps) => {
+  const [open, setOpen] = useState(false);
+  // const navigate = useNavigate();
+  const { t } = useTranslation(['estimate']);
+  // const { submitForm } = useFormikContext();
+
+  const getDialogTitle = () => {
+    if(props.refMonth === StatusUpdateEnum.DRAFT) {
+      return localeStringRefenceMonth(props.refMonth);
+    } else {
+      return "";
+    }
+  };
+
+  const getButtonTitle = () => {
+    if(props.estimateStatus !== undefined) {
+      return t('edit-estimate.button.send-edit');
+    } else {
+      return t('edit-estimate.button.update-edit');
+    }
+  };
+
+  const handlePositive = () => {
+    props.setBtnType(StatusUpdateEnum.VALIDATED);
+    // void submitForm();
+    props.submit();
+    setOpen(false);
+  };
+
+  const handleNegative = () => {
+    setOpen(false);
+  };
+
+  const onSendClick = () => {
+    setOpen(true);
+  };
+
+  return <>
+    <LoadingButton variant={"contained"}
+                   type="button"
+                   onClick={()=> onSendClick()}>
+      {getButtonTitle()}
+    </LoadingButton>
+
+    <SendEstimateDialog title={t('edit-estimate.label.send-dialog-title') + " " + getDialogTitle() + "?"}
+                 message={t('edit-estimate.label.send-dialog-message')}
+                 open={open}
+                 onClickNegative={handleNegative}
+                 onClickPositive={handlePositive}/>
+  </>;
+};

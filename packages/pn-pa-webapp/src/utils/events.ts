@@ -47,6 +47,7 @@ export enum TrackEventType {
   FOOTER_ACCESSIBILITY = 'FOOTER_ACCESSIBILITY',
   FOOTER_LANG_SWITCH = 'FOOTER_LANG_SWITCH',
   ESTIMATE_HISTORY_TABLE_PAGINATION="ESTIMATE_HISTORY_TABLE_PAGINATION",
+  ESTIMATE_HISTORY_TABLE_ROW_INTERACTION = 'ESTIMATE_HISTORY_TABLE_ROW_INTERACTION',
   ESTIMATE_GO_TO_DETAIL ="ESTIMATE_GO_TO_DETAIL",
   ESTIMATE_EXIT_WARNING = 'ESTIMATE_EXIT_WARNING',
   ESTIMATE_EXIT_FLOW = 'ESTIMATE_EXIT_FLOW',
@@ -237,6 +238,10 @@ export const events: EventsType = {
   [TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION]: {
     category: 'estimate',
     action: 'history table pagination',
+  },
+  [TrackEventType.ESTIMATE_HISTORY_TABLE_ROW_INTERACTION]: {
+    category: 'estimate',
+    action: 'click on row table',
   },
   [TrackEventType.ESTIMATE_GO_TO_DETAIL]: {
     category: 'estimate',

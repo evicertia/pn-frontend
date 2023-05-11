@@ -10,4 +10,3 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
   console.log(props.data);
   return null;
 }
-
