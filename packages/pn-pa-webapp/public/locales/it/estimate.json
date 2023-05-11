@@ -43,11 +43,11 @@
     "help-request-label": "Richiedi aiuto"
   },
   "status": {
-    "draft-label-tooltip": "Stime non ancora convalidate",
+    "draft-label-tooltip": "Stime non ancora Consolidata",
     "draft-label-chip": "Bozza",
-    "validated-label-tooltip": "Stime convalidate e non modificabili",
-    "validated-label-chip": "Convalidate",
-    "absent-label-tooltip": "Stime non inserite o mai convalidate",
+    "validated-label-tooltip": "Stime Consolidate",
+    "validated-label-chip": "Consolidata",
+    "absent-label-tooltip": "Stime non inserite o mai Consolidata",
     "absent-label-chip": "Assente",
     "pec": "PEC"
   },
@@ -62,7 +62,7 @@
       "radio-split-payment-yes": "Sì",
       "radio-split-payment-no": "No",
       "send-dialog-title": "Vuoi inviare la stima per il mese di ",
-      "send-dialog-message": "La stima sarà modificata fino alla data di scadenza.",
+      "send-dialog-message": "La stima sarà modificabile fino alla data di scadenza.",
       "date-time-format": "alle ore"
     },
     "button": {
@@ -106,7 +106,7 @@
     "history-table": {
       "reference-month": "Mese di riferimento",
       "last-modified-date": "Data ultima modifica",
-      "deadline-date": "Data di scadenza",
+      "deadline-date": "Data di scadenza per l'invio",
       "status": "Stato",
       "status-enum": {
         "draft": "In aggiornamento",

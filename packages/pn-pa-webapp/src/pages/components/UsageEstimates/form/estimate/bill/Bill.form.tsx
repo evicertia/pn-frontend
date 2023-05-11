@@ -61,7 +61,7 @@ export function BillForm({formikInstance}: EstimateFormProps){
         <Grid item container>
           <Typography
             color="text.primary"
-            variant="h4"
+            variant="h6"
           >
             {t("edit-estimate.form.bill-title")}
           </Typography>
@@ -71,7 +71,7 @@ export function BillForm({formikInstance}: EstimateFormProps){
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
             <FormControl>
               <FormLabel id="demo-radio-buttons-group-label">
-                <Typography variant="subtitle1" fontWeight={"600"} >
+                <Typography variant="body2" fontWeight={"600"} >
                   {t('edit-estimate.form.split-payment')}
                 </Typography>
               </FormLabel>

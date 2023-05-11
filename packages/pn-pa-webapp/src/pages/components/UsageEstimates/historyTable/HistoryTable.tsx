@@ -7,7 +7,7 @@ import {
     ItemsTable
 } from '@pagopa-pn/pn-commons';
 
-import {EstimateSearchTable, EstimateStatusEnum, HistoryColumn} from '../../../../models/UsageEstimation';
+import {EstimateHistory, EstimateStatusEnum, HistoryColumn} from '../../../../models/UsageEstimation';
 import {EstimateStatusChip} from "../statusChip";
 import {getFormattedDateTime, localeStringReferenceMonth} from "../../../../utils/utility";
 import * as routes from "../../../../navigation/routes.const";
@@ -16,7 +16,7 @@ import {TrackEventType} from "../../../../utils/events";
 
 
 type Props = {
-    estimates: Array<EstimateSearchTable>;
+    estimates: Array<EstimateHistory>;
 };
 
 const HistoryTable =
@@ -25,16 +25,18 @@ const HistoryTable =
     const navigate = useNavigate();
 
     const handleRowClick = (row: Item) => {
-        navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id as string));
-        // log event
-        trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_ROW_INTERACTION);
+        if (row?.status && row.status === EstimateStatusEnum.VALIDATED) {
+            navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id as string));
+            // log event
+            trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_ROW_INTERACTION);
+        }
     };
 
     const columns: Array<Column<HistoryColumn>> = [
         {
             id: 'referenceMonth',
             label: t('history-table.reference-month'),
-            width: '11%',
+            width: '15%',
             getCellLabel(value: string) {
                 return localeStringReferenceMonth(value);
             },
@@ -44,22 +46,9 @@ const HistoryTable =
             disableAccessibility: true,
         },
         {
-            id: 'lastModifiedDate',
-            label: t('history-table.last-modified-date'),
-            width: '13%',
-            sortable: false, // TODO: will be re-enabled in PN-1124
-            getCellLabel(value: string) {
-                return getFormattedDateTime(value);
-            },
-            onClick(row: Item) {
-                handleRowClick(row);
-            },
-            disableAccessibility: true
-        },
-        {
             id: 'deadlineDate',
             label: t('history-table.deadline-date'),
-            width: '23%',
+            width: '15%',
             getCellLabel(value: string) {
                 return getFormattedDateTime(value);
             },
@@ -69,9 +58,23 @@ const HistoryTable =
             disableAccessibility: true,
         },
         {
+            id: 'lastModifiedDate',
+            label: t('history-table.last-modified-date'),
+            width: '15%',
+            sortable: false, // TODO: will be re-enabled in PN-1124
+            getCellLabel(value: string) {
+                return getFormattedDateTime(value);
+            },
+            onClick(row: Item) {
+                handleRowClick(row);
+            },
+            disableAccessibility: true
+        },
+
+        {
             id: 'status',
             label: t('history-table.status'),
-            width: '20%',
+            width: '10%',
             getCellLabel(value: EstimateStatusEnum) {
                 return <EstimateStatusChip data={value}/>;
             },
@@ -79,7 +82,7 @@ const HistoryTable =
 
     ];
 
-    const rows: Array<Item> = estimates.map((n: EstimateSearchTable) => ({
+    const rows: Array<Item> = estimates.map((n: EstimateHistory) => ({
         ...n,
         id: n.referenceMonth,
     }));

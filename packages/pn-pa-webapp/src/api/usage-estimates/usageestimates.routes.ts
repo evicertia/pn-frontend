@@ -6,6 +6,7 @@ const API_ESTIMATE_PREFIX = 'pn-usage-estimates';
 
 const API_ESTIMATE_SEGMENT = 'estimate';
 const API_ESTIMATES_SEGMENT = 'estimates';
+const API_ESTIMATES_VALIDATED_SEGMENT = 'validated';
 const API_ESTIMATE_DETAIL_SEGMENT = 'detail';
 const API_ESTIMATE_FILES_SEGMENT = 'files';
 const API_ESTIMATE_FILE_SEGMENT = 'file';
@@ -26,6 +27,8 @@ const API_ESTIMATES_FROM_PA_ID_PATH = `${API_ESTIMATES_SEGMENT}`;
 
 // {paId}/estimate/{referenceMonth}
 const API_UPDATE_ESTIMATES_PATH = `:${API_ESTIMATE_PA_ID_PARAMETER}/${API_ESTIMATE_SEGMENT}/:${API_ESTIMATE_REFERENCE_MONTH_PARAMETER}`;
+// {paId}/estimate/{referenceMonth}/validated
+const API_VALIDATED_ESTIMATES_PATH = `:${API_ESTIMATE_PA_ID_PARAMETER}/${API_ESTIMATE_SEGMENT}/:${API_ESTIMATE_REFERENCE_MONTH_PARAMETER}/${API_ESTIMATES_VALIDATED_SEGMENT}`;
 
 // estimate/{paId}/detail/{referenceMonth}
 const API_ESTIMATE_DETAIL_PATH = `${API_ESTIMATE_SEGMENT}/:${API_ESTIMATE_PA_ID_PARAMETER}/${API_ESTIMATE_DETAIL_SEGMENT}/:${API_ESTIMATE_REFERENCE_MONTH_PARAMETER}`;
@@ -59,6 +62,17 @@ export function UPDATE_ESTIMATE(paId: string, referenceMonth: string, status: St
     },
     query: {
       [API_ESTIMATE_STATUS_PARAMETER]: status,
+    }
+  });
+}
+
+export function VALIDATED_ESTIMATE(paId: string, referenceMonth: string){
+  return compileRoute({
+    prefix: API_ESTIMATE_PREFIX,
+    path: API_VALIDATED_ESTIMATES_PATH,
+    params: {
+      [API_ESTIMATE_PA_ID_PARAMETER]: paId,
+      [API_ESTIMATE_REFERENCE_MONTH_PARAMETER]: referenceMonth,
     }
   });
 }

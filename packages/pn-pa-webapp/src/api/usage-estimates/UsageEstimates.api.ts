@@ -1,6 +1,6 @@
 import {apiClient} from "../apiClients";
 import {
-  EstimateBodyRequest,
+  EstimateBodyRequest, EstimateDetail,
   EstimatePeriod,
   FilterRequestEstimate, HistoryEstimates,
   InfoDownload, StatusUpdateEnum
@@ -10,7 +10,7 @@ import {
   ESTIMATE_FILE_DETAIL,
   ESTIMATE_FILES,
   ESTIMATE_PAGINATION_LIST,
-  UPDATE_ESTIMATE
+  UPDATE_ESTIMATE, VALIDATED_ESTIMATE
 } from "./usageestimates.routes";
 
 export const UsageEstimatesApi = {
@@ -37,6 +37,17 @@ export const UsageEstimatesApi = {
     return response.data;
   },
 
+  /**
+   * validated estimate from PA-ID and referenceYear
+   * @returns Promise
+   * @param paId
+   * @param referenceMonth format = Marzo-2023
+   */
+  validatedEstimate: async (paId: string, referenceMonth: string): Promise<EstimatePeriod> => {
+    const response = await apiClient.get<EstimatePeriod>(VALIDATED_ESTIMATE(paId, referenceMonth));
+    return response.data;
+  },
+
 
   /**
    * Get detail estimate from PA-ID and reference Month
@@ -44,8 +55,8 @@ export const UsageEstimatesApi = {
    * @param  {string:'MAR-2023'} referenceMonth
    * @returns Promise
    */
-  getDetailEstimate: async (paId: string, referenceMonth: string): Promise<EstimatePeriod> => {
-    const response = await apiClient.get<EstimatePeriod>(ESTIMATE_DETAIL(paId, referenceMonth));
+  getDetailEstimate: async (paId: string, referenceMonth: string): Promise<EstimateDetail> => {
+    const response = await apiClient.get<EstimateDetail>(ESTIMATE_DETAIL(paId, referenceMonth));
     return response.data;
   },
 

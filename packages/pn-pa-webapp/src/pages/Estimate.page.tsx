@@ -71,8 +71,8 @@ export function EstimatePage ()  {
 
           {
 
-              (historyEstimates?.actual) ?
-                <ActualEstimateCard data={historyEstimates.actual}/>
+              (historyEstimates?.actual && loggedUser?.organization.id) ?
+                <ActualEstimateCard paId={loggedUser.organization.id} data={historyEstimates.actual}/>
                 : null
           }
 

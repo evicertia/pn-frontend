@@ -14,3 +14,9 @@ export const getFormattedDateTime = (dataValue: string, pathHour:string="ore") :
   const formatString = "dd/MM/yyyy, '"+pathHour+"' HH:mm";
   return format(date, formatString);
 };
+
+export const getDateString = (dataValue: string): string  => {
+  const date = new Date(dataValue);
+  const formatString = "dd/MM/yyyy";
+  return format(date, formatString);
+}

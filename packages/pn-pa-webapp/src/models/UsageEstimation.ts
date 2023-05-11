@@ -20,20 +20,31 @@ export interface EstimateBodyRequest {
   mailAddress: string;
 }
 
-export interface EstimateDetail {
-  totalDigitalNotif: number;
-  totalAnalogNotif: number;
-  total890Notif: number;
-}
 
-export interface EstimatePeriod {
+export interface EstimateDetail {
   paInfo: PaInfo;
   status: EstimateStatusEnum;
   showEdit: boolean;
   deadlineDate: string;
   referenceMonth: string;
   lastModifiedDate: string;
-  estimate: EstimateDetail;
+  estimate: Estimate;
+  billing: BillingDetail;
+}
+
+export interface Estimate {
+  totalDigitalNotif: number;
+  totalAnalogNotif: number;
+  total890Notif: number;
+}
+
+export interface EstimatePeriod {
+  status: EstimateStatusEnum;
+  showEdit: boolean;
+  deadlineDate: string;
+  referenceMonth: string;
+  lastModifiedDate ?: string;
+  estimate: Estimate;
   billing: BillingDetail;
 }
 
@@ -50,17 +61,16 @@ export const EstimateStatusEnum = {
 
 export type EstimateStatusEnum = typeof EstimateStatusEnum[keyof typeof EstimateStatusEnum];
 
-export interface EstimateSearchTable {
+export interface EstimateHistory {
   referenceMonth: string;
   lastModifiedDate: string;
   deadlineDate: string;
   status: EstimateStatusEnum;
-  estimate: EstimateDetail;
 }
 
 export interface HistoryEstimates {
-  actual: EstimateSearchTable;
-  history : Page<EstimateSearchTable>;
+  actual: EstimatePeriod;
+  history : Page<EstimateHistory>;
 
 }
 
@@ -133,7 +143,7 @@ export type HistoryColumn =
 
 export const monthMap: { [key: string]: string } = {
   "GEN": "Gennaio",
-  "FEBB": "Febbraio",
+  "FEB": "Febbraio",
   "MAR": "Marzo",
   "APR": "Aprile",
   "MAG": "Maggio",

@@ -35,7 +35,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
         <Grid item container>
           <Typography
             color="text.primary"
-            variant="h4"
+            variant="h6"
           >
             {t("edit-estimate.form.usage-estimate-title")}
           </Typography>
@@ -88,12 +88,12 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
         <Divider variant="middle" />
         <Grid container alignItems={"center"} width="1" mt={1}>
           <Grid item lg={6} xs={12}>
-            <Typography variant="subtitle1" fontWeight={"bold"} >
+            <Typography variant="body2" fontWeight={"bold"} >
               {t('edit-estimate.form.total-notif')}
             </Typography>
           </Grid>
           <Grid item lg={6} xs={12}>
-            <Typography variant="subtitle1" fontWeight={"bold"} textAlign={"end"}>
+            <Typography variant="body2" fontWeight={"bold"} textAlign={"end"}>
             {
               (formikInstance.values.totalDigitalNotif as number) +
               (formikInstance.values.total890Notif as number) +
@@ -106,7 +106,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
               {t('edit-estimate.form.total-digital-notif')}
             </Typography>
           </Grid>
-          <Grid item lg={6} xs={12}>
+          <Grid item lg={6} xs={12} mt={2}>
             <Typography variant="body2" fontWeight={"600"} textAlign={"end"}>
             {
               formikInstance.values.totalDigitalNotif
@@ -118,7 +118,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
               {t('edit-estimate.form.total-analog-notif')}
             </Typography>
           </Grid>
-          <Grid item lg={6} xs={12}>
+          <Grid item lg={6} xs={12} mt={1}>
             <Typography variant="body2" fontWeight={"600"} textAlign={"end"}>
             {
               (formikInstance.values.total890Notif as number) +

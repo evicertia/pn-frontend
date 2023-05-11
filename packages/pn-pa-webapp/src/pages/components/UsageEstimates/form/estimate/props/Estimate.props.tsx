@@ -1,6 +1,6 @@
 import {FormikErrors, FormikState, FormikTouched, FormikValues} from "formik";
 import {ChangeEvent} from "react";
-import {BillingDetail, EstimateDetail} from "../../../../../../models/UsageEstimation";
+import {BillingDetail, Estimate} from "../../../../../../models/UsageEstimation";
 
 
 export type EstimateFormProps = {
@@ -23,7 +23,7 @@ export type EstimateFormProps = {
   };
 };
 
-export const UsageEstimatesInitialValue = (estimate?: EstimateDetail, billing?: BillingDetail): FormikValues => {
+export const UsageEstimatesInitialValue = (estimate?: Estimate, billing?: BillingDetail): FormikValues => {
 
   const initEstimate = {
     totalDigitalNotif: estimate?.totalDigitalNotif ? estimate?.totalDigitalNotif : 0,

@@ -17,7 +17,7 @@ import {EstimateForm} from "./components/UsageEstimates/form/estimate/Estimate.f
 
 
 export function EstimateEditPage() {
-  const {selected, error} = useAppSelector(state => state.usageEstimateState);
+  const {detail, error} = useAppSelector(state => state.usageEstimateState);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const isMobile = useIsMobile();
   const { t } = useTranslation(['estimate']);
@@ -50,16 +50,16 @@ export function EstimateEditPage() {
   };
 
   const getTitle = () => {
-    if(selected?.referenceMonth !== undefined) {
-      return t('edit-estimate.label.title') + localeStringReferenceMonth(selected?.referenceMonth);
+    if(detail?.referenceMonth !== undefined) {
+      return t('edit-estimate.label.title') + localeStringReferenceMonth(detail?.referenceMonth);
     } else {
       return "";
     }
   };
 
   const getAbstract = () => {
-    if(selected?.deadlineDate !== undefined) {
-      return t('edit-estimate.label.abstract') + getFormattedDateTime(selected?.deadlineDate, t('edit-estimate.label.date-time-format'));
+    if(detail?.deadlineDate !== undefined) {
+      return t('edit-estimate.label.abstract') + getFormattedDateTime(detail?.deadlineDate, t('edit-estimate.label.date-time-format'));
     } else {
       return "";
     }
@@ -94,9 +94,9 @@ export function EstimateEditPage() {
     </Fragment>
   );
 
-  if ( (selected != null) &&
-    (selected.status !== EstimateStatusEnum.DRAFT &&
-    selected.status !== EstimateStatusEnum.VALIDATED) ) {
+  if ( (detail != null) &&
+    (detail.status !== EstimateStatusEnum.DRAFT &&
+    detail.status !== EstimateStatusEnum.VALIDATED) ) {
     return <Navigate to={(forcedNavigate) ? forcedNavigate : routes.ESTIMATE} />;
   }
 
@@ -125,7 +125,7 @@ export function EstimateEditPage() {
               <Grid item lg={12} xs={12} sx={{ p: { xs: 0, lg: 3 } }}>
                 {!isMobile && heading}
                 <Stack sx={{ marginTop: 3}} spacing={3}>
-                  {selected && <EstimateForm selected={selected} onEstimateValidated={()=>setForcedNavigate(GET_DETAIL_ESTIMATE_PATH(selected?.referenceMonth || ""))}/>}
+                  {detail && <EstimateForm detail={detail} onEstimateValidated={()=>setForcedNavigate(GET_DETAIL_ESTIMATE_PATH(detail?.referenceMonth || ""))}/>}
                 </Stack>
               </Grid>
             </Grid>

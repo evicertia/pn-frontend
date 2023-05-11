@@ -11,12 +11,12 @@ import {
 import { ButtonNaked } from '@pagopa/mui-italia';
 
 import * as routes from '../../../../navigation/routes.const';
-import {EstimateSearchTable, EstimateStatusEnum} from "../../../../models/UsageEstimation";
+import {EstimateHistory, EstimateStatusEnum} from "../../../../models/UsageEstimation";
 import {EstimateStatusChip} from "../statusChip";
 
 
 type Props = {
-    estimates: Array<EstimateSearchTable>;
+    estimates: Array<EstimateHistory>;
 };
 
 const MobileHistoryTable = (
@@ -88,7 +88,7 @@ const MobileHistoryTable = (
         },
     ];
 
-    const cardData: Array<Item> = estimates.map((n: EstimateSearchTable) => ({
+    const cardData: Array<Item> = estimates.map((n: EstimateHistory) => ({
         ...n,
         id: n.referenceMonth,
     }));

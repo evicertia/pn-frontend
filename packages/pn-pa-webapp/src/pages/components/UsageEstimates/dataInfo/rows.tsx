@@ -1,7 +1,7 @@
 import {Typography} from "@mui/material";
 import {format} from "date-fns";
 import { EstimateStatusChip } from "../statusChip";
-import {BillingDetail, EstimateDetail, EstimatePeriod, PaInfo} from "../../../../models/UsageEstimation";
+import {BillingDetail, Estimate, EstimatePeriod, PaInfo} from "../../../../models/UsageEstimation";
 import {RowDataInfo} from "./DataInfo";
 
 export const usageInfoPA: Array<RowDataInfo<PaInfo>> = [
@@ -90,7 +90,7 @@ export const usageBillingDataPA: Array<RowDataInfo<BillingDetail>> = [
   },
 ];
 
-export const usageEstimations: Array<RowDataInfo<EstimateDetail>> = [
+export const usageEstimations: Array<RowDataInfo<Estimate>> = [
   {
     id: "totalDigitalNotif",
     label: "label.digital-notif-estimate",

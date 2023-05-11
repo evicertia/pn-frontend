@@ -22,7 +22,7 @@ import {
 export function EstimateDetailPage(){
   const { t } = useTranslation(['estimate', 'common', 'notifiche']);
   const isMobile = useIsMobile();
-  const {selected, error} = useAppSelector(state => state.usageEstimateState);
+  const {detail, error} = useAppSelector(state => state.usageEstimateState);
   const dispatch = useAppDispatch();
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const {referenceMonth} = useParams();
@@ -65,7 +65,7 @@ export function EstimateDetailPage(){
         {t('label.estimate-detail-info', { ns: 'estimate' })}
       </Typography>
       {
-        referenceMonth && <ButtonsEstimateDetail status={selected?.status} referenceMonth={referenceMonth} showEdit={selected?.showEdit}/>
+        referenceMonth && <ButtonsEstimateDetail status={detail?.status} referenceMonth={referenceMonth} showEdit={detail?.showEdit}/>
       }
 
     </Box>
@@ -85,22 +85,22 @@ export function EstimateDetailPage(){
       {header}
       <Stack spacing={3}>
         {
-          (selected) ?
+          (detail) ?
             <Fragment>
               <DataInfo title={t("pa-info-title")}
-                        data={selected.paInfo}
+                        data={detail.paInfo}
                         rows={usageInfoPA}/>
 
               <DataInfo title={t("period-title")}
-                        data={selected}
+                        data={detail}
                         rows={usagePeriod}/>
 
               <DataInfo title={t("usage-estimate-title")}
-                        data={selected.estimate}
+                        data={detail.estimate}
                         rows={usageEstimations}/>
 
               <DataInfo title={t("billing-title")}
-                        data={selected.billing}
+                        data={detail.billing}
                         rows={usageBillingDataPA}/>
             </Fragment>
             : null

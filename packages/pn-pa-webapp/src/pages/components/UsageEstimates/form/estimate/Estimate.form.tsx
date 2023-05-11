@@ -8,7 +8,7 @@ import * as yup from "yup";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "@mui/lab";
 // import * as routes from "../../../../../navigation/routes.const";
-import {EstimatePeriod, EstimateStatusEnum, StatusUpdateEnum} from "../../../../../models/UsageEstimation";
+import {EstimateDetail, EstimateStatusEnum, StatusUpdateEnum} from "../../../../../models/UsageEstimation";
 import {updateEstimate} from "../../../../../redux/usageEstimation/actions";
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
 import {RootState} from "../../../../../redux/store";
@@ -21,7 +21,7 @@ import {SendEstimateDialog} from "./dialog/SendEstimateDialog";
 
 
 interface EstimateFormProps {
-  selected: EstimatePeriod;
+  detail: EstimateDetail;
   onEstimateValidated?: () => void;
 }
 
@@ -44,7 +44,7 @@ export function EstimateForm(props: EstimateFormProps) {
   });
   
   const formik = useFormik({
-    initialValues: UsageEstimatesInitialValue(props.selected.estimate, props.selected.billing),
+    initialValues: UsageEstimatesInitialValue(props.detail.estimate, props.detail.billing),
     validationSchema,
     onSubmit: (values) => {
       console.log(values);
@@ -57,7 +57,7 @@ export function EstimateForm(props: EstimateFormProps) {
         mailAddress: values.mailAddress
       };
 
-      void dispatch(updateEstimate({paId: loggedUser.organization.id, referenceMonth: props.selected.referenceMonth,
+      void dispatch(updateEstimate({paId: loggedUser.organization.id, referenceMonth: props.detail.referenceMonth,
         status: btnType, body: estimateBodyRequest}))
         .unwrap()
         .then(()=> {
@@ -74,13 +74,13 @@ export function EstimateForm(props: EstimateFormProps) {
       <BillForm formikInstance={formik} />
       <Grid item container direction="row" justifyContent="flex-end" >
         <Stack direction={"row"} spacing={2}>
-          {(props.selected.status === StatusUpdateEnum.DRAFT)
+          {(props.detail.status === StatusUpdateEnum.DRAFT)
             ?
               <LoadingButton variant={"outlined"} type="submit" onClick={() => setBtnType(StatusUpdateEnum.DRAFT)}>{t('edit-estimate.button.save-edit')}</LoadingButton>
             :
               null
           }
-          <ButtonSendEstimate refMonth={props.selected.referenceMonth} estimateStatus={props.selected.status} setBtnType={setBtnType} submit={formik.handleSubmit}/>
+          <ButtonSendEstimate refMonth={props.detail.referenceMonth} estimateStatus={props.detail.status} setBtnType={setBtnType} submit={formik.handleSubmit}/>
         </Stack>
       </Grid>
     </form>

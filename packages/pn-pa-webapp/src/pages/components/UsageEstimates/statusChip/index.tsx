@@ -8,7 +8,7 @@ export function EstimateStatusChip(props:{data:EstimateStatusEnum}) {
 
   if (props.data === EstimateStatusEnum.DRAFT) {
       return <Tooltip title={t("draft-label-tooltip")}>
-        <Chip label={t("draft-label-chip")} />
+        <Chip color={"info"} label={t("draft-label-chip")} />
       </Tooltip>;
   }
   if (props.data === EstimateStatusEnum.VALIDATED) {
