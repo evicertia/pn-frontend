@@ -1,4 +1,3 @@
-import CardContent from '@mui/material/CardContent';
 import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -9,8 +8,9 @@ import {
   useIsMobile,
   ApiErrorWrapper,
 } from '@pagopa-pn/pn-commons';
-import {Box, Button, Typography,Card} from '@mui/material';
-import {EstimateSearchTable} from '../models/UsageEstimation';
+
+import {Box, Button, Typography } from '@mui/material';
+
 import * as routes from '../navigation/routes.const';
 import { RootState } from '../redux/store';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -20,8 +20,7 @@ import { TrackEventType } from '../utils/events';
 import {ESTIMATE_ACTIONS, getAllEstimate} from "../redux/usageEstimation/actions";
 import HistoryTable from './components/UsageEstimates/historyTable/HistoryTable';
 import MobileHistoryTable from "./components/UsageEstimates/historyTable/MobileHistoryTable";
-import {EstimateStatusChip} from "./components/UsageEstimates/statusChip";
-
+import CurrentEstimate from "./components/UsageEstimates/currentEstimate/CurrentEstimate";
 
 export function EstimatePage ()  {
   const dispatch = useAppDispatch();
@@ -33,7 +32,7 @@ export function EstimatePage ()  {
   const isMobile = useIsMobile();
   const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
 
-  const createActual = (elem : EstimateSearchTable) =>  Array.of(elem);
+
 
 
   const goToDetail = () => {
@@ -67,6 +66,8 @@ export function EstimatePage ()  {
 
 
 
+
+
   return (
       <Box p={3}>
         <Typography variant="h4" mb={isMobile ? 3 : undefined}>
@@ -88,50 +89,13 @@ export function EstimatePage ()  {
 
         </Box>
 
-        {
-          (historyEstimates?.actual?.referenceMonth) ?
-
-            <Card sx={{ minWidth: 275 }}>
-              <CardContent>
-
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  {historyEstimates.actual.referenceMonth}
-                </Typography>
-
-                <Typography variant="body2" color="text.secondary">
-                  Data ultima modifica
-                </Typography>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  {historyEstimates.actual.lastModifiedDate}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Data di scadenza
-                </Typography>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  {historyEstimates.actual.deadlineDate}
-                </Typography>
-
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  <EstimateStatusChip data= {historyEstimates.actual.status} />
-                </Typography>
-
-              </CardContent>
-            </Card>
-
-            : null
-        }
 
           {
               (historyEstimates?.actual?.referenceMonth) ?
+                //modificare campi actual
+                  <CurrentEstimate actual={""}/>
 
-                  <Card sx={{ minWidth: 275 }}>
-                      <CardContent>
-                     <HistoryTable
-                      estimates={ createActual(historyEstimates.actual)}
-                        />
-                      </CardContent>
-                 </Card>
-              :null
+          :null
           }
 
 
