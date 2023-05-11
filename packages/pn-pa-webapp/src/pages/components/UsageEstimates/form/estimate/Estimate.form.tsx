@@ -8,7 +8,7 @@ import * as yup from "yup";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "@mui/lab";
 // import * as routes from "../../../../../navigation/routes.const";
-import {EstimatePeriod, StatusUpdateEnum} from "../../../../../models/UsageEstimation";
+import {EstimatePeriod, EstimateStatusEnum, StatusUpdateEnum} from "../../../../../models/UsageEstimation";
 import {updateEstimate} from "../../../../../redux/usageEstimation/actions";
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
 import {RootState} from "../../../../../redux/store";
@@ -90,7 +90,7 @@ export function EstimateForm(props: EstimateFormProps) {
 
 interface ButtonProps {
   refMonth: string;
-  estimateStatus: StatusUpdateEnum;
+  estimateStatus: EstimateStatusEnum;
   setBtnType: (event: StatusUpdateEnum) => void;
   submit: () => void;
 }
