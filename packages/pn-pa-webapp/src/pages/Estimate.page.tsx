@@ -20,7 +20,6 @@ import { TrackEventType } from '../utils/events';
 import {ESTIMATE_ACTIONS, getAllEstimate} from "../redux/usageEstimation/actions";
 import HistoryTable from './components/UsageEstimates/historyTable/HistoryTable';
 import MobileHistoryTable from "./components/UsageEstimates/historyTable/MobileHistoryTable";
-import CurrentEstimate from "./components/UsageEstimates/currentEstimate/CurrentEstimate";
 
 export function EstimatePage ()  {
   const dispatch = useAppDispatch();
@@ -90,12 +89,15 @@ export function EstimatePage ()  {
         </Box>
 
 
+
           {
+            /*
               (historyEstimates?.actual?.referenceMonth) ?
                 //modificare campi actual
                   <CurrentEstimate actual={""}/>
 
           :null
+           */
           }
 
 

@@ -128,3 +128,19 @@ export type HistoryColumn =
     | 'lastModifiedDate'
     | 'deadlineDate'
     | 'status';
+
+
+export const monthMap: { [key: string]: string } = {
+  "GEN": "Gennaio",
+  "FEBB": "Febbraio",
+  "MAR": "Marzo",
+  "APR": "Aprile",
+  "MAG": "Maggio",
+  "GIU": "Giugno",
+  "LUG": "Luglio",
+  "AGO": "Agosto",
+  "SET": "Settembre",
+  "OTT": "Ottobre",
+  "NOV": "Novembre",
+  "DIC": "Dicembre",
+};

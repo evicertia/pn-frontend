@@ -8,6 +8,7 @@ import {
 
 import {EstimateSearchTable, EstimateStatusEnum, HistoryColumn} from '../../../../models/UsageEstimation';
 import {EstimateStatusChip} from "../statusChip";
+import {getFormattedDateTime, localeStringRefenceMonth} from "../../../../utils/utility";
 
 
 type Props = {
@@ -26,7 +27,7 @@ const HistoryTable =
             label: t('history-table.reference-month'),
             width: '11%',
             getCellLabel(value: string) {
-                return value;
+                return localeStringRefenceMonth(value);
             },
             disableAccessibility: true,
         },
@@ -36,7 +37,7 @@ const HistoryTable =
             width: '13%',
             sortable: false, // TODO: will be re-enabled in PN-1124
             getCellLabel(value: string) {
-                return value;
+                return getFormattedDateTime(value);
             },
             disableAccessibility: true
         },
@@ -45,7 +46,7 @@ const HistoryTable =
             label: t('history-table.deadline-date'),
             width: '23%',
             getCellLabel(value: string) {
-                return value;
+                return getFormattedDateTime(value);
             },
             disableAccessibility: true,
         },
