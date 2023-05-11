@@ -101,16 +101,8 @@ const ButtonSendEstimate = (props: ButtonProps) => {
   const { t } = useTranslation(['estimate']);
   // const { submitForm } = useFormikContext();
 
-  const getDialogTitle = () => {
-    if(props.refMonth === StatusUpdateEnum.DRAFT) {
-      return localeStringRefenceMonth(props.refMonth);
-    } else {
-      return "";
-    }
-  };
-
   const getButtonTitle = () => {
-    if(props.estimateStatus !== undefined) {
+    if(props.estimateStatus === StatusUpdateEnum.DRAFT) {
       return t('edit-estimate.button.send-edit');
     } else {
       return t('edit-estimate.button.update-edit');
@@ -139,7 +131,7 @@ const ButtonSendEstimate = (props: ButtonProps) => {
       {getButtonTitle()}
     </LoadingButton>
 
-    <SendEstimateDialog title={t('edit-estimate.label.send-dialog-title') + " " + getDialogTitle() + "?"}
+    <SendEstimateDialog title={t('edit-estimate.label.send-dialog-title') + " " + localeStringRefenceMonth(props.refMonth) + "?"}
                  message={t('edit-estimate.label.send-dialog-message')}
                  open={open}
                  onClickNegative={handleNegative}
