@@ -2,7 +2,7 @@ import {format} from "date-fns";
 import {monthMap} from "../models/UsageEstimation";
 
 
-export const localeStringRefenceMonth = (referenceMonth: string) => {
+export const localeStringReferenceMonth = (referenceMonth: string) => {
   const [month, year] = referenceMonth.split(/-/);
   const monthLocale = monthMap[month];
 

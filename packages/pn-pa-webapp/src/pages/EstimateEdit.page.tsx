@@ -11,7 +11,7 @@ import {getDetailEstimate} from "../redux/usageEstimation/actions";
 import {trackEventByType} from "../utils/mixpanel";
 import {TrackEventType} from "../utils/events";
 import {RootState} from "../redux/store";
-import {getFormattedDateTime, localeStringRefenceMonth} from "../utils/utility";
+import {getFormattedDateTime, localeStringReferenceMonth} from "../utils/utility";
 import {GET_DETAIL_ESTIMATE_PATH} from "../navigation/routes.const";
 import {EstimateForm} from "./components/UsageEstimates/form/estimate/Estimate.form";
 
@@ -51,7 +51,7 @@ export function EstimateEditPage() {
 
   const getTitle = () => {
     if(selected?.referenceMonth !== undefined) {
-      return t('edit-estimate.label.title') + localeStringRefenceMonth(selected?.referenceMonth);
+      return t('edit-estimate.label.title') + localeStringReferenceMonth(selected?.referenceMonth);
     } else {
       return "";
     }

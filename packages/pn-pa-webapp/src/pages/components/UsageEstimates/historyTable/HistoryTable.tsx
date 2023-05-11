@@ -9,7 +9,7 @@ import {
 
 import {EstimateSearchTable, EstimateStatusEnum, HistoryColumn} from '../../../../models/UsageEstimation';
 import {EstimateStatusChip} from "../statusChip";
-import {getFormattedDateTime, localeStringRefenceMonth} from "../../../../utils/utility";
+import {getFormattedDateTime, localeStringReferenceMonth} from "../../../../utils/utility";
 import * as routes from "../../../../navigation/routes.const";
 import {trackEventByType} from "../../../../utils/mixpanel";
 import {TrackEventType} from "../../../../utils/events";
@@ -36,7 +36,7 @@ const HistoryTable =
             label: t('history-table.reference-month'),
             width: '11%',
             getCellLabel(value: string) {
-                return localeStringRefenceMonth(value);
+                return localeStringReferenceMonth(value);
             },
             onClick(row: Item) {
                 handleRowClick(row);

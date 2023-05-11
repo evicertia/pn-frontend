@@ -51,11 +51,11 @@ export const EstimateStatusEnum = {
 export type EstimateStatusEnum = typeof EstimateStatusEnum[keyof typeof EstimateStatusEnum];
 
 export interface EstimateSearchTable {
-
   referenceMonth: string;
   lastModifiedDate: string;
   deadlineDate: string;
   status: EstimateStatusEnum;
+  estimate: EstimateDetail;
 }
 
 export interface HistoryEstimates {
@@ -129,21 +129,6 @@ export type HistoryColumn =
     | 'deadlineDate'
     | 'status';
 
-
-export enum EstimateMonthsEnum  {
-  GEN = "Gennaio",
-  FEB = "Febbraio",
-  MAR = "Marzo",
-  APR = "Aprile",
-  MAG = "Maggio",
-  GIU = "Giugno",
-  LUG = "Luglio",
-  AGO = "Agosto",
-  SET = "Settembre",
-  OTT = "Ottobre",
-  NOV = "Novembre",
-  DIC = "Dicembre",
-};
 
 
 export const monthMap: { [key: string]: string } = {

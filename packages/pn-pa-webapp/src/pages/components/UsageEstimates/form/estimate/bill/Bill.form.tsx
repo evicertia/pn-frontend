@@ -113,7 +113,6 @@ export function BillForm({formikInstance}: EstimateFormProps){
           label={t('edit-estimate.form.description-other-info')}
           // placeholder={t('edit-estimate.form.description-placeholder')}
           name="description"
-          required
           error={formikInstance.touched.description && Boolean(formikInstance.errors.description)}
           helperText={formikInstance.touched.description && formikInstance.errors.description}
           size="small"

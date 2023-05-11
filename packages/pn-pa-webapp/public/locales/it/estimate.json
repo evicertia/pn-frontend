@@ -99,8 +99,8 @@
     }
   },
   "estimate-history": {
-    "title-history": "Stime",
-    "subtitle-history": "Qui trovi lo storico di tutte le stime.",
+    "title-history": "Stime di invio utili a una fatturazione realistica",
+    "subtitle-history": "In questa sezione puoi effettuare la stima del numero di invii di notifiche che il tuo ente effettuerà il mese corrente/successivo o consultare lo storico delle stime già effettuate.\nEffettuare con regolarità le stime di invio permette a SEND di emettere fatture quanto più corrispondenti alla reali esigenze dell’ente stesso.",
     "edit-button-label": "Modifica",
     "show-detail": "Mostra dettagli",
     "history-table": {

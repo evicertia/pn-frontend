@@ -12,7 +12,7 @@ import {EstimatePeriod, EstimateStatusEnum, StatusUpdateEnum} from "../../../../
 import {updateEstimate} from "../../../../../redux/usageEstimation/actions";
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
 import {RootState} from "../../../../../redux/store";
-import {localeStringRefenceMonth} from "../../../../../utils/utility";
+import {localeStringReferenceMonth} from "../../../../../utils/utility";
 import {BillForm} from "./bill/Bill.form";
 import {UsageEstimateForm} from "./usage/UsageEstimate.form";
 import {UsageEstimatesInitialValue} from "./props/Estimate.props";
@@ -131,7 +131,7 @@ const ButtonSendEstimate = (props: ButtonProps) => {
       {getButtonTitle()}
     </LoadingButton>
 
-    <SendEstimateDialog title={t('edit-estimate.label.send-dialog-title') + " " + localeStringRefenceMonth(props.refMonth) + "?"}
+    <SendEstimateDialog title={t('edit-estimate.label.send-dialog-title') + " " + localeStringReferenceMonth(props.refMonth) + "?"}
                  message={t('edit-estimate.label.send-dialog-message')}
                  open={open}
                  onClickNegative={handleNegative}

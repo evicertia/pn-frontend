@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import {
   calculatePages,
   CustomPagination,
@@ -9,9 +8,8 @@ import {
   ApiErrorWrapper,
 } from '@pagopa-pn/pn-commons';
 
-import {Box, Button, Typography } from '@mui/material';
+import {Box, Typography } from '@mui/material';
 
-import * as routes from '../navigation/routes.const';
 import { RootState } from '../redux/store';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setPagination } from '../redux/dashboard/reducers';
@@ -20,24 +18,16 @@ import { TrackEventType } from '../utils/events';
 import {ESTIMATE_ACTIONS, getAllEstimate} from "../redux/usageEstimation/actions";
 import HistoryTable from './components/UsageEstimates/historyTable/HistoryTable';
 import MobileHistoryTable from "./components/UsageEstimates/historyTable/MobileHistoryTable";
+import {ActualEstimateCard} from "./components/UsageEstimates/actualEstimateCard/ActualEstimateCard";
 
 export function EstimatePage ()  {
   const dispatch = useAppDispatch();
   const historyEstimates = useAppSelector(state => state.usageEstimateState.historyEstimates);
   const pagination = useAppSelector((state: RootState) => state.usageEstimateState.pagination);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
-  const navigate = useNavigate();
 
   const isMobile = useIsMobile();
   const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
-
-
-
-
-  const goToDetail = () => {
-    trackEventByType(TrackEventType.ESTIMATE_GO_TO_DETAIL);
-    navigate(routes.GET_DETAIL_ESTIMATE_PATH("GIU-2023"));
-  };
 
 
   const fetchHistory= useCallback( () => {
@@ -53,6 +43,7 @@ export function EstimatePage ()  {
     fetchHistory();
   }, [fetchHistory]);
 
+
   const handleEventTrackingCallbackPageSize = (pageSize: number) => {
     trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION, {pageSize});
   };
@@ -64,29 +55,26 @@ export function EstimatePage ()  {
 
 
 
-
-
-
   return (
       <Box p={3}>
-        <Typography variant="h4" mb={isMobile ? 3 : undefined}>
-          {t('title-history')}
-        </Typography>
-        <Box display={isMobile ? 'block' : 'flex'} justifyContent="space-between" alignItems="center">
+        <Box mb={2}>
+          <Typography variant="h4" mb={isMobile ? 3 : undefined}>
+            {t('title-history')}
+          </Typography>
           <Typography variant="body1" sx={{ marginBottom: isMobile ? 3 : undefined }}>
             {t('subtitle-history')}
           </Typography>
-
-          <Button
-              variant="contained"
-              onClick={goToDetail}
-              data-testid="edit-button-lable"
-              sx={{ marginBottom: isMobile ? 3 : undefined }}
-          >
-            {t('edit-button-label')}
-          </Button>
-
         </Box>
+
+
+
+
+          {
+
+              (historyEstimates?.actual) ?
+                <ActualEstimateCard data={historyEstimates.actual}/>
+                : null
+          }
 
 
 
