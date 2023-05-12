@@ -45,11 +45,11 @@ export function DataInfo<T>(props: DataInfoProps<T>){
             props.rows.map(row => (
 
                 (row.type === "DIVIDER") ?
-                  <Grid key={row.id} container alignItems={"center"} width="1" mt={1.3}>
+                  <Grid key={row.id} container alignItems={"center"} width="1" mt={2}>
                     <Divider key={row.id} sx={{width:"100%"}} />
                   </Grid>
                 :
-                  <Grid key={row.id} container alignItems={"center"} width="1" mt={1}>
+                  <Grid key={row.id} container spacing={1} alignItems={"center"} width="1" mt={1}>
                     <Grid item lg={6} xs={12}>
                       <Typography variant={(row?.labelVariant) ? row.labelVariant : "body2"} fontWeight={(row?.labelWeight) ? row.labelWeight : "normal"} >
                         {(row.label) ? t(row?.label) : "-"}

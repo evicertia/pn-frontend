@@ -8,7 +8,7 @@ import * as yup from "yup";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "@mui/lab";
 // import * as routes from "../../../../../navigation/routes.const";
-import {EstimateDetail, EstimateStatusEnum, StatusUpdateEnum} from "../../../../../models/UsageEstimation";
+import {EstimatePeriod, EstimateStatusEnum, StatusUpdateEnum} from "../../../../../models/UsageEstimation";
 import {updateEstimate} from "../../../../../redux/usageEstimation/actions";
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
 import {RootState} from "../../../../../redux/store";
@@ -21,7 +21,7 @@ import {SendEstimateDialog} from "./dialog/SendEstimateDialog";
 
 
 interface EstimateFormProps {
-  detail: EstimateDetail;
+  detail: EstimatePeriod;
   onEstimateValidated?: () => void;
 }
 

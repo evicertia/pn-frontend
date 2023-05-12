@@ -1,7 +1,7 @@
 import {Typography} from "@mui/material";
-import {format} from "date-fns";
 import { EstimateStatusChip } from "../statusChip";
 import {BillingDetail, Estimate, EstimatePeriod, PaInfo} from "../../../../models/UsageEstimation";
+import {getFormattedDateTime, localeStringReferenceMonth} from "../../../../utils/utility";
 import {RowDataInfo} from "./DataInfo";
 
 export const usageInfoPA: Array<RowDataInfo<PaInfo>> = [
@@ -49,23 +49,25 @@ export const usagePeriod: Array<RowDataInfo<EstimatePeriod>> = [
     id: "reference",
     label: "label.reference-period",
     type: "ROW",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.referenceMonth}</Typography>
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{localeStringReferenceMonth(data.referenceMonth)}</Typography>
   },{
     id: "deadlineDate",
     label: "label.deadline-period",
     type: "ROW",
-    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.deadlineDate) ? format(new Date(data.deadlineDate), "dd/MM/yyyy") : "-"}</Typography>
-  },{
+    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.deadlineDate) ? getFormattedDateTime(data.deadlineDate) : "-"}</Typography>
+  },
+  {
+    id: "lastModifiedDate",
+    label: "label.last-update-date-period",
+    type: "ROW",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.lastModifiedDate) ? getFormattedDateTime(data.lastModifiedDate) : "-"}</Typography>
+  },
+  {
     id: "status",
     label: "label.status-period",
     type: "ROW",
     render: (data) => <EstimateStatusChip data={data.status}/>
-  },{
-    id: "insertDate",
-    label: "label.start-date-period",
-    type: "ROW",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.lastModifiedDate) ? format(new Date(data.lastModifiedDate), "dd/MM/yyyy HH:mm") : "-"}</Typography>
-  },
+  }
 ];
 
 export const usageBillingDataPA: Array<RowDataInfo<BillingDetail>> = [

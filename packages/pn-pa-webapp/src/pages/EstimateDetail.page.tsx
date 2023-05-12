@@ -2,14 +2,13 @@ import {ApiError, PnBreadcrumb, useIsMobile} from "@pagopa-pn/pn-commons";
 import {Fragment, useCallback, useEffect} from "react";
 import EmailIcon from "@mui/icons-material/Email";
 import {useTranslation} from "react-i18next";
-import {Box, Button, Stack, Typography} from "@mui/material";
-import {useNavigate, useParams} from "react-router-dom";
+import {Box, Stack, Typography} from "@mui/material";
+import {useParams} from "react-router-dom";
 import * as routes from "../navigation/routes.const";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {getDetailEstimate} from "../redux/usageEstimation/actions";
 import {RootState} from "../redux/store";
-import {EstimateStatusEnum} from "../models/UsageEstimation";
-import {GET_EDIT_ESTIMATE_PATH} from "../navigation/routes.const";
+import {localeStringReferenceMonth} from "../utils/utility";
 import {DataInfo} from "./components/UsageEstimates/dataInfo/DataInfo";
 import {
   usageBillingDataPA,
@@ -61,11 +60,11 @@ export function EstimateDetailPage(){
          justifyContent="space-between"
          mb={3}
          alignItems="center">
-      <Typography variant="body1">
-        {t('label.estimate-detail-info', { ns: 'estimate' })}
+      <Typography variant="h5" fontWeight={"600"} mt={1}>
+        {t('label.estimate-detail-info', { ns: 'estimate' }) + localeStringReferenceMonth((referenceMonth) || "")}
       </Typography>
       {
-        referenceMonth && <ButtonsEstimateDetail status={detail?.status} referenceMonth={referenceMonth} showEdit={detail?.showEdit}/>
+
       }
 
     </Box>
@@ -87,10 +86,6 @@ export function EstimateDetailPage(){
         {
           (detail) ?
             <Fragment>
-              <DataInfo title={t("pa-info-title")}
-                        data={detail.paInfo}
-                        rows={usageInfoPA}/>
-
               <DataInfo title={t("period-title")}
                         data={detail}
                         rows={usagePeriod}/>
@@ -102,6 +97,10 @@ export function EstimateDetailPage(){
               <DataInfo title={t("billing-title")}
                         data={detail.billing}
                         rows={usageBillingDataPA}/>
+
+              <DataInfo title={t("pa-info-title")}
+                        data={detail.paInfo}
+                        rows={usageInfoPA}/>
             </Fragment>
             : null
         }
@@ -110,27 +109,3 @@ export function EstimateDetailPage(){
     </Box>
   </Fragment>;
 }
-
-const ButtonsEstimateDetail = (params : {status?: EstimateStatusEnum; referenceMonth: string; showEdit?: boolean}) => {
-  const { t } = useTranslation(['estimate', 'common', 'notifiche']);
-  const navigate = useNavigate();
-
-  if (!params.status) {
-    return null;
-  }
-
-  if (params.status === EstimateStatusEnum.DRAFT ||
-    (params.status === EstimateStatusEnum.VALIDATED && (params.showEdit === null || params.showEdit)) ) {
-    return <>
-      <Button
-        variant="contained"
-        onClick={()=> navigate(GET_EDIT_ESTIMATE_PATH(params.referenceMonth))}
-        data-testid="editEstimateBtn"
-      >
-        {t('edit-estimate.button.edit', {ns: "estimate"})}
-      </Button>
-    </>;
-  }
-  
-  return null;
-};
