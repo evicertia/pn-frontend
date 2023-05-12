@@ -102,14 +102,20 @@ export function EstimateEditPage() {
     </Fragment>
   );
 
-  if ( (formData != null) &&
-    (formData.status === EstimateStatusEnum.VALIDATED && forcedNavigate) ) {
+  if(error && error === 404){
+    return <Navigate to={routes.ESTIMATE} />;
+  }
+
+  if(formData && !formData.showEdit){
+    return <Navigate to={routes.ESTIMATE} />;
+  }
+
+  if ( formData && (formData.status === EstimateStatusEnum.VALIDATED && forcedNavigate) ) {
     toastOk();
     return <Navigate to={forcedNavigate} />;
   }
 
-  if ( (formData != null) &&
-    (formData.status !== EstimateStatusEnum.VALIDATED && formData.status !== EstimateStatusEnum.DRAFT) ) {
+  if ( formData && (formData.status !== EstimateStatusEnum.VALIDATED && formData.status !== EstimateStatusEnum.DRAFT) ) {
     return <Navigate to={routes.ESTIMATE} />;
   }
 

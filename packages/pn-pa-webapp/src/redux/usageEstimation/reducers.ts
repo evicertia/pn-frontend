@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {AxiosError} from "axios";
 import {EstimateDetail, EstimatePeriod, FilterRequest, HistoryEstimates} from "../../models/UsageEstimation";
 import {getAllEstimate, getDetailEstimate, updateEstimate, validatedEstimate} from "./actions";
 
@@ -9,7 +10,7 @@ interface UsageEstimationState {
   formData: EstimatePeriod | undefined;
   pagination: FilterRequest;
   loading: boolean;
-  error: string | undefined;
+  error: string | number | undefined;
 }
 
 const initialState: UsageEstimationState = {
@@ -73,10 +74,12 @@ const usageEstimateSlice = createSlice({
         ...action.payload
       } as EstimatePeriod;
     });
-    builder.addCase(getDetailEstimate.rejected, (state) => {
+    builder.addCase(getDetailEstimate.rejected, (state, action) => {
       state.detail = undefined;
       state.loading = false;
-      state.error = "ERROR with detail estimate";
+      console.log("ERROR DETAIL ", action);
+      const tmp = action.payload as AxiosError;
+      state.error = (tmp?.response?.status) || "ERROR DETAIL ESTIMATE";
     });
 
     builder.addCase(updateEstimate.pending, (state) => {
@@ -91,7 +94,6 @@ const usageEstimateSlice = createSlice({
       state.loading = false;
       state.error = "ERROR with update estimate";
     });
-
   }
 });
 

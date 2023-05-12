@@ -3,7 +3,7 @@ import {Fragment, useCallback, useEffect} from "react";
 import EmailIcon from "@mui/icons-material/Email";
 import {useTranslation} from "react-i18next";
 import {Box, Stack, Typography} from "@mui/material";
-import {useParams} from "react-router-dom";
+import {Navigate, useParams} from "react-router-dom";
 import * as routes from "../navigation/routes.const";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {getDetailEstimate} from "../redux/usageEstimation/actions";
@@ -69,6 +69,10 @@ export function EstimateDetailPage(){
 
     </Box>
   </Fragment>);
+
+  if(error && error === 404){
+    return <Navigate to={routes.ESTIMATE} />;
+  }
 
 
   if (error) {
