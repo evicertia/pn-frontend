@@ -109,7 +109,6 @@ export function EstimateDetailPage(){
             : null
         }
       </Stack>
-
     </Box>
   </Fragment>;
 }
