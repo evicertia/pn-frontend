@@ -6,7 +6,7 @@ import {getAllEstimate, getDetailEstimate, updateEstimate, validatedEstimate} fr
 interface UsageEstimationState {
   historyEstimates: HistoryEstimates;
   detail: EstimateDetail | undefined;
-  selected: EstimatePeriod | undefined;
+  formData: EstimatePeriod | undefined;
   pagination: FilterRequest;
   loading: boolean;
   error: string | undefined;
@@ -15,7 +15,7 @@ interface UsageEstimationState {
 const initialState: UsageEstimationState = {
   historyEstimates: {} as HistoryEstimates,
   detail: undefined,
-  selected: undefined,
+  formData: undefined,
   pagination: {
     page: 1,
     tot: 10,
@@ -69,6 +69,9 @@ const usageEstimateSlice = createSlice({
     builder.addCase(getDetailEstimate.fulfilled, (state, action) => {
       state.loading = false;
       state.detail = action.payload;
+      state.formData = {
+        ...action.payload
+      } as EstimatePeriod;
     });
     builder.addCase(getDetailEstimate.rejected, (state) => {
       state.detail = undefined;
@@ -82,7 +85,7 @@ const usageEstimateSlice = createSlice({
     });
     builder.addCase(updateEstimate.fulfilled, (state, action) => {
       state.loading = false;
-      state.selected = action.payload;
+      state.formData = action.payload;
     });
     builder.addCase(updateEstimate.rejected, (state) => {
       state.loading = false;

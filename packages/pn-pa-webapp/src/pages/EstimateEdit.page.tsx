@@ -1,8 +1,8 @@
 import {Box, Typography, Grid, Stack} from "@mui/material";
-import {TitleBox, Prompt, useIsMobile, PnBreadcrumb, ApiError} from '@pagopa-pn/pn-commons';
+import {TitleBox, Prompt, useIsMobile, PnBreadcrumb, ApiError, appStateActions} from '@pagopa-pn/pn-commons';
 import {useTranslation} from "react-i18next";
 import {Navigate, useParams} from "react-router-dom";
-import {Fragment, useEffect, useState} from "react";
+import {Fragment, useCallback, useEffect, useState} from "react";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import * as routes from "../navigation/routes.const";
@@ -12,12 +12,11 @@ import {trackEventByType} from "../utils/mixpanel";
 import {TrackEventType} from "../utils/events";
 import {RootState} from "../redux/store";
 import {getFormattedDateTime, localeStringReferenceMonth} from "../utils/utility";
-import {GET_DETAIL_ESTIMATE_PATH} from "../navigation/routes.const";
 import {EstimateForm} from "./components/UsageEstimates/form/estimate/Estimate.form";
 
 
 export function EstimateEditPage() {
-  const {detail, error} = useAppSelector(state => state.usageEstimateState);
+  const {formData, error} = useAppSelector(state => state.usageEstimateState);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const isMobile = useIsMobile();
   const { t } = useTranslation(['estimate']);
@@ -27,10 +26,19 @@ export function EstimateEditPage() {
   const spacing = isMobile ? 3 : 0;
   const {referenceMonth} = useParams();
 
+  const toastOk = useCallback(() => {
+    void dispatch(appStateActions.addSuccess({
+      title: "Stima inviata correttamente",
+      message: "Stima inviata correttamente",
+    }));
+  }, []);
+
 
   const fetchDetail = (() => {
-    void dispatch(getDetailEstimate({paId: loggedUser.organization?.id,
-      referenceMonth: referenceMonth || ""}));
+    void dispatch(getDetailEstimate({
+      paId: loggedUser.organization?.id,
+      referenceMonth: referenceMonth || ""
+    }));
   });
 
   useEffect(() => {
@@ -50,16 +58,16 @@ export function EstimateEditPage() {
   };
 
   const getTitle = () => {
-    if(detail?.referenceMonth !== undefined) {
-      return t('edit-estimate.label.title') + localeStringReferenceMonth(detail?.referenceMonth);
+    if(formData?.referenceMonth) {
+      return t('edit-estimate.label.title') + localeStringReferenceMonth(formData.referenceMonth);
     } else {
       return "";
     }
   };
 
   const getAbstract = () => {
-    if(detail?.deadlineDate !== undefined) {
-      return t('edit-estimate.label.abstract') + getFormattedDateTime(detail?.deadlineDate, t('edit-estimate.label.date-time-format'));
+    if(formData?.deadlineDate) {
+      return t('edit-estimate.label.abstract') + getFormattedDateTime(formData.deadlineDate, t('edit-estimate.label.date-time-format'));
     } else {
       return "";
     }
@@ -94,10 +102,15 @@ export function EstimateEditPage() {
     </Fragment>
   );
 
-  if ( (detail != null) &&
-    (detail.status !== EstimateStatusEnum.DRAFT &&
-    detail.status !== EstimateStatusEnum.VALIDATED) ) {
-    return <Navigate to={(forcedNavigate) ? forcedNavigate : routes.ESTIMATE} />;
+  if ( (formData != null) &&
+    (formData.status === EstimateStatusEnum.VALIDATED && forcedNavigate) ) {
+    toastOk();
+    return <Navigate to={forcedNavigate} />;
+  }
+
+  if ( (formData != null) &&
+    (formData.status !== EstimateStatusEnum.VALIDATED && formData.status !== EstimateStatusEnum.DRAFT) ) {
+    return <Navigate to={routes.ESTIMATE} />;
   }
 
   return (
@@ -125,7 +138,8 @@ export function EstimateEditPage() {
               <Grid item lg={12} xs={12} sx={{ p: { xs: 0, lg: 3 } }}>
                 {!isMobile && heading}
                 <Stack sx={{ marginTop: 3}} spacing={3}>
-                  {detail && <EstimateForm detail={detail} onEstimateValidated={()=>setForcedNavigate(GET_DETAIL_ESTIMATE_PATH(detail?.referenceMonth || ""))}/>}
+                  {formData && <EstimateForm detail={formData}
+                                             onEstimateValidated={()=>setForcedNavigate(routes.ESTIMATE)}/>}
                 </Stack>
               </Grid>
             </Grid>
