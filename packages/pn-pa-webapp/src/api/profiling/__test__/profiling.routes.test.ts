@@ -7,8 +7,8 @@ const REF_YEAR = "2023"
 describe('ProfilingRouteTest', function () {
 
   it('should compile update profiling route', function () {
-    const route = PROFILING_UPDATE(PA_ID, REF_YEAR, StatusUpdateEnum.CREATED);
-    expect(route).toEqual(`/pn-usage-estimates/v1/${PA_ID}/billing/${REF_YEAR}?status=${StatusUpdateEnum.CREATED}`);
+    const route = PROFILING_UPDATE(PA_ID, REF_YEAR, StatusUpdateEnum.DRAFT);
+    expect(route).toEqual(`/pn-usage-estimates/v1/${PA_ID}/billing/${REF_YEAR}?status=${StatusUpdateEnum.DRAFT}`);
   });
 
   it('should compile all profiling route', function () {
