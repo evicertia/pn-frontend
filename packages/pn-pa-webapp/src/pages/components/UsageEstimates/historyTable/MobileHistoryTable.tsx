@@ -13,6 +13,7 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import * as routes from '../../../../navigation/routes.const';
 import {EstimateHistory, EstimateStatusEnum} from "../../../../models/UsageEstimation";
 import {EstimateStatusChip} from "../statusChip";
+import {getFormattedDateTime, localeStringReferenceMonth} from "../../../../utils/utility";
 
 
 type Props = {
@@ -31,7 +32,7 @@ const MobileHistoryTable = (
             id: 'referenceMonth',
             label: t('history-table.reference-month'),
             getLabel(value: string) {
-                return value;
+                return localeStringReferenceMonth(value);
             },
             gridProps: {
                 xs: 12,
@@ -56,7 +57,7 @@ const MobileHistoryTable = (
             id: 'lastModifiedDate',
             label: t('history-table.last-modified-date'),
             getLabel(value: string) {
-                return value;
+                return getFormattedDateTime(value);
             },
             notWrappedInTypography: true,
         },
@@ -64,7 +65,7 @@ const MobileHistoryTable = (
             id: 'deadlineDate',
             label: t('history-table.deadline-date'),
             getLabel(value: string) {
-                return value;
+                return getFormattedDateTime(value);
             },
         },
 
@@ -72,8 +73,9 @@ const MobileHistoryTable = (
 
     // Navigation handlers
     const handleRowClick = (row: Item) => {
-        navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id));
-        // trackEventByType(TrackEventType.NOTIFICATION_TABLE_ROW_INTERACTION);
+        if (row?.status && row.status === EstimateStatusEnum.VALIDATED) {
+            navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id as string));
+        }
     };
 
     const cardActions: Array<CardAction> = [
