@@ -13,10 +13,10 @@ export type EstimateFormProps = {
     ) => Promise<FormikErrors<FormikValues>> | Promise<void>;
     setFieldValue: (
       field: string,
-      value: any,
+      value: boolean,
       shouldValidate?: boolean | undefined
     ) => Promise<FormikErrors<FormikValues>> | Promise<void>;
-    handleChange: (e: ChangeEvent<any>) => void;
+    handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
     resetForm: (nextState?: Partial<FormikState<FormikValues>> | undefined) => void;
     touched: FormikTouched<FormikValues>;
     errors: FormikErrors<FormikValues>;

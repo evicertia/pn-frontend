@@ -7,9 +7,10 @@ import {
   Radio,
   FormControlLabel, FormLabel, FormControl, RadioGroup
 } from "@mui/material";
+import * as React from "react";
 import {useIsMobile} from "@pagopa-pn/pn-commons";
 import {useTranslation} from "react-i18next";
-import {ChangeEvent, Fragment} from "react";
+import {Fragment} from "react";
 import {EstimateFormProps} from "../props/Estimate.props";
 
 
@@ -18,25 +19,14 @@ export function BillForm({formikInstance}: EstimateFormProps){
   const { t } = useTranslation(['estimate']);
   const direction = isMobile ? 'column' : 'row';
 
-  const handleChangeTouched = async (e: ChangeEvent) => {
-    formikInstance.handleChange(e);
-    await formikInstance.setFieldTouched(e.target.id, true, false);
+  const handleChangeTouched = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    formikInstance.handleChange(event);
+    await formikInstance.setFieldTouched(event.target.id, true, false);
   };
 
-  // const handleChangeCheckValue = async (e: ChangeEvent) => {
-  //   const target = e.target as any;
-  //   formikInstance.handleChange(e);
-  //   await formikInstance.setFieldValue("splitPayment", target.checked);
-  // };
-
-  const handleInputChange = async (event: any) => {
+  const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     event.persist();
-    const target = event.target as any;
-    console.log(target.checked);
-    console.log(target.value);
     const valueToCheck = t('edit-estimate.label.radio-split-payment-yes');
-
-    // await formikInstance.setFieldValue("splitPayment", target.checked);
     if(event.target.value === valueToCheck) {
       formikInstance.handleChange(event);
       await formikInstance.setFieldValue("splitPayment", true);
@@ -45,8 +35,6 @@ export function BillForm({formikInstance}: EstimateFormProps){
       await formikInstance.setFieldValue("splitPayment", false);
       console.log(false);
     }
-
-    // console.debug(`${event.target.name}: ${event.target.value}`);
   };
 
   return <Fragment>
@@ -111,7 +99,6 @@ export function BillForm({formikInstance}: EstimateFormProps){
           value={formikInstance.values.description}
           onChange={handleChangeTouched}
           label={t('edit-estimate.form.description-other-info')}
-          // placeholder={t('edit-estimate.form.description-placeholder')}
           name="description"
           error={formikInstance.touched.description && Boolean(formikInstance.errors.description)}
           helperText={formikInstance.touched.description && formikInstance.errors.description}

@@ -10,7 +10,6 @@ import {getDateString, getFormattedDateTime, localeStringReferenceMonth} from ".
 import {EstimateStatusChip} from "../statusChip";
 import {GET_EDIT_ESTIMATE_PATH} from "../../../../navigation/routes.const";
 import {SendEstimateDialog} from "../form/estimate/dialog/SendEstimateDialog";
-
 import {validatedEstimate} from "../../../../redux/usageEstimation/actions";
 import {useAppDispatch} from "../../../../redux/hooks";
 
@@ -22,55 +21,7 @@ interface ActualEstimateCardProps {
 
 
 export function ActualEstimateCard (props:ActualEstimateCardProps) {
-  const navigate = useNavigate();
-
-
-
-  const TagEditDate = () => (
-    <Stack direction={"column"} sx={{alignSelf: "end"}} spacing={.5}>
-      {
-        (props.data.lastModifiedDate) && <Typography fontWeight={"400"} variant={"caption"} color={"#5C6F82"}>
-              Ultima modifica {getDateString(props.data.lastModifiedDate)}
-          </Typography>
-      }
-      <Tag
-        color={(props.data.lastModifiedDate) ? "warning" : "default"}
-        value={`Modificabile fino al ${getFormattedDateTime(props.data.deadlineDate)}`}
-        variant="default"
-      />
-    </Stack>
-  );
-
-  const ButtonsGroup = () => {
-    if (!props.data.lastModifiedDate && props.data.status === EstimateStatusEnum.DRAFT){
-      return <Button variant="outlined"
-                     onClick={() => {
-                       navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
-                     }}>
-        Crea stima
-      </Button>;
-    } else if (props.data.lastModifiedDate && props.data.status === EstimateStatusEnum.DRAFT) {
-      return <>
-        <Button variant="outlined"
-                onClick={() => {
-                  navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
-                }}>
-          Modifica
-        </Button>
-
-        <ButtonSendEstimate paId={props.paId} referenceMonth={props.data.referenceMonth}/>
-      </>;
-    } else if (props.data.status === EstimateStatusEnum.VALIDATED) {
-      return <Button variant="contained"
-                     onClick={() => {
-                       navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
-                     }}>
-        Aggiorna stima
-      </Button>;
-    }
-    return null;
-  };
-
+  const { t } = useTranslation(['estimate']);
 
   return <>
     <Card sx={{
@@ -82,7 +33,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
       <Stack spacing={2}>
         <Grid container direction={"row"} justifyContent={"space-between"}>
           <Typography fontWeight={"600"} variant={"h6"}>
-            Numero di notifiche stimate per {localeStringReferenceMonth(props.data.referenceMonth)}
+            {t('edit-estimate.button.update-edit').concat(localeStringReferenceMonth(props.data.referenceMonth))}
           </Typography>
           {
             (props.data.lastModifiedDate) && <EstimateStatusChip data={props.data.status}/>
@@ -91,7 +42,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
         <Grid container direction={"row"} justifyContent={"space-between"}>
           <Stack direction={"column"}>
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
-              Digitali
+              {t('edit-estimate.form.digital-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
               {props.data?.estimate?.totalDigitalNotif || "Da inserire"}
@@ -99,7 +50,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
           </Stack>
           <Stack direction={"column"}>
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
-              Analogiche con 890
+              {t('edit-estimate.form.analog-890-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
               {props.data?.estimate?.total890Notif || "Da inserire"}
@@ -107,7 +58,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
           </Stack>
           <Stack direction={"column"}>
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
-              Analogiche con raccomandata
+              {t('edit-estimate.form.analog-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
               {props.data?.estimate?.totalAnalogNotif || "Da inserire"}
@@ -115,9 +66,9 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
           </Stack>
         </Grid>
         <Grid container direction={"row"} justifyContent={"space-between"}>
-          <TagEditDate />
+          <TagEditDate data={props.data}/>
           <Stack direction={"row"} sx={{alignSelf: "end"}} spacing={.5}>
-            <ButtonsGroup />
+            <ButtonsGroup paId={props.paId} data={props.data}/>
           </Stack>
         </Grid>
       </Stack>
@@ -125,6 +76,56 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
   </>;
 }
 
+
+const TagEditDate = (props: {data: EstimatePeriod}) => {
+  const {t} = useTranslation(['estimate']);
+
+  return <Stack direction={"column"} sx={{alignSelf: "end"}} spacing={.5}>
+    {
+      (props.data.lastModifiedDate) && <Typography fontWeight={"400"} variant={"caption"} color={"#5C6F82"}>
+        {t('actual-estimate.card.label.last-modify').concat(getDateString(props.data.lastModifiedDate))}
+        </Typography>
+    }
+    <Tag
+      color={(props.data.lastModifiedDate) ? "warning" : "default"}
+      value={t('actual-estimate.card.label.editable').concat(`${getFormattedDateTime(props.data.deadlineDate)}`)}
+      variant="default"
+    />
+  </Stack>;
+};
+
+const ButtonsGroup = (props: ActualEstimateCardProps) => {
+  const navigate = useNavigate();
+  const { t } = useTranslation(['estimate']);
+
+  if (!props.data.lastModifiedDate && props.data.status === EstimateStatusEnum.DRAFT){
+    return <Button variant="outlined"
+                   onClick={() => {
+                     navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
+                   }}>
+      {t('actual-estimate.card.button.create-estimate')}
+    </Button>;
+  } else if (props.data.lastModifiedDate && props.data.status === EstimateStatusEnum.DRAFT) {
+    return <>
+      <Button variant="outlined"
+              onClick={() => {
+                navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
+              }}>
+        {t('edit-estimate.button.edit')}
+      </Button>
+
+      <ButtonSendEstimate paId={props.paId} referenceMonth={props.data.referenceMonth}/>
+    </>;
+  } else if (props.data.status === EstimateStatusEnum.VALIDATED) {
+    return <Button variant="contained"
+                   onClick={() => {
+                     navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
+                   }}>
+      {t('edit-estimate.button.update-edit')}
+    </Button>;
+  }
+  return null;
+};
 
 const ButtonSendEstimate = (props: {paId: string; referenceMonth: string}) => {
   const [open, setOpen] = useState(false);
@@ -138,15 +139,15 @@ const ButtonSendEstimate = (props: {paId: string; referenceMonth: string}) => {
     })).unwrap()
       .then(()=> {
         dispatch(appStateActions.addSuccess({
-          title: "Stima inviata correttamente",
-          message: "Stima inviata correttamente"
+          title: t('actual-estimate.toast-message.success.title'),
+          message: t('actual-estimate.toast-message.success.message')
         }));
         setOpen(false);
       })
       .catch(()=>{
         dispatch(appStateActions.addError({
-          title: "Si è verificato un errore. Riprova.",
-          message: "Si è verificato un errore. Riprova.",
+          title: t('actual-estimate.toast-message.error.title'),
+          message: t('actual-estimate.toast-message.error.message')
         }));
         setOpen(false);
       });

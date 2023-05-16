@@ -70,7 +70,7 @@
       "save-edit": "Salva bozza",
       "abort-edit": "Annulla",
       "send-edit": "Invia stima",
-      "update-edit": "Aggiorna stima",
+      "update-edit": "Aggiorna stima ",
       "help-request": "Richiedi aiuto",
       "edit": "Modifica"
     },
@@ -112,6 +112,28 @@
         "draft": "In aggiornamento",
         "validated": "Convalidato",
         "absent": "Assente"
+      }
+    }
+  },
+  "actual-estimate": {
+    "card": {
+      "label": {
+        "number-notify-estimate": "Numero di notifiche stimate per ",
+        "last-modify": "Ultima modifica ",
+        "editable": "Modificabile fino al "
+      },
+      "button": {
+        "create-estimate": "Crea stima"
+      }
+    },
+    "toast-message": {
+      "success": {
+        "title": "Stima inviata correttamente",
+        "message": "Stima inviata correttamente"
+      },
+      "error": {
+        "title": "Si è verificato un errore. Riprova.",
+        "message": "Si è verificato un errore. Riprova."
       }
     }
   }

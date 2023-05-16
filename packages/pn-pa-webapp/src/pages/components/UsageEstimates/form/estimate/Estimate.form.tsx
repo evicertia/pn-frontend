@@ -1,13 +1,9 @@
 import {Fragment, useState} from "react";
-import {useFormik,
-  // useFormikContext
-} from "formik";
+import {useFormik} from "formik";
 import {Grid, Stack} from "@mui/material";
-// import { useNavigate} from "react-router-dom";
 import * as yup from "yup";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "@mui/lab";
-// import * as routes from "../../../../../navigation/routes.const";
 import {EstimatePeriod, EstimateStatusEnum, StatusUpdateEnum} from "../../../../../models/UsageEstimation";
 import {updateEstimate} from "../../../../../redux/usageEstimation/actions";
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
@@ -17,7 +13,6 @@ import {BillForm} from "./bill/Bill.form";
 import {UsageEstimateForm} from "./usage/UsageEstimate.form";
 import {UsageEstimatesInitialValue} from "./props/Estimate.props";
 import {SendEstimateDialog} from "./dialog/SendEstimateDialog";
-
 
 
 interface EstimateFormProps {
@@ -97,9 +92,7 @@ interface ButtonProps {
 
 const ButtonSendEstimate = (props: ButtonProps) => {
   const [open, setOpen] = useState(false);
-  // const navigate = useNavigate();
   const { t } = useTranslation(['estimate']);
-  // const { submitForm } = useFormikContext();
 
   const getButtonTitle = () => {
     if(props.estimateStatus === StatusUpdateEnum.DRAFT) {
@@ -111,7 +104,6 @@ const ButtonSendEstimate = (props: ButtonProps) => {
 
   const handlePositive = () => {
     props.setBtnType(StatusUpdateEnum.VALIDATED);
-    // void submitForm();
     props.submit();
     setOpen(false);
   };

@@ -70,7 +70,6 @@ const HistoryTable =
             },
             disableAccessibility: true
         },
-
         {
             id: 'status',
             label: t('history-table.status'),
@@ -79,16 +78,12 @@ const HistoryTable =
                 return <EstimateStatusChip data={value}/>;
             },
         }
-
     ];
 
     const rows: Array<Item> = estimates.map((n: EstimateHistory) => ({
         ...n,
         id: n.referenceMonth,
     }));
-
-
-
 
     return (
         <Fragment>
