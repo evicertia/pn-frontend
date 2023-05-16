@@ -16,7 +16,7 @@ const API_ESTIMATE_PA_ID_PARAMETER = 'paId';
 const API_ESTIMATE_REFERENCE_MONTH_PARAMETER = 'referenceMonth';
 const API_ESTIMATE_ID_FILE_PARAMETER = 'id';
 const API_ESTIMATE_PAGE_PARAMETER = 'page';
-const API_ESTIMATE_TOT_PARAMETER = 'tot';
+const API_ESTIMATE_TOT_PARAMETER = 'size';
 const API_ESTIMATE_STATUS_PARAMETER = 'status';
 
 
@@ -40,14 +40,14 @@ const API_ESTIMATE_FILES_PATH = `${API_ESTIMATE_SEGMENT}/:${API_ESTIMATE_PA_ID_P
 const API_ESTIMATE_FILE_PATH = `${API_ESTIMATE_SEGMENT}/:${API_ESTIMATE_PA_ID_PARAMETER}/${API_ESTIMATE_FILE_SEGMENT}/:${API_ESTIMATE_ID_FILE_PARAMETER}`;
 
 
-export function ESTIMATE_PAGINATION_LIST(paId: string, page:number, tot:number){
+export function ESTIMATE_PAGINATION_LIST(paId: string, page:number, size:number){
   return compileRoute({
     prefix: API_ESTIMATE_PREFIX,
     path: API_ESTIMATES_FROM_PA_ID_PATH,
     query: {
       [API_ESTIMATE_PA_ID_PARAMETER]: paId,
       [API_ESTIMATE_PAGE_PARAMETER]: page,
-      [API_ESTIMATE_TOT_PARAMETER]: tot,
+      [API_ESTIMATE_TOT_PARAMETER]: size,
     }
   });
 }

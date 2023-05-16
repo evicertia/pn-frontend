@@ -50,7 +50,7 @@ export interface EstimatePeriod {
 
 export interface FilterRequest {
   page: number;
-  tot: number;
+  size: number;
 }
 
 export const EstimateStatusEnum = {
@@ -91,7 +91,7 @@ export type InfoDownloadStatusEnum = typeof InfoDownloadStatusEnum[keyof typeof 
 export type FilterRequestEstimate = {
   paId: string;
   page: number;
-  tot: number;
+  size: number;
 };
 
 export type Filter = {

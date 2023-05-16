@@ -5,9 +5,10 @@ import {
   TextField,
   Typography
 } from "@mui/material";
+import * as React from "react";
 import {useTranslation} from "react-i18next";
 import {useIsMobile} from "@pagopa-pn/pn-commons";
-import {ChangeEvent, Fragment} from "react";
+import {Fragment} from "react";
 import {EstimateFormProps} from "../props/Estimate.props";
 
 
@@ -15,9 +16,9 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
   const { t } = useTranslation(["estimate"]);
   const isMobile = useIsMobile();
 
-  const handleChangeTouched = async (e: ChangeEvent) => {
-    formikInstance.handleChange(e);
-    await formikInstance.setFieldTouched(e.target.id, true, false);
+  const handleChangeTouched = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    formikInstance.handleChange(event);
+    await formikInstance.setFieldTouched(event.target.id, true, false);
   };
 
   return <Fragment>
@@ -53,7 +54,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           type={"number"}
           fullWidth={isMobile}
           sx={{ marginBottom: isMobile ? '20px' : '0' }}
-          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+          inputProps={{ inputMode: 'numeric', min: 0, pattern: '^[0-9]*?$' }}
         />
         <TextField
           id="totalAnalogNotif"
@@ -68,12 +69,12 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           type={"number"}
           fullWidth={isMobile}
           sx={{ marginBottom: isMobile ? '20px' : '0' }}
-          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+          inputProps={{ inputMode: 'numeric', min: 0, pattern: '^[0-9]*?$' }}
         />
         <TextField
           id="total890Notif"
           value={formikInstance.values.total890Notif}
-          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+          inputProps={{ inputMode: 'numeric', min: 0, pattern: '^[0-9]*?$' }}
           onChange={handleChangeTouched}
           label={t('edit-estimate.form.analog-890-notif-estimate')}
           name="total890Notif"

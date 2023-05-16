@@ -15,7 +15,7 @@ describe('UsageEstimatesTest', function () {
 
   it('should compile pagination estimates', function () {
     const route = ESTIMATE_PAGINATION_LIST(PA_ID, 1, 10);
-    expect(route).toEqual(`/pn-usage-estimates/estimates?paId=${PA_ID}&page=${1}&tot=${10}`);
+    expect(route).toEqual(`/pn-usage-estimates/estimates?paId=${PA_ID}&page=${1}&size=${10}`);
   });
 
   it('should compile update estimates', function () {

@@ -19,7 +19,7 @@ const initialState: UsageEstimationState = {
   formData: undefined,
   pagination: {
     page: 1,
-    tot: 10,
+    size: 5,
   },
   loading: false,
   error: undefined
@@ -31,7 +31,8 @@ const usageEstimateSlice = createSlice({
   initialState,
   reducers: {
     setPagination: (state, action: PayloadAction<FilterRequest>) => {
-      state.pagination = action.payload;
+      state.pagination.page = action.payload.page;
+      state.pagination.size = action.payload.size;
     }
   },
   extraReducers: (builder) => {
@@ -96,6 +97,8 @@ const usageEstimateSlice = createSlice({
     });
   }
 });
+
+export const { setPagination } = usageEstimateSlice.actions;
 
 export default usageEstimateSlice;
 

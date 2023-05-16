@@ -70,7 +70,7 @@ const getA11yPaginationLabels = (
 export default function CustomPagination({
   paginationData,
   onPageRequest,
-  elementsPerPage = [10, 20, 50],
+  elementsPerPage = [5, 10, 20, 50],
   pagesToShow,
   sx,
   eventTrackingCallbackPageSize,

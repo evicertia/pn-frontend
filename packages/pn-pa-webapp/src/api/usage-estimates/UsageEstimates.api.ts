@@ -20,7 +20,7 @@ export const UsageEstimatesApi = {
    * @param params
    */
   getAllEstimate: async (params: FilterRequestEstimate): Promise<HistoryEstimates> => {
-    const response = await apiClient.get<HistoryEstimates>(ESTIMATE_PAGINATION_LIST(params.paId, params.page, params.tot));
+    const response = await apiClient.get<HistoryEstimates>(ESTIMATE_PAGINATION_LIST(params.paId, params.page, params.size));
     return response.data;
   },
 

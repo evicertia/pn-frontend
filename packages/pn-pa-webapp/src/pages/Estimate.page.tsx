@@ -7,14 +7,13 @@ import {
   useIsMobile,
   ApiErrorWrapper,
 } from '@pagopa-pn/pn-commons';
-
 import {Box, Typography } from '@mui/material';
-
 import { RootState } from '../redux/store';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { setPagination } from '../redux/dashboard/reducers';
+import { setPagination } from '../redux/usageEstimation/reducers';
 import { trackEventByType } from '../utils/mixpanel';
 import { TrackEventType } from '../utils/events';
+import {FilterRequest} from "../models/UsageEstimation";
 import {ESTIMATE_ACTIONS, getAllEstimate} from "../redux/usageEstimation/actions";
 import HistoryTable from './components/UsageEstimates/historyTable/HistoryTable';
 import MobileHistoryTable from "./components/UsageEstimates/historyTable/MobileHistoryTable";
@@ -25,10 +24,8 @@ export function EstimatePage ()  {
   const historyEstimates = useAppSelector(state => state.usageEstimateState.historyEstimates);
   const pagination = useAppSelector((state: RootState) => state.usageEstimateState.pagination);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
-
   const isMobile = useIsMobile();
   const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
-
 
   const fetchHistory= useCallback( () => {
     void dispatch(getAllEstimate(
@@ -38,11 +35,9 @@ export function EstimatePage ()  {
         }));
   },[pagination]);
 
-
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
-
 
   const handleEventTrackingCallbackPageSize = (pageSize: number) => {
     trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION, {pageSize});
@@ -50,9 +45,12 @@ export function EstimatePage ()  {
 
   const handleChangePage = (paginationData: PaginationData) => {
     trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION);
-    dispatch(setPagination({ size: paginationData.size, page: paginationData.page }));
+    const filterRequest: FilterRequest = {
+      size: paginationData.size,
+      page: paginationData.page + 1
+    };
+    dispatch(setPagination(filterRequest));
   };
-
 
 
   return (
@@ -66,34 +64,26 @@ export function EstimatePage ()  {
           </Typography>
         </Box>
 
-
-
-
-          {
-
-              (historyEstimates?.actual && loggedUser?.organization.id) ?
-                <ActualEstimateCard paId={loggedUser.organization.id} data={historyEstimates.actual}/>
-                : null
-          }
-
-
+        {
+          (historyEstimates?.actual && loggedUser?.organization.id)
+            ?
+              <ActualEstimateCard paId={loggedUser.organization.id} data={historyEstimates.actual}/>
+            :
+              null
+        }
 
         <ApiErrorWrapper apiId={ESTIMATE_ACTIONS.GET_ALL_ESTIMATE} reloadAction={() => fetchHistory()} mt={3}>
-            {
-              (historyEstimates?.history?.content) ?
-                (isMobile) ? (
-                  <MobileHistoryTable
-                    estimates={historyEstimates.history.content}
-                  />
-                ) : (
-                  <HistoryTable
-                    estimates={historyEstimates.history.content}
-                  />
-                )
-
-                : null
-            }
-
+          {
+            (historyEstimates?.history?.content)
+              ?
+                (isMobile)
+                  ?
+                    (<MobileHistoryTable estimates={historyEstimates.history.content}/>)
+                  :
+                    (<HistoryTable estimates={historyEstimates.history.content}/>)
+              :
+                null
+          }
 
           {historyEstimates?.history && (
               <CustomPagination
@@ -105,7 +95,7 @@ export function EstimatePage ()  {
                   onPageRequest={handleChangePage}
                   eventTrackingCallbackPageSize={handleEventTrackingCallbackPageSize}
                   pagesToShow={calculatePages(
-                    historyEstimates.history.number,
+                    historyEstimates.history.size,
                     historyEstimates.history.totalElements,
                     Math.min(historyEstimates.history.size, 3),
                     historyEstimates.history.number + 1
