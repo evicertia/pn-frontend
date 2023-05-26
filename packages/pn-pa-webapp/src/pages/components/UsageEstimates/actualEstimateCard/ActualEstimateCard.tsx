@@ -33,7 +33,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
       <Stack spacing={2}>
         <Grid container direction={"row"} justifyContent={"space-between"}>
           <Typography fontWeight={"600"} variant={"h6"}>
-            {t('edit-estimate.button.update-edit').concat(localeStringReferenceMonth(props.data.referenceMonth))}
+            {t('actual-estimate.card.label.number-notify-estimate').concat(localeStringReferenceMonth(props.data.referenceMonth))}
           </Typography>
           {
             (props.data.lastModifiedDate) && <EstimateStatusChip data={props.data.status}/>
@@ -42,7 +42,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
         <Grid container direction={"row"} justifyContent={"space-between"}>
           <Stack direction={"column"}>
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
-              {t('edit-estimate.form.digital-notif-estimate')}
+              {t('actual-estimate.card.label.digital-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
               {props.data?.estimate?.totalDigitalNotif || "Da inserire"}
@@ -50,7 +50,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
           </Stack>
           <Stack direction={"column"}>
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
-              {t('edit-estimate.form.analog-890-notif-estimate')}
+              {t('actual-estimate.card.label.analog-890-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
               {props.data?.estimate?.total890Notif || "Da inserire"}
@@ -58,7 +58,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
           </Stack>
           <Stack direction={"column"}>
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
-              {t('edit-estimate.form.analog-notif-estimate')}
+              {t('actual-estimate.card.label.analog-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
               {props.data?.estimate?.totalAnalogNotif || "Da inserire"}
@@ -111,7 +111,7 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
               onClick={() => {
                 navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
               }}>
-        {t('edit-estimate.button.edit')}
+        {t('actual-estimate.card.button.edit-estimate')}
       </Button>
 
       <ButtonSendEstimate paId={props.paId} referenceMonth={props.data.referenceMonth}/>
@@ -121,7 +121,7 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
                    onClick={() => {
                      navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
                    }}>
-      {t('edit-estimate.button.update-edit')}
+      {t('actual-estimate.card.button.edit-estimate')}
     </Button>;
   }
   return null;
@@ -165,14 +165,13 @@ const ButtonSendEstimate = (props: {paId: string; referenceMonth: string}) => {
     <LoadingButton variant={"contained"}
                    type="button"
                    onClick={()=> onSendClick()}>
-      {t('edit-estimate.button.send-edit')}
+      {t('actual-estimate.card.button.send-estimate')}
     </LoadingButton>
 
-    <SendEstimateDialog title={t('edit-estimate.label.send-dialog-title') + " " + localeStringReferenceMonth(props.referenceMonth) + "?"}
-                        message={t('edit-estimate.label.send-dialog-message')}
+    <SendEstimateDialog title={t('dialog.send-dialog-title') + " " + localeStringReferenceMonth(props.referenceMonth) + "?"}
+                        message={t('dialog.send-dialog-message')}
                         open={open}
                         onClickNegative={handleNegative}
                         onClickPositive={handlePositive}/>
   </>;
 };
-

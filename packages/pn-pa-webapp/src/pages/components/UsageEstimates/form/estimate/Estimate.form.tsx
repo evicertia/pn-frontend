@@ -1,9 +1,9 @@
 import {Fragment, useState} from "react";
 import {useFormik} from "formik";
 import {Grid, Stack} from "@mui/material";
-import * as yup from "yup";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "@mui/lab";
+import * as yup from "yup";
 import {EstimatePeriod, EstimateStatusEnum, StatusUpdateEnum} from "../../../../../models/UsageEstimation";
 import {updateEstimate} from "../../../../../redux/usageEstimation/actions";
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
@@ -11,7 +11,11 @@ import {RootState} from "../../../../../redux/store";
 import {localeStringReferenceMonth} from "../../../../../utils/utility";
 import {BillForm} from "./bill/Bill.form";
 import {UsageEstimateForm} from "./usage/UsageEstimate.form";
-import {UsageEstimatesInitialValue} from "./props/Estimate.props";
+import {
+  UsageEstimatesInitialValue,
+  validationSchemaBilling,
+  validationSchemaUsageEstimate
+} from "./props/Estimate.props";
 import {SendEstimateDialog} from "./dialog/SendEstimateDialog";
 
 
@@ -25,18 +29,7 @@ export function EstimateForm(props: EstimateFormProps) {
   const dispatch = useAppDispatch();
   const [btnType, setBtnType] = useState(StatusUpdateEnum.DRAFT);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
-
-  const validationSchema = yup.object({
-    mailAddress: yup.string()
-      .email(t('edit-estimate.form.mailAddress-error'))
-      .required(t('edit-estimate.form.mandatory')),
-    totalDigitalNotif: yup.number()
-      .required(t('edit-estimate.form.mandatory')),
-    totalAnalogNotif: yup.number()
-      .required(t('edit-estimate.form.mandatory')),
-    total890Notif: yup.number()
-      .required(t('edit-estimate.form.mandatory')),
-  });
+  const validationSchema = yup.object({...validationSchemaUsageEstimate(t), ...validationSchemaBilling(t)});
   
   const formik = useFormik({
     initialValues: UsageEstimatesInitialValue(props.detail.estimate, props.detail.billing),
@@ -66,7 +59,7 @@ export function EstimateForm(props: EstimateFormProps) {
   return <Fragment>
     <form onSubmit={formik.handleSubmit}>
       <UsageEstimateForm formikInstance={formik} />
-      <BillForm formikInstance={formik} />
+      <BillForm formikInstance={formik} data-testid={"bill-form"}/>
       <Grid item container direction="row" justifyContent="flex-end" >
         <Stack direction={"row"} spacing={2}>
           {(props.detail.status === StatusUpdateEnum.DRAFT)
@@ -98,7 +91,7 @@ const ButtonSendEstimate = (props: ButtonProps) => {
     if(props.estimateStatus === StatusUpdateEnum.DRAFT) {
       return t('edit-estimate.button.send-edit');
     } else {
-      return t('edit-estimate.button.update-edit');
+      return t('edit-estimate.button.edit');
     }
   };
 
@@ -123,8 +116,8 @@ const ButtonSendEstimate = (props: ButtonProps) => {
       {getButtonTitle()}
     </LoadingButton>
 
-    <SendEstimateDialog title={t('edit-estimate.label.send-dialog-title') + " " + localeStringReferenceMonth(props.refMonth) + "?"}
-                 message={t('edit-estimate.label.send-dialog-message')}
+    <SendEstimateDialog title={t('dialog.send-dialog-title') + " " + localeStringReferenceMonth(props.refMonth) + "?"}
+                 message={t('dialog.send-dialog-message')}
                  open={open}
                  onClickNegative={handleNegative}
                  onClickPositive={handlePositive}/>

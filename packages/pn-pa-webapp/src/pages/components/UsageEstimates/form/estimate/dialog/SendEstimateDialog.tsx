@@ -21,8 +21,8 @@ export function SendEstimateDialog(props: SendEstimateDialogProps){
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{mb: 2, mr: 2, ml: 2}} >
-        <Button variant={"outlined"} onClick={props.onClickNegative}>{t('edit-estimate.button.abort-edit')}</Button>
-        <Button variant={"contained"} onClick={props.onClickPositive} autoFocus>{t('edit-estimate.button.send-edit')}</Button>
+        <Button variant={"outlined"} onClick={props.onClickNegative}>{t('dialog.abort-dialog')}</Button>
+        <Button variant={"contained"} onClick={props.onClickPositive} autoFocus>{t('dialog.send-dialog')}</Button>
       </DialogActions>
     </Dialog>
   </>;

@@ -71,6 +71,7 @@ export function EstimateDetailPage(){
   </Fragment>);
 
   if(error && error === 404){
+    console.log("DA FIX");
     return <Navigate to={routes.ESTIMATE} />;
   }
 

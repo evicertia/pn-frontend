@@ -16,9 +16,9 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
   const { t } = useTranslation(["estimate"]);
   const isMobile = useIsMobile();
 
-  const handleChangeTouched = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     formikInstance.handleChange(event);
-    await formikInstance.setFieldTouched(event.target.id, true, false);
+    await formikInstance.setFieldTouched(event.target.id, true);
   };
 
   return <Fragment>
@@ -44,7 +44,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
         <TextField
           id="totalDigitalNotif"
           value={formikInstance.values.totalDigitalNotif}
-          onChange={handleChangeTouched}
+          onChange={handleTextInputChange}
           label={t('edit-estimate.form.digital-notif-estimate')}
           name="totalDigitalNotif"
           required
@@ -55,11 +55,12 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           fullWidth={isMobile}
           sx={{ marginBottom: isMobile ? '20px' : '0' }}
           inputProps={{ inputMode: 'numeric', min: 0, pattern: '^[0-9]*?$' }}
+          data-testid={"usage-textfield-digital"}
         />
         <TextField
           id="totalAnalogNotif"
           value={formikInstance.values.totalAnalogNotif}
-          onChange={handleChangeTouched}
+          onChange={handleTextInputChange}
           label={t('edit-estimate.form.analog-notif-estimate')}
           name="totalAnalogNotif"
           required
@@ -70,12 +71,13 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           fullWidth={isMobile}
           sx={{ marginBottom: isMobile ? '20px' : '0' }}
           inputProps={{ inputMode: 'numeric', min: 0, pattern: '^[0-9]*?$' }}
+          data-testid={"usage-textfield-analog-notif"}
         />
         <TextField
           id="total890Notif"
           value={formikInstance.values.total890Notif}
           inputProps={{ inputMode: 'numeric', min: 0, pattern: '^[0-9]*?$' }}
-          onChange={handleChangeTouched}
+          onChange={handleTextInputChange}
           label={t('edit-estimate.form.analog-890-notif-estimate')}
           name="total890Notif"
           required
@@ -85,6 +87,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           type={"number"}
           fullWidth={isMobile}
           sx={{ marginBottom: isMobile ? '20px' : '0' }}
+          data-testid={"usage-textfield-analog-890"}
         />
         <Divider variant="middle" />
         <Grid container alignItems={"center"} width="1" mt={1}>

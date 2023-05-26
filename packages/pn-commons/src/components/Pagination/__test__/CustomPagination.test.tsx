@@ -56,16 +56,16 @@ describe('CustomPagination Component', () => {
     const itemsPerPageListContainer = await screen.findByRole('presentation');
     expect(itemsPerPageListContainer).toBeInTheDocument();
     const itemsPerPageList = await screen.findAllByRole('menuitem');
-    expect(itemsPerPageList).toHaveLength(3);
+    expect(itemsPerPageList).toHaveLength(4);
     await waitFor(() => {
       fireEvent.click(itemsPerPageList[1]!);
     });
-    expect(button).toHaveTextContent(/20/i);
+    expect(button).toHaveTextContent(/10/i);
     expect(handlePageChange).toBeCalledTimes(1);
     expect(mockEventTrackingPageSize).toBeCalledTimes(1);
     expect(handlePageChange).toBeCalledWith({
       page: 0,
-      size: 20,
+      size: 10,
       totalElements: 500,
     });
   });

@@ -1,4 +1,5 @@
 import Email from '@mui/icons-material/Email';
+import PhotoFilterIcon from '@mui/icons-material/PhotoFilter';
 import VpnKey from '@mui/icons-material/VpnKey';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -92,7 +93,7 @@ const App = () => {
           ),
         route: routes.APP_STATUS,
       },
-      { label: 'menu.estimate', icon: VpnKey, route: routes.ESTIMATE },
+      { label: 'menu.estimate', icon: PhotoFilterIcon, route: routes.ESTIMATE },
       { label: 'menu.profiling', icon: VpnKey, route: routes.PROFILING },
     ];
 

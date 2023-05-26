@@ -11,8 +11,6 @@ import {EstimateHistory, EstimateStatusEnum, HistoryColumn} from '../../../../mo
 import {EstimateStatusChip} from "../statusChip";
 import {getFormattedDateTime, localeStringReferenceMonth} from "../../../../utils/utility";
 import * as routes from "../../../../navigation/routes.const";
-import {trackEventByType} from "../../../../utils/mixpanel";
-import {TrackEventType} from "../../../../utils/events";
 
 
 type Props = {
@@ -27,8 +25,6 @@ const HistoryTable =
     const handleRowClick = (row: Item) => {
         if (row?.status && row.status === EstimateStatusEnum.VALIDATED) {
             navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id as string));
-            // log event
-            trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_ROW_INTERACTION);
         }
     };
 

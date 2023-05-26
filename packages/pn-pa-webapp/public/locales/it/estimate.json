@@ -43,34 +43,36 @@
     "help-request-label": "Richiedi aiuto"
   },
   "status": {
-    "draft-label-tooltip": "Stime non ancora Consolidata",
-    "draft-label-chip": "Bozza",
+    "draft-label-tooltip": "Stime non ancora Inviate",
+    "draft-label-chip": "In bozza",
     "validated-label-tooltip": "Stime Consolidate",
-    "validated-label-chip": "Consolidata",
-    "absent-label-tooltip": "Stime non inserite o mai Consolidata",
+    "validated-label-chip": "Inviata",
+    "absent-label-tooltip": "Stime non inserite o mai Inviate",
     "absent-label-chip": "Assente",
     "pec": "PEC"
   },
-
+  "dialog": {
+    "send-dialog-title": "Vuoi inviare la stima per il mese di ",
+    "send-dialog-message": "La stima sarà modificabile fino alla data di scadenza.",
+    "abort-dialog": "Annulla",
+    "send-dialog": "Invia"
+  },
   "edit-estimate": {
     "label": {
       "breadcrumb-root": "Stime",
-      "breadcrumb-leaf": "Modifica stima",
-      "title": "Stima per il mese di ",
-      "abstract": "Per inviare la stima, inserisci i dati richiesti. Puoi salvare una bozza e procedere con l'invio in un secondo momento. La stima è modificabile fino al ",
+      "breadcrumb-leaf": "Modifica",
+      "title": "Stima di ",
+      "abstract-pre": "Hai tempo fino alle ",
+      "abstract-post": " per inviare la stima del prossimo mese. Puoi crearla ora, salvarla in bozza e inviarla in un secondo momento.",
       "mandatory-fields": "*Campi obbligatori",
       "radio-split-payment-yes": "Sì",
       "radio-split-payment-no": "No",
-      "send-dialog-title": "Vuoi inviare la stima per il mese di ",
-      "send-dialog-message": "La stima sarà modificabile fino alla data di scadenza.",
-      "date-time-format": "alle ore"
+      "date-time-format": "del"
     },
     "button": {
       "go-back-edit": "Indietro",
       "save-edit": "Salva bozza",
-      "abort-edit": "Annulla",
-      "send-edit": "Invia stima",
-      "update-edit": "Aggiorna stima ",
+      "send-edit": "Invia",
       "help-request": "Richiedi aiuto",
       "edit": "Modifica"
     },
@@ -78,20 +80,20 @@
       "sdi-code": "Codice SDI",
       "sdi-code-placeholder": "Codice SDI",
       "mandatory": "Obbligatorio",
-      "split-payment": "Soggetto Split Payment*",
+      "split-payment": "Split Payment*",
       "mailAddress": "Indirizzo e-mail",
       "mailAddress-error": "Indirizzo e-mail non valido",
       "mailAddress-placeholder": "Indirizzo e-mail amministrativo",
-      "description-other-info": "Altre informazioni utili alla fatturazione",
-      "description-placeholder": "Max 256 caratteri",
-      "digital-notif-estimate": "Digitali",
-      "analog-notif-estimate": "Analogiche con raccomandata",
-      "analog-890-notif-estimate": "Analogiche con 890",
-      "total-digital-notif": "Per via digitale",
-      "total-analog-notif": "Per via analogica",
+      "description-other-info": "Altre informazioni utili alla fatturazione (opzionale)",
+      "description-placeholder": "Scrivi massimo 256 caratteri",
+      "digital-notif-estimate": "PEC",
+      "analog-notif-estimate": "Raccomandate A/R",
+      "analog-890-notif-estimate": "Raccomandate 890",
+      "total-digital-notif": "Digitali",
+      "total-analog-notif": "Analogiche",
       "total-notif": "Totale notifiche stimate",
-      "bill-title": "Dati aggiuntivi per la fatturazione",
-      "usage-estimate-title": "Numero di notifiche stimate"
+      "bill-title": "Informazioni per la fatturazione",
+      "usage-estimate-title": "Notifiche stimate"
     },
     "prompt": {
       "title": "Vuoi davvero uscire?",
@@ -99,14 +101,15 @@
     }
   },
   "estimate-history": {
-    "title-history": "Stime di invio utili a una fatturazione realistica",
-    "subtitle-history": "In questa sezione puoi effettuare la stima del numero di invii di notifiche che il tuo ente effettuerà il mese corrente/successivo o consultare lo storico delle stime già effettuate.\nEffettuare con regolarità le stime di invio permette a SEND di emettere fatture quanto più corrispondenti alla reali esigenze dell’ente stesso.",
+    "title-history": "Stime di invio",
+    "subtitle-history": "Ogni mese, inserisci quante notifiche prevedi di inviare il mese successivo tra PEC, raccomandate A/R e raccomandate 890. In questo modo riceverai fatture basate il più possibile sugli invii reali ed eviterai eventuali conguagli.",
     "edit-button-label": "Modifica",
     "show-detail": "Mostra dettagli",
     "history-table": {
       "reference-month": "Mese di riferimento",
-      "last-modified-date": "Data ultima modifica",
-      "deadline-date": "Data di scadenza per l'invio",
+      "last-modified-date": "Ultima modifica",
+      "deadline-date": "Termine per l'invio",
+      "final-balance": "Consuntivi",
       "status": "Stato",
       "status-enum": {
         "draft": "In aggiornamento",
@@ -118,22 +121,27 @@
   "actual-estimate": {
     "card": {
       "label": {
-        "number-notify-estimate": "Numero di notifiche stimate per ",
+        "number-notify-estimate": "Notifiche stimate per ",
         "last-modify": "Ultima modifica ",
-        "editable": "Modificabile fino al "
+        "editable": "Da inviare entro il ",
+        "digital-notif-estimate": "PEC",
+        "analog-notif-estimate": "Raccomandate A/R",
+        "analog-890-notif-estimate": "Raccomandate 890"
       },
       "button": {
-        "create-estimate": "Crea stima"
+        "create-estimate": "Crea stima",
+        "edit-estimate": "Modifica",
+        "send-estimate": "Invia"
       }
     },
     "toast-message": {
       "success": {
-        "title": "Stima inviata correttamente",
-        "message": "Stima inviata correttamente"
+        "title": "Stima inviata. Grazie!",
+        "message": "Stima inviata. Grazie!"
       },
       "error": {
-        "title": "Si è verificato un errore. Riprova.",
-        "message": "Si è verificato un errore. Riprova."
+        "title": "Si è verificato un errore e la stima non è stata inviata. Riprova.",
+        "message": "Si è verificato un errore e la stima non è stata inviata. Riprova."
       }
     }
   }

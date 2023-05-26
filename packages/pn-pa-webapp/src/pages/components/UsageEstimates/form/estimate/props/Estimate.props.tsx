@@ -1,5 +1,6 @@
 import {FormikErrors, FormikState, FormikTouched, FormikValues} from "formik";
 import {ChangeEvent} from "react";
+import * as yup from "yup";
 import {BillingDetail, Estimate} from "../../../../../../models/UsageEstimation";
 
 
@@ -39,3 +40,18 @@ export const UsageEstimatesInitialValue = (estimate?: Estimate, billing?: Billin
 
   return {...initEstimate, ...initBilling};
 };
+
+export const validationSchemaUsageEstimate = (t: any) => ({
+  totalDigitalNotif: yup.number()
+    .required(t('edit-estimate.form.mandatory')),
+  totalAnalogNotif: yup.number()
+    .required(t('edit-estimate.form.mandatory')),
+  total890Notif: yup.number()
+    .required(t('edit-estimate.form.mandatory'))
+});
+
+export const validationSchemaBilling = (t: any) => ({
+  mailAddress: yup.string()
+    .email(t('edit-estimate.form.mailAddress-error'))
+    .required(t('edit-estimate.form.mandatory'))
+});
