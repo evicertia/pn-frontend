@@ -8,14 +8,14 @@ import {EstimatePeriod, EstimateStatusEnum, StatusUpdateEnum} from "../../../../
 import {updateEstimate} from "../../../../../redux/usageEstimation/actions";
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
 import {RootState} from "../../../../../redux/store";
-import {localeStringReferenceMonth} from "../../../../../utils/utility";
+import {getFormattedDateTimeAbstract, localeStringReferenceMonth} from "../../../../../utils/utility";
 import {BillForm} from "./bill/Bill.form";
 import {UsageEstimateForm} from "./usage/UsageEstimate.form";
 import {
   UsageEstimatesInitialValue,
   validationSchemaBilling,
   validationSchemaUsageEstimate
-} from "./props/Estimate.props";
+} from "./formik/Formik.config";
 import {SendEstimateDialog} from "./dialog/SendEstimateDialog";
 
 
@@ -64,11 +64,11 @@ export function EstimateForm(props: EstimateFormProps) {
         <Stack direction={"row"} spacing={2}>
           {(props.detail.status === StatusUpdateEnum.DRAFT)
             ?
-              <LoadingButton variant={"outlined"} type="submit" onClick={() => setBtnType(StatusUpdateEnum.DRAFT)}>{t('edit-estimate.button.save-edit')}</LoadingButton>
+              <LoadingButton variant={"outlined"} type="submit" onClick={() => setBtnType(StatusUpdateEnum.DRAFT)} data-testid={"btn-save-estimate"}>{t('edit-estimate.button.save-edit')}</LoadingButton>
             :
               null
           }
-          <ButtonSendEstimate refMonth={props.detail.referenceMonth} estimateStatus={props.detail.status} setBtnType={setBtnType} submit={formik.handleSubmit}/>
+          <ButtonSendEstimate refMonth={props.detail.referenceMonth} deadlineDate={props.detail.deadlineDate} estimateStatus={props.detail.status} setBtnType={setBtnType} submit={formik.handleSubmit}/>
         </Stack>
       </Grid>
     </form>
@@ -78,6 +78,7 @@ export function EstimateForm(props: EstimateFormProps) {
 
 interface ButtonProps {
   refMonth: string;
+  deadlineDate: string;
   estimateStatus: EstimateStatusEnum;
   setBtnType: (event: StatusUpdateEnum) => void;
   submit: () => void;
@@ -112,12 +113,13 @@ const ButtonSendEstimate = (props: ButtonProps) => {
   return <>
     <LoadingButton variant={"contained"}
                    type="button"
+                   data-testid={"btn-open-dialog"}
                    onClick={()=> onSendClick()}>
       {getButtonTitle()}
     </LoadingButton>
 
     <SendEstimateDialog title={t('dialog.send-dialog-title') + " " + localeStringReferenceMonth(props.refMonth) + "?"}
-                 message={t('dialog.send-dialog-message')}
+                 message={t('dialog.send-dialog-message')  + getFormattedDateTimeAbstract(props.deadlineDate, t('edit-estimate.label.date-time-format'))}
                  open={open}
                  onClickNegative={handleNegative}
                  onClickPositive={handlePositive}/>

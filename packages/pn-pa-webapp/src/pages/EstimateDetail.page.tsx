@@ -6,9 +6,9 @@ import {Box, Stack, Typography} from "@mui/material";
 import {Navigate, useParams} from "react-router-dom";
 import * as routes from "../navigation/routes.const";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
-import {getDetailEstimate} from "../redux/usageEstimation/actions";
 import {RootState} from "../redux/store";
 import {localeStringReferenceMonth} from "../utils/utility";
+import {getDetailEstimate} from "../redux/usageEstimation/actions";
 import {DataInfo} from "./components/UsageEstimates/dataInfo/DataInfo";
 import {
   usageBillingDataPA,
@@ -71,7 +71,6 @@ export function EstimateDetailPage(){
   </Fragment>);
 
   if(error && error === 404){
-    console.log("DA FIX");
     return <Navigate to={routes.ESTIMATE} />;
   }
 

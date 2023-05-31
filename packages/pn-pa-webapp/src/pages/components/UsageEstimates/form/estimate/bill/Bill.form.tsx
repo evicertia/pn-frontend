@@ -11,7 +11,7 @@ import * as React from "react";
 import {useIsMobile} from "@pagopa-pn/pn-commons";
 import {useTranslation} from "react-i18next";
 import {Fragment} from "react";
-import {EstimateFormProps} from "../props/Estimate.props";
+import {EstimateFormProps} from "../formik/Formik.config";
 
 
 export function BillForm({formikInstance}: EstimateFormProps){
@@ -19,8 +19,9 @@ export function BillForm({formikInstance}: EstimateFormProps){
   const { t } = useTranslation(['estimate']);
 
   const handleTextInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event);
     formikInstance.handleChange(event);
-    await formikInstance.setFieldTouched(event.target.id, true);
+    await formikInstance.setFieldTouched(event.target.id, true, false);
   };
 
   const handleRadioInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -6,7 +6,12 @@ import {useTranslation} from "react-i18next";
 import {LoadingButton} from "@mui/lab";
 import {appStateActions} from "@pagopa-pn/pn-commons";
 import {EstimatePeriod, EstimateStatusEnum} from "../../../../models/UsageEstimation";
-import {getDateString, getFormattedDateTime, localeStringReferenceMonth} from "../../../../utils/utility";
+import {
+  getDateString,
+  getFormattedDateTime,
+  getFormattedDateTimeAbstract,
+  localeStringReferenceMonth
+} from "../../../../utils/utility";
 import {EstimateStatusChip} from "../statusChip";
 import {GET_EDIT_ESTIMATE_PATH} from "../../../../navigation/routes.const";
 import {SendEstimateDialog} from "../form/estimate/dialog/SendEstimateDialog";
@@ -114,7 +119,7 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
         {t('actual-estimate.card.button.edit-estimate')}
       </Button>
 
-      <ButtonSendEstimate paId={props.paId} referenceMonth={props.data.referenceMonth}/>
+      <ButtonSendEstimate paId={props.paId} referenceMonth={props.data.referenceMonth} deadlineDate={props.data.deadlineDate}/>
     </>;
   } else if (props.data.status === EstimateStatusEnum.VALIDATED) {
     return <Button variant="contained"
@@ -127,7 +132,7 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
   return null;
 };
 
-const ButtonSendEstimate = (props: {paId: string; referenceMonth: string}) => {
+const ButtonSendEstimate = (props: {paId: string; referenceMonth: string; deadlineDate: string}) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation(['estimate']);
   const dispatch = useAppDispatch();
@@ -169,7 +174,7 @@ const ButtonSendEstimate = (props: {paId: string; referenceMonth: string}) => {
     </LoadingButton>
 
     <SendEstimateDialog title={t('dialog.send-dialog-title') + " " + localeStringReferenceMonth(props.referenceMonth) + "?"}
-                        message={t('dialog.send-dialog-message')}
+                        message={t('dialog.send-dialog-message') + getFormattedDateTimeAbstract(props.deadlineDate, t('edit-estimate.label.date-time-format'))}
                         open={open}
                         onClickNegative={handleNegative}
                         onClickPositive={handlePositive}/>

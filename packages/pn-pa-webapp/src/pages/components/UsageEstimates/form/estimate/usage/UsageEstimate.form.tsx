@@ -9,7 +9,7 @@ import * as React from "react";
 import {useTranslation} from "react-i18next";
 import {useIsMobile} from "@pagopa-pn/pn-commons";
 import {Fragment} from "react";
-import {EstimateFormProps} from "../props/Estimate.props";
+import {EstimateFormProps} from "../formik/Formik.config";
 
 
 export function UsageEstimateForm({formikInstance}: EstimateFormProps){

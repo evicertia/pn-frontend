@@ -23,25 +23,18 @@ export const usageInfoPA: Array<RowDataInfo<PaInfo>> = [
     type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.taxId}</Typography>
   },
-
-  {
-    id: "ipaCode",
-    label: "label.ipa-code",
-    type: "ROW",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.ipaCode}</Typography>
-  },
-  {
-    id: "sdiCode",
-    label: "label.sdi-code",
-    type: "ROW",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.sdiCode) ? data.sdiCode : "-"}</Typography>
-  },
-  {
-    id: "pec",
-    label: "label.pec",
-    type: "ROW",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.pec}</Typography>
-  },
+  // {
+  //   id: "ipaCode",
+  //   label: "label.ipa-code",
+  //   type: "ROW",
+  //   render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.ipaCode}</Typography>
+  // },
+  // {
+  //   id: "pec",
+  //   label: "label.pec",
+  //   type: "ROW",
+  //   render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.pec}</Typography>
+  // },
 ];
 
 export const usagePeriod: Array<RowDataInfo<EstimatePeriod>> = [
@@ -54,13 +47,13 @@ export const usagePeriod: Array<RowDataInfo<EstimatePeriod>> = [
     id: "deadlineDate",
     label: "label.deadline-period",
     type: "ROW",
-    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.deadlineDate) ? getFormattedDateTime(data.deadlineDate) : "-"}</Typography>
+    render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.deadlineDate) ? getFormattedDateTime(data.deadlineDate, "ore") : "-"}</Typography>
   },
   {
     id: "lastModifiedDate",
     label: "label.last-update-date-period",
     type: "ROW",
-    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.lastModifiedDate) ? getFormattedDateTime(data.lastModifiedDate) : "-"}</Typography>
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.lastModifiedDate) ? getFormattedDateTime(data.lastModifiedDate, "ore") : "-"}</Typography>
   },
   {
     id: "status",
@@ -71,7 +64,12 @@ export const usagePeriod: Array<RowDataInfo<EstimatePeriod>> = [
 ];
 
 export const usageBillingDataPA: Array<RowDataInfo<BillingDetail>> = [
-
+  {
+    id: "sdiCode",
+    label: "label.sdi-code",
+    type: "ROW",
+    render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.sdiCode) ? data.sdiCode : "-"}</Typography>
+  },
   {
     id: "splitPayment",
     label: "label.split-payment-profiling",
