@@ -8,18 +8,18 @@ export function EstimateStatusChip(props:{data:EstimateStatusEnum}) {
 
   if (props.data === EstimateStatusEnum.DRAFT) {
       return <Tooltip title={t("draft-label-tooltip")}>
-        <Chip color={"info"} label={t("draft-label-chip")} />
+        <Chip color={"info"} label={t("draft-label-chip")} data-testid={"chip-info"}/>
       </Tooltip>;
   }
   if (props.data === EstimateStatusEnum.VALIDATED) {
     return <Tooltip title={t("validated-label-tooltip")}>
-      <Chip color={"success"} label={t("validated-label-chip")} />
+      <Chip color={"success"} label={t("validated-label-chip")} data-testid={"chip-success"}/>
     </Tooltip>;
   }
   if (props.data === EstimateStatusEnum.ABSENT) {
     return <Tooltip title={t("absent-label-tooltip")}>
-      <Chip color={"error"} label={t("absent-label-chip")} />
+      <Chip color={"error"} label={t("absent-label-chip")} data-testid={"chip-error"}/>
     </Tooltip>;
   }
-  return <Chip label={"-"}/>;
+  return <Chip label={"-"} data-testid={"chip-empty"} />;
 }
