@@ -50,7 +50,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
               {t('actual-estimate.card.label.digital-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
-              {props.data?.estimate?.totalDigitalNotif || "Da inserire"}
+              {props.data?.estimate?.totalDigitalNotif || t('actual-estimate.card.label.estimate-to-complete')}
             </Typography>
           </Stack>
           <Stack direction={"column"}>
@@ -58,7 +58,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
               {t('actual-estimate.card.label.analog-890-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
-              {props.data?.estimate?.total890Notif || "Da inserire"}
+              {props.data?.estimate?.total890Notif || t('actual-estimate.card.label.estimate-to-complete')}
             </Typography>
           </Stack>
           <Stack direction={"column"}>
@@ -66,7 +66,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
               {t('actual-estimate.card.label.analog-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
-              {props.data?.estimate?.totalAnalogNotif || "Da inserire"}
+              {props.data?.estimate?.totalAnalogNotif || t('actual-estimate.card.label.estimate-to-complete')}
             </Typography>
           </Stack>
         </Grid>
