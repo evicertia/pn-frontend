@@ -33,6 +33,10 @@ const usageEstimateSlice = createSlice({
     setPagination: (state, action: PayloadAction<FilterRequest>) => {
       state.pagination.page = action.payload.page;
       state.pagination.size = action.payload.size;
+    },
+    resetDetailState: (state) => {
+      state.detail = undefined;
+      state.formData = undefined;
     }
   },
   extraReducers: (builder) => {
@@ -98,7 +102,7 @@ const usageEstimateSlice = createSlice({
   }
 });
 
-export const { setPagination } = usageEstimateSlice.actions;
+export const { setPagination, resetDetailState } = usageEstimateSlice.actions;
 
 export default usageEstimateSlice;
 

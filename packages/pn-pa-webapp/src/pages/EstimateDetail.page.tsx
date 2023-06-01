@@ -9,6 +9,7 @@ import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {RootState} from "../redux/store";
 import {localeStringReferenceMonth} from "../utils/utility";
 import {getDetailEstimate} from "../redux/usageEstimation/actions";
+import {resetDetailState} from "../redux/usageEstimation/reducers";
 import {DataInfo} from "./components/UsageEstimates/dataInfo/DataInfo";
 import {
   usageBillingDataPA,
@@ -37,6 +38,9 @@ export function EstimateDetailPage(){
 
   useEffect(() => {
     fetching();
+    return () => {
+      void dispatch(resetDetailState());
+    };
   }, [fetching]);
 
 
@@ -63,14 +67,10 @@ export function EstimateDetailPage(){
       <Typography variant="h5" fontWeight={"600"} mt={1}>
         {t('label.estimate-detail-info', { ns: 'estimate' }) + localeStringReferenceMonth((referenceMonth) || "")}
       </Typography>
-      {
-
-      }
-
     </Box>
   </Fragment>);
 
-  if(error && error === 404){
+  if(error && error === 404) {
     return <Navigate to={routes.ESTIMATE} />;
   }
 
