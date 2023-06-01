@@ -71,7 +71,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
           </Stack>
         </Grid>
         <Grid container direction={"row"} justifyContent={"space-between"}>
-          <TagEditDate data={props.data}/>
+          <TagEditDate data-testid={"testIdTagEditDate"} data={props.data}/>
           <Stack direction={"row"} sx={{alignSelf: "end"}} spacing={.5}>
             <ButtonsGroup paId={props.paId} data={props.data}/>
           </Stack>
