@@ -11,8 +11,6 @@ import {Box, Typography } from '@mui/material';
 import { RootState } from '../redux/store';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setPagination } from '../redux/usageEstimation/reducers';
-import { trackEventByType } from '../utils/mixpanel';
-import { TrackEventType } from '../utils/events';
 import {FilterRequest} from "../models/UsageEstimation";
 import {ESTIMATE_ACTIONS, getAllEstimate} from "../redux/usageEstimation/actions";
 import HistoryTable from './components/UsageEstimates/historyTable/HistoryTable';
@@ -39,12 +37,7 @@ export function EstimatePage ()  {
     fetchHistory();
   }, [fetchHistory]);
 
-  const handleEventTrackingCallbackPageSize = (pageSize: number) => {
-    trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION, {pageSize});
-  };
-
   const handleChangePage = (paginationData: PaginationData) => {
-    trackEventByType(TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION);
     const filterRequest: FilterRequest = {
       size: paginationData.size,
       page: paginationData.page + 1
@@ -93,7 +86,7 @@ export function EstimatePage ()  {
                     totalElements: historyEstimates.history.totalElements,
                   }}
                   onPageRequest={handleChangePage}
-                  eventTrackingCallbackPageSize={handleEventTrackingCallbackPageSize}
+                  eventTrackingCallbackPageSize={() => {}}
                   pagesToShow={calculatePages(
                     historyEstimates.history.size,
                     historyEstimates.history.totalElements,

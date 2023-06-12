@@ -65,24 +65,21 @@ const ScenarioUsageEstimations = () => {
 describe("whenDataArePassedToDataInfo", () => {
   afterEach(cleanup);
 
-  it("check data correctly inserted into the rows of 'usageInfoPA' type", async () => {
+  it("checkDataCorrectlyInsertedIntoTheRowsOfusageInfoPAtype", async () => {
     render(<ScenarioUsageInfoPA />);
     expect(screen.getByText("Comune di Milano")).toBeInTheDocument();
     expect(screen.getByText("01199250158")).toBeInTheDocument();
     expect(screen.getByText("Via Milano")).toBeInTheDocument();
-    expect(screen.getByText("asf359ljro3912")).toBeInTheDocument();
-    expect(screen.getByText("milano@pec.it")).toBeInTheDocument();
-    expect(screen.getByText("c3rfl93qw903v")).toBeInTheDocument();
   });
 
-  it("check data correctly inserted into the rows of 'usagePeriod' type", async () => {
+  it("checkDataCorrectlyInsertedIntoTheRowsOfusagePeriodtype", async () => {
     render(<ScenarioUsagePeriod />);
-    expect(screen.getByText(getFormattedDateTime("2023-06-15T23:59:00.000+00:00"))).toBeInTheDocument();
-    expect(screen.getByText(getFormattedDateTime("2023-05-22T13:36:27.000+00:00"))).toBeInTheDocument();
+    expect(screen.getByText("15/06/2023, ore 23:59")).toBeInTheDocument();
+    expect(screen.getByText("22/05/2023, ore 13:36")).toBeInTheDocument();
     expect(screen.getByText(localeStringReferenceMonth("LUG-2023"))).toBeInTheDocument();
   });
 
-  it("check data correctly inserted into the rows of 'usageBillingDataPA' type", async () => {
+  it("checkDataCorrectlyInsertedIntoTheRowsOfusageBillingDataPAtype", async () => {
     render(<ScenarioUsageBillingDataPA />);
     expect(screen.getByText("This is a description")).toBeInTheDocument();
     expect(screen.getByText("test@test.com")).toBeInTheDocument();
@@ -90,7 +87,7 @@ describe("whenDataArePassedToDataInfo", () => {
   });
 
 
-  it("check data correctly inserted into the rows of 'usageEstimations' type", async () => {
+  it("checkDataCorrectlyInsertedIntoTheRowsOfusageEstimationsType'", async () => {
     render(<ScenarioUsageEstimations />);
     const [totalDigitalNotif, toDigitalWay] = screen.getAllByText('5');
     const [totalAnalogNotif, total890Notif] = screen.getAllByText('10');

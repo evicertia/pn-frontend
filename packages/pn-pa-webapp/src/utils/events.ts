@@ -45,13 +45,7 @@ export enum TrackEventType {
   USER_LOGOUT = 'logout/fulfilled',
   USER_NAV_ITEM = 'USER_NAV_ITEM',
   FOOTER_ACCESSIBILITY = 'FOOTER_ACCESSIBILITY',
-  FOOTER_LANG_SWITCH = 'FOOTER_LANG_SWITCH',
-  ESTIMATE_HISTORY_TABLE_PAGINATION="ESTIMATE_HISTORY_TABLE_PAGINATION",
-  ESTIMATE_HISTORY_TABLE_ROW_INTERACTION = 'ESTIMATE_HISTORY_TABLE_ROW_INTERACTION',
-  ESTIMATE_GO_TO_DETAIL ="ESTIMATE_GO_TO_DETAIL",
-  ESTIMATE_EXIT_WARNING = 'ESTIMATE_EXIT_WARNING',
-  ESTIMATE_EXIT_FLOW = 'ESTIMATE_EXIT_FLOW',
-  ESTIMATE_EXIT_CANCEL = 'ESTIMATE_EXIT_CANCEL',
+  FOOTER_LANG_SWITCH = 'FOOTER_LANG_SWITCH'
 }
 
 export const events: EventsType = {
@@ -234,29 +228,5 @@ export const events: EventsType = {
   [TrackEventType.FOOTER_LANG_SWITCH]: {
     category: 'footer',
     action: 'click on app language option',
-  },
-  [TrackEventType.ESTIMATE_HISTORY_TABLE_PAGINATION]: {
-    category: 'estimate',
-    action: 'history table pagination',
-  },
-  [TrackEventType.ESTIMATE_HISTORY_TABLE_ROW_INTERACTION]: {
-    category: 'estimate',
-    action: 'click on row table',
-  },
-  [TrackEventType.ESTIMATE_GO_TO_DETAIL]: {
-    category: 'estimate',
-    action: 'go to estimate detail',
-  },
-  [TrackEventType.ESTIMATE_EXIT_WARNING]: {
-    category: 'estimate',
-    action: 'confirm cancel send notification',
-  },
-  [TrackEventType.ESTIMATE_EXIT_FLOW]: {
-    category: 'estimate',
-    action: 'cancel send notification',
-  },
-  [TrackEventType.ESTIMATE_EXIT_CANCEL]: {
-    category: 'estimate',
-    action: 'abort cancel notification',
-  },
+  }
 };
