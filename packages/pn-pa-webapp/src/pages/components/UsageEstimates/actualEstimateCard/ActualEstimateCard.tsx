@@ -104,7 +104,8 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
   const { t } = useTranslation(['estimate']);
 
   if (!props.data.lastModifiedDate && props.data.status === EstimateStatusEnum.DRAFT){
-    return <Button variant="outlined"
+    return <Button data-testid="create-button-test-id"
+        variant="outlined"
                    onClick={() => {
                      navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
                    }}>
