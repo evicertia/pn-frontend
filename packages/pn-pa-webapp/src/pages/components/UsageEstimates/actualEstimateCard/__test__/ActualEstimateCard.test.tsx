@@ -102,8 +102,11 @@ const propsNullElement ={
 
 
 describe('ActualEstimateCardFunctionalities', () => {
-
+    beforeEach(() => {
+        window.history.pushState({}, '', '/');
+    });
     afterEach(cleanup);
+
 
 
     it('Create estimate button behaviour when lastModifiedDate is null and status is DRAFT', async () => {
