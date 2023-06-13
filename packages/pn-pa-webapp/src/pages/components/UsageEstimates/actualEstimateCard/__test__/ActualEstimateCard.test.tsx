@@ -21,25 +21,21 @@ describe('ActualEstimateCard', () => {
     const mockDispatchFn = jest.fn();
     const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
 
-
-
-
-
     beforeEach(() => {
-        spyOnDispatch.mockReturnValue(mockDispatchFn);
+
     });
 
     afterEach(() => {
         cleanup();
     });
+    const props = {
+        paId: 'paId1234567',
+        data: {...draftElement
+        },
+    };
 
 
     it('renders create estimate button when lastModifiedDate is null and status is DRAFT', async () => {
-        const props = {
-            paId: 'paId1234567',
-            data: {...draftElement
-            },
-        };
 
         render(<BrowserRouter >
             <Routes>
@@ -55,9 +51,9 @@ describe('ActualEstimateCard', () => {
 
         await act(async () => {
             await waitFor( () => {
-                // expect(location.pathname).toEqual(GET_EDIT_ESTIMATE_PATH(draftElement.referenceMonth));
-                //expect(screen.getByTestId("estimate-edit-page")).toBeInTheDocument()
-                expect(mockDispatchFn).toBeCalledTimes(0);
+                expect(location.pathname).toEqual(GET_EDIT_ESTIMATE_PATH(draftElement.referenceMonth));
+                expect(screen.getByTestId("estimate-edit-page")).toBeInTheDocument()
+                //expect(mockDispatchFn).toBeCalledTimes(0);
                 expect(mockNavigateFn).toBeCalledTimes(1);
             })
 
@@ -65,7 +61,8 @@ describe('ActualEstimateCard', () => {
     });
 
     it('edit estimate button and send estimate button when status is DRAFT', () => {
-        const props = {
+        spyOnDispatch.mockReturnValue(mockDispatchFn);
+        const props_test = {
             paId: 'paId',
             data: {
                 lastModifiedDate: '2023-05-22T13:36:27.000+00:00',
@@ -81,7 +78,7 @@ describe('ActualEstimateCard', () => {
         const editEstimateButton = getByText('Modifica stima');
         fireEvent.click(editEstimateButton);
 
-        expect(navigateMock).toHaveBeenCalledWith(
+        expect(mockNavigateFn).toHaveBeenCalledWith(
             GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth)
         );
 
@@ -93,7 +90,8 @@ describe('ActualEstimateCard', () => {
     });
 
     it('edit estimate button when status is VALIDATED', () => {
-        const props = {
+        spyOnDispatch.mockReturnValue(mockDispatchFn);
+        const props_test = {
             paId: 'paId',
             data: {
                 lastModifiedDate: null,
@@ -103,19 +101,20 @@ describe('ActualEstimateCard', () => {
         };
 
         const { getByText } = render(
-            <ActualEstimateCard {...props} navigate={navigateMock} t={tMock} />
+            <ActualEstimateCard {...props}  />
         );
 
         const editEstimateButton = getByText('Modifica stima');
         fireEvent.click(editEstimateButton);
 
-        expect(navigateMock).toHaveBeenCalledWith(
+        expect(mockNavigateFn).toHaveBeenCalledWith(
             GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth)
         );
     });
 
     it('renders null when none of the conditions are met', () => {
-        const props = {
+        spyOnDispatch.mockReturnValue(mockDispatchFn);
+        const props_test = {
             paId: 'paId1234567',
             data: {
                 lastModifiedDate: '2023-05-22T13:36:27.000+00:00',
@@ -125,7 +124,7 @@ describe('ActualEstimateCard', () => {
         };
 
         const { container } = render(
-            <ActualEstimateCard {...props} navigate={navigateMock} t={tMock} />
+            <ActualEstimateCard {...props}  />
         );
 
         expect(container.firstChild).toBeNull();
