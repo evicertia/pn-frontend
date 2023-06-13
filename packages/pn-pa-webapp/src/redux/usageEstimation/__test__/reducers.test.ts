@@ -91,23 +91,23 @@ describe('usageEstimateSlice', () => {
             };
 
             const mockPayload = {
-
+                result:"testFulfilled"
             };
 
-            const nextState = null //usageEstimateSlice.reducer(initialState, getAllEstimate.fulfilled("testFulfilled",filterRequest));
+            const nextState = usageEstimateSlice.reducer(initialState, getAllEstimate.fulfilled("testFulfilled",filterRequest));
 
             expect(nextState.loading).toEqual(false);
-            expect(nextState.historyEstimates).toEqual(mockPayload);
+            expect(nextState.historyEstimates).toEqual(mockPayload.result);
         });
 
         it('should handle getAllEstimate.rejected', () => {
             const state = {
                 loading: true,
                 historyEstimates: {},
-                error: undefined,
+                error: 'ERROR with history estimate',
             };
 
-            const nextState = null//usageEstimateSlice.reducer(initialState, getAllEstimate.rejected());
+            const nextState = usageEstimateSlice.reducer(initialState, getAllEstimate.rejected("testRejected",state));
 
             expect(nextState.loading).toEqual(false);
             expect(nextState.historyEstimates).toEqual({});
