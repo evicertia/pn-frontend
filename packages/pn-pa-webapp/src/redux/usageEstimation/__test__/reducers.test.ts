@@ -1,6 +1,6 @@
 import usageEstimateSlice, { setPagination, resetDetailState } from '../reducers';
 import {HistoryEstimates} from "../../../models/UsageEstimation";
-import {getAllEstimate} from "../actions";
+import {getAllEstimate, getDetailEstimate, updateEstimate, validatedEstimate} from "../actions";
 
 describe('usageEstimateSlice', () => {
     const initialState = {
@@ -71,7 +71,7 @@ describe('usageEstimateSlice', () => {
     });
 
     describe('extraReducers', () => {
-        it('should handle getAllEstimate.pending', () => {
+        it('handle getAllEstimate.pending', () => {
             const filterRequest = {
                 paId:"test",
                 page: 2,
@@ -83,7 +83,7 @@ describe('usageEstimateSlice', () => {
             expect(nextState.error).toBeUndefined();
         });
 
-        it('should handle getAllEstimate.fulfilled', () => {
+        it('handle getAllEstimate.fulfilled', () => {
             const filterRequest = {
                 paId:"test",
                 page: 2,
@@ -100,7 +100,7 @@ describe('usageEstimateSlice', () => {
             expect(nextState.historyEstimates).toEqual(mockPayload.result);
         });
 
-        it('should handle getAllEstimate.rejected', () => {
+        it('handle getAllEstimate.rejected', () => {
             const state = {
                 loading: true,
                 historyEstimates: {},
@@ -113,7 +113,133 @@ describe('usageEstimateSlice', () => {
             expect(nextState.historyEstimates).toEqual({});
             expect(nextState.error).toEqual('ERROR with history estimate');
         });
+
+        it('handle validatedEstimate.pending', () => {
+            const initialState = {
+                historyEstimates: null,
+                detail:  undefined,
+                formData:  undefined,
+                pagination: null,
+                loading: false,
+                error: 'Some error message',
+            };
+
+            const nextState = usageEstimateSlice.reducer(initialState, validatedEstimate.pending());
+
+            expect(nextState.loading).toBe(true);
+            expect(nextState.error).toBeUndefined();
+        });
+
+        it('handle validatedEstimate.fulfilled', () => {
+            const initialState = {
+                loading: true,
+                historyEstimates: {
+                    actual: null,
+                },
+            };
+
+            const payload = {  };
+            const nextState = usageEstimateSlice.reducer(initialState, validatedEstimate.fulfilled(payload));
+
+            expect(nextState.loading).toBe(false);
+            expect(nextState.historyEstimates.actual).toBe(payload);
+        });
+
+        it('handle validatedEstimate.rejected"', () => {
+            const initialState = {
+                loading: true,
+                error: undefined,
+            };
+
+            const nextState = usageEstimateSlice.reducer(initialState, validatedEstimate.rejected());
+
+            expect(nextState.loading).toBe(false);
+            expect(nextState.error).toBe('ERROR with history estimate');
+        });
+
+        it('handle getDetailEstimate.pending', () => {
+            const initialState = {
+                loading: false,
+                detail: { },
+                error: 'Some error message',
+            };
+
+            const payload = {  };
+            const nextState = usageEstimateSlice.reducer(initialState, getDetailEstimate.pending(payload));
+            expect(nextState.loading).toBe(true);
+            expect(nextState.detail).toBe(undefined);
+            expect(nextState.error).toBeUndefined();
+        });
+
+        it('handle getDetailEstimate.fulfilled', () => {
+            const initialState = {
+            loading: true,
+            detail: null,
+            formData: null,
+        };
+
+            const payload = { /* payload data */ };
+            const nextState = usageEstimateSlice.reducer(initialState, getDetailEstimate.fulfilled(payload));
+
+            expect(nextState.loading).toBe(false);
+            expect(nextState.detail).toBe(payload);
+            expect(nextState.formData).toEqual(payload);
+            });
+
+        it('handle getDetailEstimate.rejected', () => {
+            const initialState = {
+                loading: true,
+                detail: { /* some existing detail */ },
+                error: undefined,
+            };
+
+            const action = {
+                payload: { /* AxiosError data */ },
+            };
+
+            const nextState = usageEstimateSlice.reducer(initialState, getDetailEstimate.rejected(action));
+
+            expect(nextState.detail).toBeUndefined();
+            expect(nextState.loading).toBe(false);
+            expect(nextState.error).toBe('ERROR DETAIL ESTIMATE');
+        });
+
+        it('handle updateEstimate.pending', () => {
+            const initialState = {
+                loading: false,
+                error: 'Some error message',
+                        };
+            const nextState = usageEstimateSlice.reducer(initialState, updateEstimate.pending());
+
+            expect(nextState.loading).toBe(true);
+            expect(nextState.error).toBeUndefined();
+        });
+
+        it('handle updateEstimate.fulfilled', () => {
+            const initialState = {
+                loading: true,
+                formData: null,
+            };
+
+            const payload = { /* payload data */ };
+            const nextState = usageEstimateSlice.reducer(initialState, updateEstimate.fulfilled(payload));
+            expect(nextState.loading).toBe(false);
+            expect(nextState.formData).toBe(payload);
+        });
+
+        it('handle handle updateEstimate.rejected"', () => {
+            const initialState = {
+                loading: true,
+                error: undefined,
+            };
+            const nextState = usageEstimateSlice.reducer(initialState, updateEstimate.rejected());
+
+            expect(nextState.loading).toBe(false);
+            expect(nextState.error).toBe('ERROR with update estimate');
+        });
+
     });
-
-
 });
+
+
+
