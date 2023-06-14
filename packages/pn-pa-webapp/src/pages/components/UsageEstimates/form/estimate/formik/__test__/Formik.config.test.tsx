@@ -1,7 +1,8 @@
-import {cleanup, screen} from "@testing-library/react";
+import {cleanup} from "@testing-library/react";
 import {UsageEstimatesInitialValue} from "../Formik.config";
 
 describe("Formik.config.test", () => {
+
   afterEach(cleanup);
 
   it("whenFormikInitialValuesAreCorrectlyInitialized", async function () {
@@ -18,7 +19,14 @@ describe("Formik.config.test", () => {
     }
 
     const formikInitialValue = UsageEstimatesInitialValue(initEstimate, initBilling);
-    console.log(formikInitialValue)
+
+    expect(formikInitialValue.totalDigitalNotif).toEqual(initEstimate.totalDigitalNotif);
+    expect(formikInitialValue.totalAnalogNotif).toEqual(initEstimate.totalAnalogNotif);
+    expect(formikInitialValue.total890Notif).toEqual(initEstimate.total890Notif);
+    expect(formikInitialValue.sdiCode).toEqual(initBilling.sdiCode);
+    expect(formikInitialValue.splitPayment).toEqual(initBilling.splitPayment);
+    expect(formikInitialValue.mailAddress).toEqual(initBilling.mailAddress);
+    expect(formikInitialValue.description).toEqual(initBilling.description);
   });
 
 

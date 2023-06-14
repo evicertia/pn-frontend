@@ -3,7 +3,7 @@ import {
   ESTIMATE_FILE_DETAIL,
   ESTIMATE_FILES,
   ESTIMATE_PAGINATION_LIST,
-  UPDATE_ESTIMATE
+  UPDATE_ESTIMATE, VALIDATED_ESTIMATE
 } from "../usageestimates.routes";
 import {StatusUpdateEnum} from "../../../models/UsageEstimation";
 
@@ -28,6 +28,10 @@ describe('UsageEstimatesTest', function () {
     expect(route).toEqual(`/pn-usage-estimates/estimate/${PA_ID}/detail/${REF_MONTH}`);
   });
 
+  it('should compile validate estimates', function () {
+    const route = VALIDATED_ESTIMATE(PA_ID, REF_MONTH);
+    expect(route).toEqual(`/pn-usage-estimates/${PA_ID}/estimate/${REF_MONTH}/validated`);
+  });
 
   it('should compile estimate files', function () {
     const route = ESTIMATE_FILES(PA_ID, REF_MONTH);

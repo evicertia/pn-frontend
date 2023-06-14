@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import MobileHistoryTable from '../MobileHistoryTable';
+import {MobileHistoryTable} from '../MobileHistoryTable';
 import {EstimateStatusEnum} from "../../../../../models/UsageEstimation";
 
 
@@ -33,7 +33,7 @@ const mockEstimates = [
 
 
 
-describe('HistoryTable', () => {
+describe('MobileHistoryTable', () => {
     test('renders table columns and rows correctly', () => {
 
         render(
