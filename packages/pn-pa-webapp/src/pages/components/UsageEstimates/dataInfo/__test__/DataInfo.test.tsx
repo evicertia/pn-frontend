@@ -1,8 +1,8 @@
 import {render, cleanup, screen} from "@testing-library/react";
 import {DataInfo} from "../DataInfo";
 import {usageBillingDataPA, usageEstimations, usageInfoPA, usagePeriod} from "../rows";
-import {BillingDetail, Estimate, EstimateStatusEnum} from "../../../../../models/UsageEstimation";
-import {getFormattedDateTime, localeStringReferenceMonth} from "../../../../../utils/utility";
+import {EstimateStatusEnum} from "../../../../../models/UsageEstimation";
+import {localeStringReferenceMonth} from "../../../../../utils/utility";
 
 
 const ScenarioUsageInfoPA = () => {

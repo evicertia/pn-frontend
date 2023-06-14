@@ -13,8 +13,8 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setPagination } from '../redux/usageEstimation/reducers';
 import {FilterRequest} from "../models/UsageEstimation";
 import {ESTIMATE_ACTIONS, getAllEstimate} from "../redux/usageEstimation/actions";
-import HistoryTable from './components/UsageEstimates/historyTable/HistoryTable';
-import MobileHistoryTable from "./components/UsageEstimates/historyTable/MobileHistoryTable";
+import {HistoryTable} from './components/UsageEstimates/historyTable/HistoryTable';
+import {MobileHistoryTable} from "./components/UsageEstimates/historyTable/MobileHistoryTable";
 import {ActualEstimateCard} from "./components/UsageEstimates/actualEstimateCard/ActualEstimateCard";
 
 export function EstimatePage ()  {

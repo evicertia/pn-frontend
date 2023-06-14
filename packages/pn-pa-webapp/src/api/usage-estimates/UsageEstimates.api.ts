@@ -20,7 +20,12 @@ export const UsageEstimatesApi = {
    * @param params
    */
   getAllEstimate: async (params: FilterRequestEstimate): Promise<HistoryEstimates> => {
-    const response = await apiClient.get<HistoryEstimates>(ESTIMATE_PAGINATION_LIST(params.paId, params.page, params.size));
+    const config = {
+      headers:{
+        originFe: "PN-PLATFORM-NOTIFICATION-FE"
+      }
+    };
+    const response = await apiClient.get<HistoryEstimates>(ESTIMATE_PAGINATION_LIST(params.paId, params.page, params.size), config);
     return response.data;
   },
 

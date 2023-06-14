@@ -2,9 +2,9 @@ import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import {useNavigate} from "react-router-dom";
 import {
-    Column,
-    Item,
-    ItemsTable
+  Column,
+  Item,
+  ItemsTable
 } from '@pagopa-pn/pn-commons';
 
 import {EstimateHistory, EstimateStatusEnum, HistoryColumn} from '../../../../models/UsageEstimation';
@@ -14,87 +14,86 @@ import * as routes from "../../../../navigation/routes.const";
 
 
 type Props = {
-    estimates: Array<EstimateHistory>;
+  estimates: Array<EstimateHistory>;
 };
 
-const HistoryTable =
-    ({ estimates}: Props) => {
+export const HistoryTable =
+  ({ estimates}: Props) => {
     const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
     const navigate = useNavigate();
 
     const handleRowClick = (row: Item) => {
-        if (row?.status && row.status === EstimateStatusEnum.VALIDATED) {
-            navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id as string));
-        }
+      if (row?.status && row.status === EstimateStatusEnum.VALIDATED) {
+        navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id as string));
+      }
     };
 
     const columns: Array<Column<HistoryColumn>> = [
-        {
-            id: 'referenceMonth',
-            label: t('history-table.reference-month'),
-            width: '15%',
-            getCellLabel(value: string) {
-                return localeStringReferenceMonth(value);
-            },
-            onClick(row: Item) {
-                handleRowClick(row);
-            },
-            disableAccessibility: true,
+      {
+        id: 'referenceMonth',
+        label: t('history-table.reference-month'),
+        width: '15%',
+        getCellLabel(value: string) {
+          return localeStringReferenceMonth(value);
         },
-        {
-            id: 'deadlineDate',
-            label: t('history-table.deadline-date'),
-            width: '15%',
-            getCellLabel(value: string) {
-                return getFormattedDateTime(value);
-            },
-            onClick(row: Item) {
-                handleRowClick(row);
-            },
-            disableAccessibility: true,
+        onClick(row: Item) {
+          handleRowClick(row);
         },
-        {
-            id: 'lastModifiedDate',
-            label: t('history-table.last-modified-date'),
-            width: '15%',
-            sortable: false, // TODO: will be re-enabled in PN-1124
-            getCellLabel(value: string) {
-                return getFormattedDateTime(value);
-            },
-            onClick(row: Item) {
-                handleRowClick(row);
-            },
-            disableAccessibility: true
+        disableAccessibility: true,
+      },
+      {
+        id: 'deadlineDate',
+        label: t('history-table.deadline-date'),
+        width: '15%',
+        getCellLabel(value: string) {
+          return getFormattedDateTime(value);
         },
-        {
-            id: 'status',
-            label: t('history-table.status'),
-            width: '10%',
-            getCellLabel(value: EstimateStatusEnum) {
-                return <EstimateStatusChip data={value}/>;
-            },
-        }
+        onClick(row: Item) {
+          handleRowClick(row);
+        },
+        disableAccessibility: true,
+      },
+      {
+        id: 'lastModifiedDate',
+        label: t('history-table.last-modified-date'),
+        width: '15%',
+        sortable: false, // TODO: will be re-enabled in PN-1124
+        getCellLabel(value: string) {
+          return getFormattedDateTime(value);
+        },
+        onClick(row: Item) {
+          handleRowClick(row);
+        },
+        disableAccessibility: true
+      },
+      {
+        id: 'status',
+        label: t('history-table.status'),
+        width: '10%',
+        getCellLabel(value: EstimateStatusEnum) {
+          return <EstimateStatusChip data={value}/>;
+        },
+      }
     ];
 
     const rows: Array<Item> = estimates.map((n: EstimateHistory) => ({
-        ...n,
-        id: n.referenceMonth,
+      ...n,
+      id: n.referenceMonth,
     }));
 
     return (
-        <Fragment>
-            {estimates && (
-                <Fragment>
-                    {
-                        <ItemsTable
-                            columns={columns}
-                            rows={rows}
-                        />
-                    }
-                </Fragment>
-            )}
-        </Fragment>
+      <Fragment>
+        {estimates && (
+          <Fragment>
+            {
+              <ItemsTable
+                columns={columns}
+                rows={rows}
+              />
+            }
+          </Fragment>
+        )}
+      </Fragment>
     );
-};
+  };
 
-export default HistoryTable;
