@@ -1,6 +1,12 @@
 import MockAdapter from "axios-mock-adapter";
 import {apiClient} from "../../apiClients";
-import {ESTIMATE_DETAIL, ESTIMATE_PAGINATION_LIST, UPDATE_ESTIMATE, VALIDATED_ESTIMATE} from "../usageestimates.routes";
+import {
+  ESTIMATE_DETAIL,
+  ESTIMATE_FILE_DETAIL, ESTIMATE_FILES,
+  ESTIMATE_PAGINATION_LIST,
+  UPDATE_ESTIMATE,
+  VALIDATED_ESTIMATE
+} from "../usageestimates.routes";
 import {EstimateStatusEnum, StatusUpdateEnum} from "../../../models/UsageEstimation";
 import {UsageEstimatesApi} from "../UsageEstimates.api";
 
@@ -140,3 +146,35 @@ const mockHistoryEstimates = {
     content: []
   }
 }
+
+describe('Usage Estimate api tests', () => {
+  let mock;
+
+  beforeEach(() => {
+    mock = new MockAdapter(apiClient);
+  });
+
+  afterEach(() => {
+    mock.reset();
+    mock.restore();
+  });
+
+  it('getFilesEstimate', async () => {
+    const mockInfoDownloads = [{ /* mocked info download data */ }];
+    mock.onGet(ESTIMATE_FILES(PA_ID, REF_MONTH)).reply(200, mockInfoDownloads);
+
+    const res = await UsageEstimatesApi.getFilesEstimate(PA_ID, REF_MONTH);
+
+    expect(res).toStrictEqual(mockInfoDownloads);
+  });
+
+  it('getFileEstimate', async () => {
+    const fileId = 'exampleFileId';
+    const mockInfoDownload = { /* mocked info download data */ };
+    mock.onGet(ESTIMATE_FILE_DETAIL(PA_ID, fileId)).reply(200, mockInfoDownload);
+
+    const res = await UsageEstimatesApi.getFileEstimate(PA_ID, fileId);
+
+    expect(res).toStrictEqual(mockInfoDownload);
+  });
+});

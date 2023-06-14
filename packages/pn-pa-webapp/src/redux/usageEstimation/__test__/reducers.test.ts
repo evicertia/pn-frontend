@@ -94,7 +94,7 @@ describe('usageEstimateSlice', () => {
                 result:"testFulfilled"
             };
 
-            const nextState = usageEstimateSlice.reducer(initialState, getAllEstimate.fulfilled("testFulfilled",filterRequest));
+            const nextState = usageEstimateSlice.reducer(initialState, getAllEstimate.fulfilled("testFulfilled","testFulfilled",filterRequest));
 
             expect(nextState.loading).toEqual(false);
             expect(nextState.historyEstimates).toEqual(mockPayload.result);

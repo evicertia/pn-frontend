@@ -120,11 +120,12 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
         {t('actual-estimate.card.button.edit-estimate')}
       </Button>
 
-      <ButtonSendEstimate paId={props.paId} referenceMonth={props.data.referenceMonth} deadlineDate={props.data.deadlineDate}/>
+      <ButtonSendEstimate  paId={props.paId} referenceMonth={props.data.referenceMonth} deadlineDate={props.data.deadlineDate}/>
     </>;
   } else if (props.data.status === EstimateStatusEnum.VALIDATED) {
-    return <Button variant="contained"
-                   onClick={() => {
+    return <Button data-testid="update-after-validation-button-test-id"
+                    variant="contained"
+                    onClick={() => {
                      navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
                    }}>
       {t('actual-estimate.card.button.edit-estimate')}
@@ -168,13 +169,15 @@ const ButtonSendEstimate = (props: {paId: string; referenceMonth: string; deadli
   };
 
   return <>
-    <LoadingButton variant={"contained"}
+    <LoadingButton data-testid="loading-button-test-id"
+                   variant={"contained"}
                    type="button"
                    onClick={()=> onSendClick()}>
       {t('actual-estimate.card.button.send-estimate')}
     </LoadingButton>
 
-    <SendEstimateDialog title={t('dialog.send-dialog-title') + " " + localeStringReferenceMonth(props.referenceMonth) + "?"}
+    <SendEstimateDialog data-testid="dialog-test-id"
+                        title={t('dialog.send-dialog-title') + " " + localeStringReferenceMonth(props.referenceMonth) + "?"}
                         message={t('dialog.send-dialog-message') + getFormattedDateTimeAbstract(props.deadlineDate, t('edit-estimate.label.date-time-format'))}
                         open={open}
                         onClickNegative={handleNegative}

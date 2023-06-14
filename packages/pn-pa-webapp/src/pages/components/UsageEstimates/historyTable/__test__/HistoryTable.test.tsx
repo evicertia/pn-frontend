@@ -80,7 +80,7 @@ describe('HistoryTable', () => {
             history.push = navigate;
 
             render(
-                <Router history={history}>
+                <Router >
                     <HistoryTable estimates={mockEstimates} />
                 </Router>
             );

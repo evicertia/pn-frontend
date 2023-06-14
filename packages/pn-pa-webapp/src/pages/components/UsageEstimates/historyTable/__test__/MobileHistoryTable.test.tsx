@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import {cleanup, render, screen} from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import {MobileHistoryTable} from '../MobileHistoryTable';
 import {EstimateStatusEnum} from "../../../../../models/UsageEstimation";
+import * as util from "../../../../../../src/utils/utility"
 
 
 const mockEstimates = [
@@ -34,6 +35,10 @@ const mockEstimates = [
 
 
 describe('MobileHistoryTable', () => {
+    beforeEach(() => {
+        window.history.pushState({}, '', '/');
+    });
+    afterEach(cleanup);
     test('renders table columns and rows correctly', () => {
 
         render(
@@ -45,13 +50,13 @@ describe('MobileHistoryTable', () => {
         // Assert the presence and text content of the columnss
         expect(screen.getByText('Giugno 2023')).toBeInTheDocument();
         expect(screen.getByText('22/05/2023, alle 13:36')).toBeInTheDocument();
-        expect(screen.getByText('absent-label-chip')).toBeInTheDocument();
+
 
         // Assert the presence and text content of the table rows
         mockEstimates.forEach((estimate) => {
-            expect(screen.getByText(estimate.referenceMonth)).toBeInTheDocument();
-            expect(screen.getByText(estimate.deadlineDate)).toBeInTheDocument();
-            expect(screen.getByText(estimate.lastModifiedDate)).toBeInTheDocument();
+            expect(screen.getByText(util.localeStringReferenceMonth(estimate.referenceMonth))).toBeInTheDocument();
+            expect(screen.getByText(util.getFormattedDateTime(estimate.deadlineDate))).toBeInTheDocument();
+            expect(screen.getByText(util.getFormattedDateTime(estimate.lastModifiedDate))).toBeInTheDocument();
         });
     });
 

@@ -4,17 +4,11 @@ import {BrowserRouter, MemoryRouter, Route, Routes, useNavigate} from "react-rou
 import { createStore } from "redux";
 import {EstimatePeriod, EstimateStatusEnum} from "../../../../../models/UsageEstimation";
 import {Provider} from "react-redux";
-import {GET_EDIT_ESTIMATE_PATH} from "../../../../../navigation/routes.const";
+import {GET_DETAIL_ESTIMATE_PATH, GET_EDIT_ESTIMATE_PATH} from "../../../../../navigation/routes.const";
 import * as reactRedux from "../../../../../redux/hooks";
 import { useAppDispatch } from '../../../../../redux/hooks';
-import userEvent from '@testing-library/user-event';
 import { validatedEstimate } from '../../../../../redux/usageEstimation/actions';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-
-
-
-
+import {appStateActions} from "@pagopa-pn/pn-commons";
 
 const firstEstimate :EstimatePeriod = {
     referenceMonth: "LUG-2023",
@@ -82,6 +76,28 @@ const sentEstimate :EstimatePeriod = {
 };
 
 
+const sentValidatedEstimate :EstimatePeriod = {
+    referenceMonth: "GIU-2023",
+    status: EstimateStatusEnum.VALIDATED,
+    lastModifiedDate: "2023-05-22T13:36:27.000+00:00",
+    deadlineDate: "2023-06-15T23:59:00.000+00:00",
+    estimate: {
+        totalDigitalNotif: 12,
+        total890Notif: 1330,
+        totalAnalogNotif: 125,
+    },
+    showEdit: false,
+    billing: {
+        sdiCode: "ABCDE12345",
+        splitPayment: false,
+        description: "string",
+        mailAddress: "test@test.com",
+
+    },
+
+};
+
+
 
 const propsDraftEstimate ={
     paId:"123456789",
@@ -98,12 +114,12 @@ const propsFirstEstimate ={
     data: firstEstimate,
 };
 
-const propsNullElement ={
+const propsAfterValidationElement ={
     paId: null,
-    data: firstEstimate,
+    data: sentValidatedEstimate,
 };
 
-describe("test", () =>{
+
 
 describe('ActualEstimateCardFunctionalities', () => {
     beforeEach(() => {
@@ -161,6 +177,7 @@ describe('ActualEstimateCardFunctionalities', () => {
 
 
     it('edit estimate button and send estimate button when status is DRAFT', async () => {
+
         const mockDispatchFn = jest.fn();
         const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
         spyOnDispatch.mockReturnValue(mockDispatchFn);
@@ -171,9 +188,8 @@ describe('ActualEstimateCardFunctionalities', () => {
             </Routes>
         </BrowserRouter>);
 
-        const sendEstimateButton = getByText('actual-estimate.card.button.send-estimate');
+        const sendEstimateButton = screen.getByText("actual-estimate.card.button.send-estimate");
         fireEvent.click(sendEstimateButton);
-
         await act(async () => {
             await waitFor(() => {
                 expect(screen.getByTestId("send-estimate-dialog")).toBeInTheDocument()
@@ -255,7 +271,69 @@ describe("ActualEstimateCardRender", () => {
 
         });
 
-    });
+        it('renders edit estimate button when status is VALIDATED', () => {
 
+            const mockDispatchFn = jest.fn();
+            const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
+            spyOnDispatch.mockReturnValue(mockDispatchFn);
+
+
+            const {getByText} = render(<BrowserRouter>
+                <Routes>
+                    <Route path={"/"} element={<ActualEstimateCard {...propsAfterValidationElement}/>}/>
+                    <Route path={GET_EDIT_ESTIMATE_PATH(propsAfterValidationElement.data.referenceMonth)}
+                           element={<h1 data-testid={"estimate-detail-page"}>Detail Estimate page route</h1>}/>
+                </Routes>
+            </BrowserRouter>);
+
+            const editEstimateButton = screen.getByTestId('update-after-validation-button-test-id');
+            fireEvent.click(editEstimateButton);
+
+            expect(location.pathname).toEqual(GET_EDIT_ESTIMATE_PATH(propsAfterValidationElement.data.referenceMonth));
+            expect(screen.getByTestId("estimate-detail-page")).toBeInTheDocument()
+             });
+
+        it('handles positive action correctly', async () => {
+            const mockDispatch = jest.fn();
+            const mockExternalDispatchResolve = jest.fn().mockImplementation(() => Promise.resolve(mockDispatch) );
+            const mockExternalDispatchRejected = jest.fn().mockImplementation(() => Promise.reject(mockDispatch) );
+            const mockNavigateFn = jest.fn();
+            render(
+                <Provider store={mockStore}>
+                    <MemoryRouter>
+                        <ActualEstimateCard {...propsDraftEstimate} />
+                    </MemoryRouter>
+                </Provider>
+            );
+
+            await act(async () => {
+                const sendEstimateButton = screen.getByTestId('loading-button-test-id');
+                fireEvent.click(sendEstimateButton);
+
+                await act(async () => {
+                    screen.getByTestId("dialog-test-id");
+
+                });
+            });
+        });
+
+        it('handles negative action correctly', () => {
+            const mockSetOpen = jest.fn();
+            const mockDispatchFn = jest.fn();
+            const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
+            spyOnDispatch.mockReturnValue(mockDispatchFn);
+            const {getByText} = render(<BrowserRouter>
+                <Routes>
+                    <Route path={"/"} element={<ActualEstimateCard {...propsDraftEstimate}/>}/>
+
+                </Routes>
+            </BrowserRouter>);
+
+            const negativeButton = screen.getByText('actual-estimate.card.button.send-estimate');
+            fireEvent.click(negativeButton);
+
+            expect(mockSetOpen).toHaveBeenCalledWith(false);
+        });
 
 });
+
