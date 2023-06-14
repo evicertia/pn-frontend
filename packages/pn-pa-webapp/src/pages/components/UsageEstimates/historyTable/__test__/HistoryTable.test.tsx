@@ -1,8 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {BrowserRouter, BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {HistoryTable} from '../HistoryTable';
 import {EstimateStatusEnum} from "../../../../../models/UsageEstimation";
-
+import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
+import {ActualEstimateCard} from "../../actualEstimateCard/ActualEstimateCard";
+import {GET_DETAIL_ESTIMATE_PATH, GET_EDIT_ESTIMATE_PATH} from "../../../../../navigation/routes.const";
 
 const mockEstimates = [
    {
@@ -49,5 +52,45 @@ describe('HistoryTable', () => {
 
         });
 
+    describe('HistoryTableHandleRowClick', () => {
+
+
+        it('handle validated row', async () => {
+            render(<BrowserRouter>
+                <Routes>
+                    <Route path={"/"} element={<HistoryTable estimates={mockEstimates}/>} />
+                    <Route path={GET_DETAIL_ESTIMATE_PATH(mockEstimates[1].referenceMonth)}
+                           element={<h1 data-testid={"estimate-detail-page"}>Estimate page route</h1>}/>
+                </Routes>
+            </BrowserRouter>);
+            const estimateButton = screen.getByText("Maggio 2023");
+            fireEvent.click(estimateButton);
+            await act(async () => {
+                await waitFor(() => {
+                    expect(location.pathname).toEqual(GET_DETAIL_ESTIMATE_PATH(mockEstimates[1].referenceMonth));
+                    expect(screen.getByTestId("estimate-detail-page")).toBeInTheDocument()
+                })
+
+            })
+        });
+
+        it('handle not validated row', () => {
+            const history = createMemoryHistory();
+            const navigate = jest.fn();
+            history.push = navigate;
+
+            render(
+                <Router history={history}>
+                    <HistoryTable estimates={mockEstimates} />
+                </Router>
+            );
+
+            const nonValidatedRow = screen.getByText('Giugno 2023');
+            userEvent.click(nonValidatedRow);
+            expect(navigate).not.toHaveBeenCalled();
+        });
+    });
 
 });
+
+

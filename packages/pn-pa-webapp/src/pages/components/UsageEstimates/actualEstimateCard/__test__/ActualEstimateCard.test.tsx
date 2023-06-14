@@ -5,9 +5,12 @@ import { createStore } from "redux";
 import {EstimatePeriod, EstimateStatusEnum} from "../../../../../models/UsageEstimation";
 import {Provider} from "react-redux";
 import {GET_EDIT_ESTIMATE_PATH} from "../../../../../navigation/routes.const";
-
-
 import * as reactRedux from "../../../../../redux/hooks";
+import { useAppDispatch } from '../../../../../redux/hooks';
+import userEvent from '@testing-library/user-event';
+import { validatedEstimate } from '../../../../../redux/usageEstimation/actions';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
 
 
 
@@ -57,7 +60,7 @@ const draftEstimate :EstimatePeriod = {
 };
 
 
-const validatedEstimate :EstimatePeriod = {
+const sentEstimate :EstimatePeriod = {
     referenceMonth: "GIU-2023",
     status: EstimateStatusEnum.DRAFT,
     lastModifiedDate: "2023-05-22T13:36:27.000+00:00",
@@ -87,7 +90,7 @@ const propsDraftEstimate ={
 
 const propsValidateElement ={
     paId:"123456789",
-    data: validatedEstimate,
+    data: sentEstimate,
 };
 
 const propsFirstEstimate ={
@@ -100,6 +103,7 @@ const propsNullElement ={
     data: firstEstimate,
 };
 
+describe("test", () =>{
 
 describe('ActualEstimateCardFunctionalities', () => {
     beforeEach(() => {
@@ -203,8 +207,10 @@ describe('ActualEstimateCardFunctionalities', () => {
     });
 
 });
-    const mockStore = createStore(() => propsDraftEstimate, propsDraftEstimate);
-    describe("ActualEstimateCardRender", () => {
+
+describe("ActualEstimateCardRender", () => {
+        const mockStore = createStore(() => propsDraftEstimate, propsDraftEstimate);
+
         afterEach(cleanup);
 
         it("renders the card with correct data - DRAFT", async () => {
@@ -251,3 +257,5 @@ describe('ActualEstimateCardFunctionalities', () => {
 
     });
 
+
+});
