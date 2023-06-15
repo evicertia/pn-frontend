@@ -327,13 +327,10 @@ describe("ActualEstimateCardRender", () => {
         });
 
         it('renders edit estimate button when status is VALIDATED', async() => {
-
             const mockDispatchFn = jest.fn();
             const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
             spyOnDispatch.mockReturnValue(mockDispatchFn);
-
-
-            const {getByText} = render(<BrowserRouter>
+            render(<BrowserRouter>
                 <Routes>
                     <Route path={"/"} element={<ActualEstimateCard {...propsAfterValidationElement}/>}/>
                     <Route path={GET_EDIT_ESTIMATE_PATH(propsAfterValidationElement.data.referenceMonth)}
@@ -344,6 +341,7 @@ describe("ActualEstimateCardRender", () => {
             fireEvent.click(editEstimateButton);
             await act(async () => {
                 await waitFor(() => {
+                    screen.debug();
                     expect(location.pathname).toEqual(GET_EDIT_ESTIMATE_PATH(propsAfterValidationElement.data.referenceMonth));
                     expect(screen.getByTestId("estimate-detail-page")).toBeInTheDocument()
                 })
