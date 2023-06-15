@@ -155,7 +155,6 @@ describe('ActualEstimateCardFunctionalities', () => {
     afterEach(cleanup);
 
 
-
     it('Create estimate button behaviour when lastModifiedDate is null and status is DRAFT', async () => {
         render(<BrowserRouter>
             <Routes>
@@ -225,8 +224,39 @@ describe('ActualEstimateCardFunctionalities', () => {
 
     });
 
+    it('renders edit estimate button when status is VALIDATED', async() => {
+        const mockNavigateFn = jest.fn();
+        jest.mock('react-router-dom', () => ({
+            ...jest.requireActual('react-router-dom'),
+            useNavigate: () => mockNavigateFn,
+        }));
+        const mockDispatchFn = jest.fn();
+        const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
+        spyOnDispatch.mockReturnValue(mockDispatchFn);
+        render(<BrowserRouter>
+            <Routes>
+                <Route path={"/"} element={<ActualEstimateCard {...propsAfterValidationElement}/>}/>
+                <Route path={GET_EDIT_ESTIMATE_PATH(propsAfterValidationElement.data.referenceMonth)}
+                       element={<h1 data-testid={"estimate-detail-page"}>Detail Estimate page route</h1>}/>
+            </Routes>
+        </BrowserRouter>);
+        const editEstimateButton = screen.getByTestId('update-after-validation-button-test-id');
+        fireEvent.click(editEstimateButton);
+        await act(async () => {
+            await waitFor(() => {
+                screen.debug();
+                expect(location.pathname).toEqual(GET_EDIT_ESTIMATE_PATH(propsAfterValidationElement.data.referenceMonth));
+                expect(screen.getByTestId("estimate-detail-page")).toBeInTheDocument()
+            })
+        })
+    });
 
     it('edit estimate button when status is VALIDATED', async () => {
+        const mockNavigateFn = jest.fn();
+        jest.mock('react-router-dom', () => ({
+            ...jest.requireActual('react-router-dom'),
+            useNavigate: () => mockNavigateFn,
+        }));
         const mockDispatchFn = jest.fn();
         const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
         spyOnDispatch.mockReturnValue(mockDispatchFn);
@@ -326,33 +356,54 @@ describe("ActualEstimateCardRender", () => {
 
         });
 
-        it('renders edit estimate button when status is VALIDATED', async() => {
-            const mockDispatchFn = jest.fn();
-            const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
-            spyOnDispatch.mockReturnValue(mockDispatchFn);
-            render(<BrowserRouter>
-                <Routes>
-                    <Route path={"/"} element={<ActualEstimateCard {...propsAfterValidationElement}/>}/>
-                    <Route path={GET_EDIT_ESTIMATE_PATH(propsAfterValidationElement.data.referenceMonth)}
-                           element={<h1 data-testid={"estimate-detail-page"}>Detail Estimate page route</h1>}/>
-                </Routes>
-            </BrowserRouter>);
-            const editEstimateButton = screen.getByTestId('update-after-validation-button-test-id');
-            fireEvent.click(editEstimateButton);
+        it('whenButtonCancelDialogIsClicked', async () => {
+            const screen= render(
+              <Provider store={mockStore}>
+                  <MemoryRouter>
+                      <ActualEstimateCard {...propsDraftEstimate} />
+                  </MemoryRouter>
+              </Provider>
+            );
+
+            const openDialogButton = screen.getByTestId('loading-button-test-id');
+            expect(openDialogButton).toBeInTheDocument();
+
+            fireEvent.click(openDialogButton);
+            const sendDialog = screen.getByTestId("send-estimate-dialog");
+            expect(sendDialog).toBeInTheDocument();
+
+            const buttons = sendDialog.querySelectorAll('button');
+            buttons.forEach((btn, index) => {
+                screen.debug(btn)
+                if(index === 0) {
+                    fireEvent.click(btn);
+                }
+            });
+
             await act(async () => {
-                await waitFor(() => {
-                    screen.debug();
-                    expect(location.pathname).toEqual(GET_EDIT_ESTIMATE_PATH(propsAfterValidationElement.data.referenceMonth));
-                    expect(screen.getByTestId("estimate-detail-page")).toBeInTheDocument()
+                await waitFor( () => {
+                    expect(sendDialog).not.toBeInTheDocument();
                 })
             })
-          });
+        });
 
-        it('handles positive action correctly 1', async () => {
-            const mockDispatch = jest.fn();
-            const mockExternalDispatchResolve = jest.fn().mockImplementation(() => Promise.resolve(mockDispatch) );
-            const mockExternalDispatchRejected = jest.fn().mockImplementation(() => Promise.reject(mockDispatch) );
-            const mockNavigateFn = jest.fn();
+        it('whenButtonSendDialogIsClicked', async () => {
+            const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
+            const mockDispatch = jest.fn().mockReturnValue(
+                jest.fn().mockResolvedValue(Promise.resolve())
+            );
+
+            // const mockDi =  Promise.resolve(Promise.resolve(()=>jest.fn().mockReturnValue(jest.fn())));
+            // const mockDi =  Promise.reject(jest.fn().mockReturnValue(jest.fn()));
+            // const mockPromise = jest.fn(() => mockDispatch);
+
+            const mockExternalDispatchResolve = spyOnDispatch.mockReturnValue(
+              mockDispatch
+                // () => Promise.resolve(()=> jest.fn().mockReturnValue(jest.fn())))
+            );
+
+
+
             const screen= render(
                 <Provider store={mockStore}>
                     <MemoryRouter>
@@ -361,19 +412,27 @@ describe("ActualEstimateCardRender", () => {
                 </Provider>
             );
 
-            await act(async () => {
-                //const sendEstimateButton = screen.getByTestId('loading-button-test-id');
+            const openDialogButton = screen.getByTestId('loading-button-test-id');
+            expect(openDialogButton).toBeInTheDocument();
 
-                const sendEstimateButton = screen.getByTestId('loading-button-test-id');
+            fireEvent.click(openDialogButton);
+            const sendDialog = screen.getByTestId("send-estimate-dialog");
+            const buttons = sendDialog.querySelectorAll('button');
 
-                fireEvent.click(sendEstimateButton);
-
-                await act(async () => {
-                    screen.debug();
-
-
-                });
+            buttons.forEach((btn, index) => {
+                screen.debug(btn)
+                if(index === 1) {
+                    fireEvent.click(btn);
+                }
             });
+
+            await act(async () => {
+                await waitFor( () => {
+                    expect(sendDialog).not.toBeInTheDocument();
+                    expect(mockExternalDispatchResolve).toBeCalledTimes(2);
+                })
+            })
+
         });
 
         /*

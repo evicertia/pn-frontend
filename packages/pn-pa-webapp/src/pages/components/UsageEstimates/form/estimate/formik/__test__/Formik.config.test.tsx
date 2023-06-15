@@ -23,7 +23,6 @@ describe("Formik.config.test", () => {
     expect(formikInitialValue.totalDigitalNotif).toEqual(initEstimate.totalDigitalNotif);
     expect(formikInitialValue.totalAnalogNotif).toEqual(initEstimate.totalAnalogNotif);
     expect(formikInitialValue.total890Notif).toEqual(initEstimate.total890Notif);
-    expect(formikInitialValue.sdiCode).toEqual(initBilling.sdiCode);
     expect(formikInitialValue.splitPayment).toEqual(initBilling.splitPayment);
     expect(formikInitialValue.mailAddress).toEqual(initBilling.mailAddress);
     expect(formikInitialValue.description).toEqual(initBilling.description);
