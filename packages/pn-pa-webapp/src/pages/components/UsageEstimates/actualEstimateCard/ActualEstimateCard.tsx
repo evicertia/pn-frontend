@@ -120,7 +120,7 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
         {t('actual-estimate.card.button.edit-estimate')}
       </Button>
 
-      <ButtonSendEstimate  paId={props.paId} referenceMonth={props.data.referenceMonth} deadlineDate={props.data.deadlineDate}/>
+      <ButtonSendEstimate data-testid="send-estimate-button-draft-test-id"  paId={props.paId} referenceMonth={props.data.referenceMonth} deadlineDate={props.data.deadlineDate}/>
     </>;
   } else if (props.data.status === EstimateStatusEnum.VALIDATED) {
     return <Button data-testid="update-after-validation-button-test-id"
@@ -176,7 +176,7 @@ const ButtonSendEstimate = (props: {paId: string; referenceMonth: string; deadli
       {t('actual-estimate.card.button.send-estimate')}
     </LoadingButton>
 
-    <SendEstimateDialog data-testid="dialog-test-id"
+    <SendEstimateDialog data-testid="dialog-send-estimate-test-id"
                         title={t('dialog.send-dialog-title') + " " + localeStringReferenceMonth(props.referenceMonth) + "?"}
                         message={t('dialog.send-dialog-message') + getFormattedDateTimeAbstract(props.deadlineDate, t('edit-estimate.label.date-time-format'))}
                         open={open}
