@@ -1,14 +1,16 @@
-import {cleanup, render, screen} from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import {act, cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {BrowserRouter, BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {MobileHistoryTable} from '../MobileHistoryTable';
 import {EstimateStatusEnum} from "../../../../../models/UsageEstimation";
 import * as util from "../../../../../../src/utils/utility"
+import {HistoryTable} from "../HistoryTable";
+import {GET_DETAIL_ESTIMATE_PATH} from "../../../../../navigation/routes.const";
 
 
 const mockEstimates = [
     {
         referenceMonth: "GIU-2023",
-        status: EstimateStatusEnum.ABSENT,
+        status: EstimateStatusEnum.VALIDATED,
         lastModifiedDate: "2023-05-22T13:36:27.000+00:00",
         deadlineDate: "2023-06-15T23:59:00.000+00:00",
     },
@@ -32,6 +34,14 @@ const mockEstimates = [
     },
 ];
 
+const mockEstimate = [
+    {
+        referenceMonth: "GIU-2023",
+        status: EstimateStatusEnum.VALIDATED,
+        lastModifiedDate: "2023-05-22T13:36:27.000+00:00",
+        deadlineDate: "2023-06-15T23:59:00.000+00:00",
+    }
+];
 
 
 describe('MobileHistoryTable', () => {
@@ -58,6 +68,27 @@ describe('MobileHistoryTable', () => {
             expect(screen.getByText(util.getFormattedDateTime(estimate.deadlineDate))).toBeInTheDocument();
             expect(screen.getByText(util.getFormattedDateTime(estimate.lastModifiedDate))).toBeInTheDocument();
         });
+    });
+
+
+    it('handle validated row', async () => {
+        render(<BrowserRouter>
+            <Routes>
+                <Route path={"/"} element={<MobileHistoryTable estimates={mockEstimate}/>} />
+                <Route path={GET_DETAIL_ESTIMATE_PATH(mockEstimate[0].referenceMonth)}
+                       element={<h1 data-testid={"estimate-detail-page"}>Estimate page route</h1>}/>
+            </Routes>
+        </BrowserRouter>);
+        const estimateButtons = screen.getAllByText("show-detail");
+        const firstButton= estimateButtons[0]
+        fireEvent.click(firstButton);
+        await act(async () => {
+            await waitFor(() => {
+                expect(location.pathname).toEqual(GET_DETAIL_ESTIMATE_PATH(mockEstimate[0].referenceMonth));
+                expect(screen.getByTestId("estimate-detail-page")).toBeInTheDocument()
+            })
+
+        })
     });
 
 });
