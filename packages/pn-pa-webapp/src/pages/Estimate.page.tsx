@@ -10,12 +10,12 @@ import {
 import {Box, Typography } from '@mui/material';
 import { RootState } from '../redux/store';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { setPagination } from '../redux/usageEstimation/reducers';
+import { setPagination } from '../redux/usageEstimates/estimate/reducers';
 import {FilterRequest} from "../models/UsageEstimation";
-import {ESTIMATE_ACTIONS, getAllEstimate} from "../redux/usageEstimation/actions";
-import {HistoryTable} from './components/UsageEstimates/historyTable/HistoryTable';
-import {MobileHistoryTable} from "./components/UsageEstimates/historyTable/MobileHistoryTable";
-import {ActualEstimateCard} from "./components/UsageEstimates/actualEstimateCard/ActualEstimateCard";
+import {ESTIMATE_ACTIONS, getAllEstimate} from "../redux/usageEstimates/estimate/actions";
+import {HistoryTable} from './components/UsageEstimates/Estimate/historyTable/HistoryTable';
+import {MobileHistoryTable} from "./components/UsageEstimates/Estimate/historyTable/MobileHistoryTable";
+import {ActualEstimateCard} from "./components/UsageEstimates/Estimate/actualEstimateCard/ActualEstimateCard";
 
 export function EstimatePage ()  {
   const dispatch = useAppDispatch();

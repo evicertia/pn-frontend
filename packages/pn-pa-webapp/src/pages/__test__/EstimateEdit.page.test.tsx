@@ -83,7 +83,7 @@ jest.mock('@pagopa-pn/pn-commons', () => ({
   useIsMobile: () => false,
 }));
 
-jest.mock("../components/UsageEstimates/form/estimate/Estimate.form",
+jest.mock("../components/UsageEstimates/Estimate/form/Estimate.form",
  () => ({
    EstimateForm: (props:{detail:{}, onEstimateValidated: () => void}) => {
      // @ts-ignore

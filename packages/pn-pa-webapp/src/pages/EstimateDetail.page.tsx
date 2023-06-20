@@ -8,15 +8,15 @@ import * as routes from "../navigation/routes.const";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {RootState} from "../redux/store";
 import {localeStringReferenceMonth} from "../utils/utility";
-import {getDetailEstimate} from "../redux/usageEstimation/actions";
-import {resetDetailState} from "../redux/usageEstimation/reducers";
-import {DataInfo} from "./components/UsageEstimates/dataInfo/DataInfo";
+import {getDetailEstimate} from "../redux/usageEstimates/estimate/actions";
+import {resetDetailState} from "../redux/usageEstimates/estimate/reducers";
+import {DataInfo} from "./components/UsageEstimates/Common/dataInfo/DataInfo";
 import {
   usageBillingDataPA,
   usageEstimations,
   usageInfoPA,
   usagePeriod
-} from "./components/UsageEstimates/dataInfo/rows";
+} from "./components/UsageEstimates/Common/dataInfo/rows";
 
 
 export function EstimateDetailPage(){

@@ -1,5 +1,4 @@
-
-
+/* COMPONENTS INTERFACE */
 export interface PaInfo {
   paId: string;
   paName: string;
@@ -11,6 +10,73 @@ export interface PaInfo {
   sdiCode: string;
 }
 
+export interface Estimate {
+  totalDigitalNotif: number;
+  totalAnalogNotif: number;
+  total890Notif: number;
+}
+
+export interface EstimateHistory {
+  referenceMonth: string;
+  lastModifiedDate: string;
+  deadlineDate: string;
+  status: EstimateStatusEnum;
+}
+
+export interface ProfilingHistory {
+  referenceYear: string;
+  lastModifiedDate: string;
+  deadlineDate: string;
+  status: EstimateStatusEnum;
+}
+
+
+export interface FilterRequest {
+  page: number;
+  size: number;
+}
+
+export type HistoryColumn =
+  | 'referenceMonth'
+  | 'lastModifiedDate'
+  | 'deadlineDate'
+  | 'status';
+
+export const monthMap: { [key: string]: string } = {
+  "GEN": "Gennaio",
+  "FEB": "Febbraio",
+  "MAR": "Marzo",
+  "APR": "Aprile",
+  "MAG": "Maggio",
+  "GIU": "Giugno",
+  "LUG": "Luglio",
+  "AGO": "Agosto",
+  "SET": "Settembre",
+  "OTT": "Ottobre",
+  "NOV": "Novembre",
+  "DIC": "Dicembre",
+};
+
+
+/* API ENUM/INTERFACE */
+export const EstimateStatusEnum = {
+  DRAFT: 'DRAFT',
+  VALIDATED: 'VALIDATED',
+  ABSENT: 'ABSENT',
+} as const;
+export type EstimateStatusEnum = typeof EstimateStatusEnum[keyof typeof EstimateStatusEnum];
+
+export enum StatusUpdateEnum {
+  DRAFT = "DRAFT",
+  VALIDATED = "VALIDATED"
+}
+
+export const InfoDownloadStatusEnum = {
+  Uploading: 'UPLOADING',
+  Uploaded: 'UPLOADED'
+} as const;
+export type InfoDownloadStatusEnum = typeof InfoDownloadStatusEnum[keyof typeof InfoDownloadStatusEnum];
+
 export interface EstimateBodyRequest {
   totalDigitalNotif: number;
   total890Notif: number;
@@ -20,6 +86,18 @@ export interface EstimateBodyRequest {
   mailAddress: string;
 }
 
+export interface ProfilingBodyRequest {
+  splitPayment: boolean;
+  description: string;
+  mailAddress: string;
+}
+
+export interface BillingDetail {
+  sdiCode: string;
+  splitPayment: boolean;
+  description: string;
+  mailAddress: string;
+}
 
 export interface EstimateDetail {
   paInfo: PaInfo;
@@ -32,12 +110,6 @@ export interface EstimateDetail {
   billing: BillingDetail;
 }
 
-export interface Estimate {
-  totalDigitalNotif: number;
-  totalAnalogNotif: number;
-  total890Notif: number;
-}
-
 export interface EstimatePeriod {
   status: EstimateStatusEnum;
   showEdit: boolean;
@@ -48,45 +120,40 @@ export interface EstimatePeriod {
   billing: BillingDetail;
 }
 
-export interface FilterRequest {
-  page: number;
-  size: number;
-}
-
-export const EstimateStatusEnum = {
-  DRAFT: 'DRAFT',
-  VALIDATED: 'VALIDATED',
-  ABSENT: 'ABSENT',
-} as const;
-
-export type EstimateStatusEnum = typeof EstimateStatusEnum[keyof typeof EstimateStatusEnum];
-
-export interface EstimateHistory {
-  referenceMonth: string;
-  lastModifiedDate: string;
-  deadlineDate: string;
-  status: EstimateStatusEnum;
-}
-
 export interface HistoryEstimates {
   actual: EstimatePeriod;
   history : Page<EstimateHistory>;
+}
 
+
+export interface ProfilingDetail {
+  paInfo: PaInfo;
+  status: EstimateStatusEnum;
+  showEdit: boolean;
+  deadlineDate: string;
+  referenceYear: string;
+  lastModifiedDate: string;
+  billing: BillingDetail;
+}
+
+export interface ProfilingPeriod {
+  status: EstimateStatusEnum;
+  showEdit: boolean;
+  deadlineDate: string;
+  referenceYear: string;
+  lastModifiedDate ?: string;
+  billing: BillingDetail;
+}
+
+export interface HistoryProfilings {
+  actual: ProfilingPeriod;
+  history : Page<ProfilingHistory>;
 }
 
 export interface InfoDownload {
   paId?: string;
   status?: InfoDownloadStatusEnum;
-
 }
-
-export const InfoDownloadStatusEnum = {
-  Uploading: 'UPLOADING',
-  Uploaded: 'UPLOADED'
-} as const;
-
-export type InfoDownloadStatusEnum = typeof InfoDownloadStatusEnum[keyof typeof InfoDownloadStatusEnum];
-
 
 export type FilterRequestEstimate = {
   paId: string;
@@ -103,55 +170,4 @@ export type Page<T> = {
   size: number;
   totalElements: number;
   content: Array<T>;
-};
-
-export interface Profiling {
-  paInfo: PaInfo;
-  profiles: Array<ProfilingDetail>;
-
-}
-
-export interface ProfilingDetail {
-  billing: BillingDetail;
-  status: EstimateStatusEnum;
-  deadlineDate?: string;
-  referenceYear: string;
-  showEdit: boolean;
-}
-
-export interface BillingDetail {
-  sdiCode: string;
-  splitPayment: boolean;
-  description: string;
-  mailAddress: string;
-
-}
-
-export enum StatusUpdateEnum {
-  DRAFT = "DRAFT",
-  VALIDATED = "VALIDATED"
-}
-
-
-export type HistoryColumn =
-    | 'referenceMonth'
-    | 'lastModifiedDate'
-    | 'deadlineDate'
-    | 'status';
-
-
-
-export const monthMap: { [key: string]: string } = {
-  "GEN": "Gennaio",
-  "FEB": "Febbraio",
-  "MAR": "Marzo",
-  "APR": "Aprile",
-  "MAG": "Maggio",
-  "GIU": "Giugno",
-  "LUG": "Luglio",
-  "AGO": "Agosto",
-  "SET": "Settembre",
-  "OTT": "Ottobre",
-  "NOV": "Novembre",
-  "DIC": "Dicembre",
 };

@@ -35,7 +35,7 @@ jest.mock('@pagopa-pn/pn-commons/src/components/Pagination/CustomPagination', ()
 ));
 
 
-jest.mock("../components/UsageEstimates/actualEstimateCard/ActualEstimateCard",
+jest.mock("../components/UsageEstimates/Estimate/actualEstimateCard/ActualEstimateCard",
   () => ({
     ActualEstimateCard: () => {
       // @ts-ignore
@@ -44,7 +44,7 @@ jest.mock("../components/UsageEstimates/actualEstimateCard/ActualEstimateCard",
   })
 );
 
-jest.mock("../components/UsageEstimates/historyTable/HistoryTable",
+jest.mock("../components/UsageEstimates/Estimate/historyTable/HistoryTable",
   () => ({
     HistoryTable: () => {
       // @ts-ignore
@@ -53,7 +53,7 @@ jest.mock("../components/UsageEstimates/historyTable/HistoryTable",
   })
 );
 
-jest.mock("../components/UsageEstimates/historyTable/MobileHistoryTable",
+jest.mock("../components/UsageEstimates/Estimate/historyTable/MobileHistoryTable",
   () => ({
     MobileHistoryTable: () => {
       // @ts-ignore

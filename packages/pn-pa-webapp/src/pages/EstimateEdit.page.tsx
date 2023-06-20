@@ -7,10 +7,10 @@ import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import * as routes from "../navigation/routes.const";
 import {EstimateStatusEnum} from "../models/UsageEstimation";
-import {getDetailEstimate} from "../redux/usageEstimation/actions";
+import {getDetailEstimate} from "../redux/usageEstimates/estimate/actions";
 import {RootState} from "../redux/store";
 import {getFormattedDateTimeAbstract, localeStringReferenceMonth} from "../utils/utility";
-import {EstimateForm} from "./components/UsageEstimates/form/estimate/Estimate.form";
+import {EstimateForm} from "./components/UsageEstimates/Estimate/form/Estimate.form";
 
 
 export function EstimateEditPage() {

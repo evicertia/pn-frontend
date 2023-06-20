@@ -11,8 +11,8 @@ import newNotificationSlice from './newNotification/reducers';
 import notificationSlice from './notification/reducers';
 import apiKeysSlice from './apiKeys/reducers';
 import statisticsSlice from "./statistics/reducers";
-import profilingSlice from "./profiling/reducers";
-import usageEstimateSlice from "./usageEstimation/reducers";
+import profilingSlice from "./usageEstimates/profiling/reducers";
+import usageEstimateSlice from "./usageEstimates/estimate/reducers";
 
 
 export const appReducers = {

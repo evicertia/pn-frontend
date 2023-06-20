@@ -144,5 +144,9 @@
         "message": "Si è verificato un errore e la stima non è stata inviata. Riprova."
       }
     }
+  },
+  "profiling-history": {
+    "title-history": "Gestione Profilazione",
+    "subtitle-history": "In questa sezione potrai inserire il profilo di fatturazione per la tua PA."
   }
 }
