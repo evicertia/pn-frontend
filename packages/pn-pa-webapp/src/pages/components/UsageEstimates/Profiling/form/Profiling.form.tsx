@@ -112,6 +112,6 @@ const ButtonSendProfiling = (props: ButtonProps) => {
                         open={open}
                         onClickNegative={handleNegative}
                         onClickPositive={handlePositive}
-                        prefix={'estimate'}/>
+                        prefix={'profiling'}/>
   </>;
 };

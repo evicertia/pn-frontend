@@ -26,7 +26,7 @@ export const ProfilingHistoryTable = ({profilings}: Props) => {
 
   const handleRowClick = (row: Item) => {
     if (row?.status && row.status === EstimateStatusEnum.DRAFT && row.showEdit) {
-      navigate(routes.GET_DETAIL_PROFILING_PATH(row.id));
+      navigate(routes.GET_EDIT_PROFILING_PATH(row.id));
     }
 
     // if (row?.status && row.status === EstimateStatusEnum.VALIDATED && !row.showEdit) {
@@ -87,7 +87,6 @@ export const ProfilingHistoryTable = ({profilings}: Props) => {
     id: element.referenceYear,
     // showEdit: element.showEdit
   }));
-  console.log(rows);
 
   return (
     <Fragment>
