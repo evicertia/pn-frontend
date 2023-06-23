@@ -18,6 +18,8 @@ import {ProfilingPage} from "../pages/Profiling.page";
 import {EstimatePage} from "../pages/Estimate.page";
 import {EstimateEditPage} from "../pages/EstimateEdit.page";
 import {EstimateDetailPage} from "../pages/EstimateDetail.page";
+import {ProfilingEditPage} from "../pages/ProfilingEdit.page";
+import {ProfilingDetailPage} from "../pages/ProfilingDetail.page";
 import * as routes from './routes.const';
 import SessionGuard from './SessionGuard';
 import RouteGuard from './RouteGuard';
@@ -59,6 +61,8 @@ function Router() {
               <Route path={routes.ESTIMATE_EDIT} element={<EstimateEditPage />} />
               <Route path={routes.ESTIMATE_DETAIL} element={<EstimateDetailPage />} />
               <Route path={routes.PROFILING} element={<ProfilingPage />} />
+              <Route path={routes.PROFILING_EDIT} element={<ProfilingEditPage />} />
+              <Route path={routes.PROFILING_DETAIL} element={<ProfilingDetailPage />} />
               <Route path="/" element={<Navigate to={routes.DASHBOARD} />} />
             </Route>
             {/* not found - non-logged users will see the common AccessDenied component */}

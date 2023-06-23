@@ -2,7 +2,6 @@ import {Grid, Typography, Card, Divider} from "@mui/material";
 import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
 
-
 export interface RowDataInfo<T> {
   id: string;
   type: "DIVIDER" | "ROW";
@@ -12,15 +11,13 @@ export interface RowDataInfo<T> {
   render ?: (data: T) => ReactNode;
 
 }
-
 export interface DataInfoProps<T> {
   title: string;
   data: T;
   rows: Array<RowDataInfo<T>>;
 }
-
 export function DataInfo<T>(props: DataInfoProps<T>){
-  const { t } = useTranslation(["estimate"]);
+  const {t} = useTranslation(["estimate"]);
 
   return (
     <Card

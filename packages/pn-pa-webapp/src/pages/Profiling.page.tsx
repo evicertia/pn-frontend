@@ -2,13 +2,13 @@ import {Box, Typography} from "@mui/material";
 import {ApiErrorWrapper, calculatePages, CustomPagination, PaginationData, useIsMobile} from "@pagopa-pn/pn-commons";
 import {useTranslation} from "react-i18next";
 import {useCallback, useEffect} from "react";
-import {FilterRequest} from "../models/UsageEstimation";
+import {FilterRequest, HistoryProfilings} from "../models/UsageEstimation";
 import {setPagination} from "../redux/usageEstimates/estimate/reducers";
 import {PROFILING_ACTIONS, getAllProfiling} from "../redux/usageEstimates/profiling/actions";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {RootState} from "../redux/store";
-// import {MobileHistoryTable} from "./components/UsageEstimates/Estimate/historyTable/MobileHistoryTable";
-// import {HistoryTable} from "./components/UsageEstimates/Estimate/historyTable/HistoryTable";
+import {ProfilingMobileHistoryTable} from "./components/UsageEstimates/Profiling/historyTable/ProfilingMobileHistoryTable";
+import {ProfilingHistoryTable} from "./components/UsageEstimates/Profiling/historyTable/ProfilingHistoryTable";
 
 
 export function ProfilingPage() {
@@ -17,14 +17,14 @@ export function ProfilingPage() {
   const pagination = useAppSelector((state: RootState) => state.profilingState.pagination);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const isMobile = useIsMobile();
-  const { t } = useTranslation(['estimate'], {keyPrefix: "profiling-history"});
+  const { t } = useTranslation(['estimate'], {keyPrefix: "profiling.history"});
 
   const fetchHistory= useCallback( () => {
-    void dispatch(getAllProfiling(
-      {
-        paId:loggedUser.organization.id,
-        ...pagination
-      }));
+    void dispatch(getAllProfiling({
+        paId: loggedUser.organization.id,
+        taxId: "",
+        ipaId: "",
+        ...pagination}));
   },[pagination]);
 
   useEffect(() => {
@@ -51,17 +51,13 @@ export function ProfilingPage() {
       </Box>
 
       <ApiErrorWrapper apiId={PROFILING_ACTIONS.GET_ALL_PROFILING} reloadAction={() => fetchHistory()} mt={3}>
-        {/*{*/}
-        {/*  (historyProfilings?.history?.content)*/}
-        {/*    ?*/}
-        {/*    (isMobile)*/}
-        {/*      ?*/}
-        {/*      (<MobileHistoryTable estimates={historyProfilings.history.content}/>)*/}
-        {/*      :*/}
-        {/*      (<HistoryTable estimates={historyProfilings.history.content}/>)*/}
-        {/*    :*/}
-        {/*    null*/}
-        {/*}*/}
+        {
+          (historyProfilings?.history?.content)
+            ?
+              getTable(isMobile, historyProfilings)
+            :
+              null
+        }
 
         {historyProfilings?.history && (
           <CustomPagination
@@ -84,4 +80,21 @@ export function ProfilingPage() {
       </ApiErrorWrapper>
     </Box>
   );
+}
+
+function getHistoryContent(historyProfilings: HistoryProfilings) {
+  return [{status: historyProfilings.actual.status,
+    deadlineDate: historyProfilings.actual.deadlineDate,
+    referenceYear: historyProfilings.actual.referenceYear,
+    lastModifiedDate: historyProfilings.actual?.lastModifiedDate ? historyProfilings.actual.lastModifiedDate : "",
+    showEdit: historyProfilings.actual.showEdit},
+    ...historyProfilings.history.content];
+};
+
+function getTable(isMobile: boolean, historyProfilings: HistoryProfilings) {
+  if(isMobile) {
+    return <ProfilingMobileHistoryTable profilings={getHistoryContent(historyProfilings)}/>;
+  } else {
+    return <ProfilingHistoryTable profilings={getHistoryContent(historyProfilings)}/>;
+  }
 }

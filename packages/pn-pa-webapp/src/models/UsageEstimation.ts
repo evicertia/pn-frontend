@@ -36,8 +36,14 @@ export interface FilterRequest {
   size: number;
 }
 
-export type HistoryColumn =
+export type EstimateHistoryColumn =
   | 'referenceMonth'
+  | 'lastModifiedDate'
+  | 'deadlineDate'
+  | 'status';
+
+export type ProfilingHistoryColumn =
+  | 'referenceYear'
   | 'lastModifiedDate'
   | 'deadlineDate'
   | 'status';
@@ -115,7 +121,7 @@ export interface EstimatePeriod {
   showEdit: boolean;
   deadlineDate: string;
   referenceMonth: string;
-  lastModifiedDate ?: string;
+  lastModifiedDate?: string;
   estimate: Estimate;
   billing: BillingDetail;
 }
@@ -141,7 +147,7 @@ export interface ProfilingPeriod {
   showEdit: boolean;
   deadlineDate: string;
   referenceYear: string;
-  lastModifiedDate ?: string;
+  lastModifiedDate?: string;
   billing: BillingDetail;
 }
 
@@ -157,6 +163,14 @@ export interface InfoDownload {
 
 export type FilterRequestEstimate = {
   paId: string;
+  page: number;
+  size: number;
+};
+
+export type FilterRequestProfiling = {
+  paId: string;
+  taxId: string;
+  ipaId: string;
   page: number;
   size: number;
 };

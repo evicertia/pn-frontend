@@ -8,15 +8,15 @@ import {EstimatePeriod, EstimateStatusEnum, StatusUpdateEnum} from "../../../../
 import {updateEstimate} from "../../../../../redux/usageEstimates/estimate/actions";
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
 import {RootState} from "../../../../../redux/store";
-import {getFormattedDateTimeAbstract, localeStringReferenceMonth} from "../../../../../utils/utility";
+import {getFormattedDateTimeAbstract, localeStringReferenceId} from "../../../../../utils/utility";
 import {BillForm} from "./bill/Bill.form";
 import {UsageEstimateForm} from "./usage/UsageEstimate.form";
 import {
-  UsageEstimatesInitialValue,
+  EstimateInitialValue,
   validationSchemaBilling,
-  validationSchemaUsageEstimate
+  validationSchemaEstimate
 } from "./formik/Formik.config";
-import {SendEstimateDialog} from "./dialog/SendEstimateDialog";
+import {SendDialog} from "./dialog/SendDialog";
 
 
 interface EstimateFormProps {
@@ -25,14 +25,14 @@ interface EstimateFormProps {
 }
 
 export function EstimateForm(props: EstimateFormProps) {
-  const {t} = useTranslation(['estimate']);
+  const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.edit"});
   const dispatch = useAppDispatch();
   const [btnType, setBtnType] = useState(StatusUpdateEnum.DRAFT);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
-  const validationSchema = yup.object({...validationSchemaUsageEstimate(t), ...validationSchemaBilling(t)});
+  const validationSchema = yup.object({...validationSchemaEstimate(t), ...validationSchemaBilling(t)});
   
   const formik = useFormik({
-    initialValues: UsageEstimatesInitialValue(props.detail.estimate, props.detail.billing),
+    initialValues: EstimateInitialValue(props.detail.estimate, props.detail.billing),
     validationSchema,
     onSubmit: (values) => {
       const estimateBodyRequest = {
@@ -44,8 +44,7 @@ export function EstimateForm(props: EstimateFormProps) {
         mailAddress: values.mailAddress
       };
 
-      void dispatch(updateEstimate({paId: loggedUser.organization.id, referenceMonth: props.detail.referenceMonth,
-        status: btnType, body: estimateBodyRequest}))
+      void dispatch(updateEstimate({paId: loggedUser.organization.id, referenceMonth: props.detail.referenceMonth, status: btnType, body: estimateBodyRequest}))
         .unwrap()
         .then(()=> {
           if(btnType === StatusUpdateEnum.VALIDATED) {
@@ -63,7 +62,7 @@ export function EstimateForm(props: EstimateFormProps) {
         <Stack direction={"row"} spacing={2}>
           {(props.detail.status === StatusUpdateEnum.DRAFT)
             ?
-              <LoadingButton variant={"outlined"} type="submit" onClick={() => setBtnType(StatusUpdateEnum.DRAFT)} data-testid={"btn-save-estimate"}>{t('edit-estimate.button.save-edit')}</LoadingButton>
+              <LoadingButton variant={"outlined"} type="submit" onClick={() => setBtnType(StatusUpdateEnum.DRAFT)} data-testid={"btn-save-estimate"}>{t('button.save-edit')}</LoadingButton>
             :
               null
           }
@@ -85,13 +84,13 @@ interface ButtonProps {
 
 const ButtonSendEstimate = (props: ButtonProps) => {
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation(['estimate']);
+  const {t} = useTranslation(['estimate'], {keyPrefix: "estimate"});
 
   const getButtonTitle = () => {
     if(props.estimateStatus === StatusUpdateEnum.DRAFT) {
-      return t('edit-estimate.button.send-edit');
+      return t('edit.button.send-edit');
     } else {
-      return t('edit-estimate.button.edit');
+      return t('edit.button.edit');
     }
   };
 
@@ -117,10 +116,11 @@ const ButtonSendEstimate = (props: ButtonProps) => {
       {getButtonTitle()}
     </LoadingButton>
 
-    <SendEstimateDialog title={t('dialog.send-dialog-title') + " " + localeStringReferenceMonth(props.refMonth) + "?"}
-                 message={t('dialog.send-dialog-message')  + getFormattedDateTimeAbstract(props.deadlineDate, t('edit-estimate.label.date-time-format'))}
-                 open={open}
-                 onClickNegative={handleNegative}
-                 onClickPositive={handlePositive}/>
+    <SendDialog title={t('dialog.send-dialog-title') + " " + localeStringReferenceId(props.refMonth) + "?"}
+                message={t('dialog.send-dialog-message')  + getFormattedDateTimeAbstract(props.deadlineDate, t('edit.label.date-time-format'))}
+                open={open}
+                onClickNegative={handleNegative}
+                onClickPositive={handlePositive}
+                prefix={'estimate'}/>
   </>;
 };

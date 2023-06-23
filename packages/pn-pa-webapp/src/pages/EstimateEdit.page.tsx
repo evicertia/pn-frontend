@@ -9,7 +9,7 @@ import * as routes from "../navigation/routes.const";
 import {EstimateStatusEnum} from "../models/UsageEstimation";
 import {getDetailEstimate} from "../redux/usageEstimates/estimate/actions";
 import {RootState} from "../redux/store";
-import {getFormattedDateTimeAbstract, localeStringReferenceMonth} from "../utils/utility";
+import {getFormattedDateTimeAbstract, localeStringReferenceId} from "../utils/utility";
 import {EstimateForm} from "./components/UsageEstimates/Estimate/form/Estimate.form";
 
 
@@ -17,7 +17,7 @@ export function EstimateEditPage() {
   const {formData, error} = useAppSelector(state => state.usageEstimateState);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const isMobile = useIsMobile();
-  const { t } = useTranslation(['estimate']);
+  const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.edit"});
   const dispatch = useAppDispatch();
   const [forcedNavigate, setForcedNavigate] = useState<string | undefined>(undefined);
   const direction = isMobile ? 'column-reverse' : 'row';
@@ -26,8 +26,8 @@ export function EstimateEditPage() {
 
   const toastOk = useCallback(() => {
     void dispatch(appStateActions.addSuccess({
-      title: t('edit-estimate.toast-message.success.title'),
-      message: t('edit-estimate.toast-message.success.message'),
+      title: t('toast-message.success.title'),
+      message: t('toast-message.success.message'),
     }));
   }, []);
 
@@ -45,7 +45,7 @@ export function EstimateEditPage() {
 
   const getTitle = () => {
     if(formData?.referenceMonth) {
-      return t('edit-estimate.label.title') + localeStringReferenceMonth(formData.referenceMonth);
+      return t('label.title').concat(localeStringReferenceId(formData.referenceMonth));
     } else {
       return "";
     }
@@ -53,7 +53,7 @@ export function EstimateEditPage() {
 
   const getAbstract = () => {
     if(formData?.deadlineDate) {
-      return t('edit-estimate.label.abstract-pre') + getFormattedDateTimeAbstract(formData.deadlineDate, t('edit-estimate.label.date-time-format')) + t('edit-estimate.label.abstract-post') ;
+      return t('label.abstract-pre').concat(getFormattedDateTimeAbstract(formData.deadlineDate, t('label.date-time-format'))).concat(t('label.abstract-post'));
     } else {
       return "";
     }
@@ -65,11 +65,11 @@ export function EstimateEditPage() {
       linkLabel={
         <Fragment>
           <RequestQuoteIcon sx={{ mr: 0.5 }} />
-          {t('edit-estimate.label.breadcrumb-root')}
+          {t('label.breadcrumb-root')}
         </Fragment>
       }
-      currentLocationLabel={t('edit-estimate.label.breadcrumb-leaf')}
-      goBackLabel={t('edit-estimate.button.go-back-edit')}
+      currentLocationLabel={t('label.breadcrumb-leaf')}
+      goBackLabel={t('button.go-back-edit')}
     />
   );
 
@@ -88,11 +88,11 @@ export function EstimateEditPage() {
     </Fragment>
   );
 
-  if(error && error === 404){
+  if(error && error === 404) {
     return <Navigate to={routes.ESTIMATE} />;
   }
 
-  if(formData && !formData.showEdit){
+  if(formData && !formData.showEdit) {
     return <Navigate to={routes.ESTIMATE} />;
   }
 

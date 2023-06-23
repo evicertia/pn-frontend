@@ -13,7 +13,7 @@ import {EstimateFormProps} from "../formik/Formik.config";
 
 
 export function UsageEstimateForm({formikInstance}: EstimateFormProps){
-  const { t } = useTranslation(["estimate"]);
+  const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.edit"});
   const isMobile = useIsMobile();
 
   const handleTextInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +23,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
 
   return <Fragment>
     <Typography variant="body1">
-      {t("edit-estimate.label.mandatory-fields")}
+      {t("label.mandatory-fields")}
     </Typography>
     <Card
       sx={{
@@ -38,14 +38,14 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
             color="text.primary"
             variant="h6"
           >
-            {t("edit-estimate.form.usage-estimate-title")}
+            {t("form.usage-estimate-title")}
           </Typography>
         </Grid>
         <TextField
           id="totalDigitalNotif"
           value={formikInstance.values.totalDigitalNotif}
           onChange={handleTextInputChange}
-          label={t('edit-estimate.form.digital-notif-estimate')}
+          label={t('form.digital-notif-estimate')}
           name="totalDigitalNotif"
           required
           error={formikInstance.touched.totalDigitalNotif && Boolean(formikInstance.errors.totalDigitalNotif)}
@@ -61,7 +61,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           id="totalAnalogNotif"
           value={formikInstance.values.totalAnalogNotif}
           onChange={handleTextInputChange}
-          label={t('edit-estimate.form.analog-notif-estimate')}
+          label={t('form.analog-notif-estimate')}
           name="totalAnalogNotif"
           required
           error={formikInstance.touched.totalAnalogNotif && Boolean(formikInstance.errors.totalAnalogNotif)}
@@ -78,7 +78,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           value={formikInstance.values.total890Notif}
           inputProps={{ inputMode: 'numeric', min: 0, pattern: '^[0-9]*?$' }}
           onChange={handleTextInputChange}
-          label={t('edit-estimate.form.analog-890-notif-estimate')}
+          label={t('form.analog-890-notif-estimate')}
           name="total890Notif"
           required
           error={formikInstance.touched.total890Notif && Boolean(formikInstance.errors.total890Notif)}
@@ -93,7 +93,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
         <Grid container alignItems={"center"} width="1" mt={1}>
           <Grid item lg={6} xs={12}>
             <Typography variant="body2" fontWeight={"bold"} >
-              {t('edit-estimate.form.total-notif')}
+              {t('form.total-notif')}
             </Typography>
           </Grid>
           <Grid item lg={6} xs={12}>
@@ -107,7 +107,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           </Grid>
           <Grid item lg={6} xs={12} mt={2}>
             <Typography variant="body2" fontWeight={"600"} >
-              {t('edit-estimate.form.total-digital-notif')}
+              {t('form.total-digital-notif')}
             </Typography>
           </Grid>
           <Grid item lg={6} xs={12} mt={2}>
@@ -119,7 +119,7 @@ export function UsageEstimateForm({formikInstance}: EstimateFormProps){
           </Grid>
           <Grid item lg={6} xs={12} mt={1}>
             <Typography variant="body2" fontWeight={"600"} >
-              {t('edit-estimate.form.total-analog-notif')}
+              {t('form.total-analog-notif')}
             </Typography>
           </Grid>
           <Grid item lg={6} xs={12} mt={1}>

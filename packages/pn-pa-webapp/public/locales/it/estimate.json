@@ -1,152 +1,256 @@
 {
-  "titleEstimate": "Dettagli Stime",
-  "userInfoSelectEstimate": "Seleziona il mese d'interesse dalla timeline a destra",
-  "subtitleEstimate": "In questa sezione potrai visualizzare le previsioni di stima sui volumi delle notifiche per la tua PA",
-  "historyEstimate": "Storico",
-  "pa-info-title": "INFORMAZIONI SULL'ENTE",
-  "period-title": "PERIODO",
-  "billing-title": "DATI AGGIUNTIVI PER LA FATTURAZIONE",
-  "usage-estimate-title": "STIMA",
-  "message-edit": "Puoi ancora modificare fino alla data di scadenza",
-  "label": {
-    "estimate-root": "Stime di invio",
-    "estimate-detail": "Dettagli stime",
-    "estimate-detail-info": "Stima per il mese di ",
-    "digital-notif-estimate": "Numero notifiche per via digitale",
-    "analog-notif-estimate": "Numero notifiche per via analogica tramite A/R",
-    "analog-inter-notif-estimate": "Numero di notifiche internazionali per via analogica tramite A/R",
-    "analog-890-notif-estimate": "Numero notifiche per via analogica tramite 890",
-    "total-digital-notif": "Per via digitale",
-    "total-analog-notif": "Per via analogica",
-    "total-notif": "Totale notifiche stimate",
-    "email-profiling": "Indirizzo e-mail amministrativo",
-    "split-payment-profiling": "Soggetto Split Payment",
-    "other-description-profiling": "Altre informazioni utili alla fatturazione",
-    "email": "Email",
-    "sdi-code": "Codice SDI",
-    "reference-period": "Mese di riferimento",
-    "deadline-period": "Data di scadenza",
-    "status-period": "Stato",
-    "last-update-date-period": "Data di ultima modifica",
-    "subject-name": "Soggetto aderente",
-    "business-name": "Sede legale",
-    "tax-id": "Partita IVA",
-    "ipa-code": "Codice IPA",
-    "pec": "PEC",
-    "select-split-payment": "Seleziona una voce",
-    "yes": "Si",
-    "none": "No"
-  },
-  "button": {
-    "edit-label": "Modifica",
-    "help-request-label": "Richiedi aiuto"
-  },
-  "status": {
-    "draft-label-tooltip": "Stime non ancora Inviate",
-    "draft-label-chip": "In bozza",
-    "validated-label-tooltip": "Stime Consolidate",
-    "validated-label-chip": "Inviata",
-    "absent-label-tooltip": "Stime non inserite o mai Inviate",
-    "absent-label-chip": "Assente",
-    "pec": "PEC"
-  },
-  "dialog": {
-    "send-dialog-title": "Vuoi inviare la stima di ",
-    "send-dialog-message": "Se hai bisogno di modificarla, potrai farlo fino alle ",
-    "abort-dialog": "Annulla",
-    "send-dialog": "Invia"
-  },
-  "edit-estimate": {
-    "label": {
-      "breadcrumb-root": "Stime",
-      "breadcrumb-leaf": "Modifica",
-      "title": "Stima di ",
-      "abstract-pre": "Hai tempo fino alle ",
-      "abstract-post": " per inviare la stima del prossimo mese. Puoi crearla ora, salvarla in bozza e inviarla in un secondo momento.",
-      "mandatory-fields": "*Campi obbligatori",
-      "radio-split-payment-yes": "Sì",
-      "radio-split-payment-no": "No",
-      "date-time-format": "del"
-    },
-    "button": {
-      "go-back-edit": "Indietro",
-      "save-edit": "Salva bozza",
-      "send-edit": "Invia",
-      "help-request": "Richiedi aiuto",
-      "edit": "Modifica"
-    },
-    "form": {
-      "sdi-code": "Codice SDI",
-      "sdi-code-placeholder": "Codice SDI",
-      "mandatory": "Obbligatorio",
-      "split-payment": "Split Payment*",
-      "mailAddress": "Indirizzo e-mail",
-      "mailAddress-error": "Indirizzo e-mail non valido",
-      "mailAddress-placeholder": "Indirizzo e-mail amministrativo",
-      "description-other-info": "Altre informazioni utili alla fatturazione (opzionale)",
-      "description-placeholder": "Scrivi massimo 256 caratteri",
-      "digital-notif-estimate": "PEC",
-      "analog-notif-estimate": "Raccomandate A/R",
-      "analog-890-notif-estimate": "Raccomandate 890",
-      "total-digital-notif": "Digitali",
-      "total-analog-notif": "Analogiche",
-      "total-notif": "Totale notifiche stimate",
-      "bill-title": "Informazioni per la fatturazione",
-      "usage-estimate-title": "Notifiche stimate"
-    },
-    "prompt": {
-      "title": "Vuoi davvero uscire?",
-      "message": "Se esci, i dati inseriti andranno persi."
-    }
-  },
-  "estimate-history": {
-    "title-history": "Stime di invio",
-    "subtitle-history": "Ogni mese, inserisci quante notifiche prevedi di inviare il mese successivo tra PEC, raccomandate A/R e raccomandate 890. In questo modo riceverai fatture basate il più possibile sugli invii reali ed eviterai eventuali conguagli.",
-    "edit-button-label": "Modifica",
-    "show-detail": "Mostra dettagli",
-    "history-table": {
-      "reference-month": "Mese di riferimento",
-      "last-modified-date": "Ultima modifica",
-      "deadline-date": "Termine per l'invio",
-      "final-balance": "Consuntivi",
-      "status": "Stato",
-      "status-enum": {
-        "draft": "In aggiornamento",
-        "validated": "Convalidato",
-        "absent": "Assente"
+  "estimate": {
+    "actual": {
+      "card": {
+        "label": {
+          "number-notify-estimate": "Notifiche stimate per ",
+          "last-modify": "Ultima modifica ",
+          "editable": "Da inviare entro il ",
+          "digital-notif-estimate": "PEC",
+          "analog-notif-estimate": "Raccomandate A/R",
+          "analog-890-notif-estimate": "Raccomandate 890",
+          "estimate-to-complete": "da completare"
+        },
+        "button": {
+          "create-estimate": "Crea stima",
+          "edit-estimate": "Modifica",
+          "send-estimate": "Invia"
+        }
+      },
+
+      "toast-message": {
+        "success": {
+          "title": "Stima inviata. Grazie!",
+          "message": "Stima inviata. Grazie!"
+        },
+        "error": {
+          "title": "Si è verificato un errore e la stima non è stata inviata. Riprova.",
+          "message": "Si è verificato un errore e la stima non è stata inviata. Riprova."
+        }
       }
-    }
-  },
-  "actual-estimate": {
-    "card": {
+    },
+
+    "edit": {
       "label": {
-        "number-notify-estimate": "Notifiche stimate per ",
-        "last-modify": "Ultima modifica ",
-        "editable": "Da inviare entro il ",
+        "breadcrumb-root": "Stime",
+        "breadcrumb-leaf": "Modifica",
+        "title": "Stima di ",
+        "abstract-pre": "Hai tempo fino alle ",
+        "abstract-post": " per inviare la stima del prossimo mese. Puoi crearla ora, salvarla in bozza e inviarla in un secondo momento.",
+        "mandatory-fields": "*Campi obbligatori",
+        "radio-split-payment-yes": "Sì",
+        "radio-split-payment-no": "No",
+        "date-time-format": "del"
+      },
+      "button": {
+        "go-back-edit": "Indietro",
+        "save-edit": "Salva bozza",
+        "send-edit": "Invia",
+        "edit": "Modifica"
+      },
+      "form": {
+        "sdi-code": "Codice SDI",
+        "sdi-code-placeholder": "Codice SDI",
+        "mandatory": "Obbligatorio",
+        "split-payment": "Split Payment*",
+        "mailAddress": "Indirizzo e-mail",
+        "mailAddress-error": "Indirizzo e-mail non valido",
+        "mailAddress-placeholder": "Indirizzo e-mail amministrativo",
+        "description-other-info": "Altre informazioni utili alla fatturazione (opzionale)",
+        "description-placeholder": "Scrivi massimo 256 caratteri",
         "digital-notif-estimate": "PEC",
         "analog-notif-estimate": "Raccomandate A/R",
         "analog-890-notif-estimate": "Raccomandate 890",
-        "estimate-to-complete": "da completare"
+        "total-digital-notif": "Digitali",
+        "total-analog-notif": "Analogiche",
+        "total-notif": "Totale notifiche stimate",
+        "bill-title": "Informazioni per la fatturazione",
+        "usage-estimate-title": "Notifiche stimate"
       },
-      "button": {
-        "create-estimate": "Crea stima",
-        "edit-estimate": "Modifica",
-        "send-estimate": "Invia"
+      "prompt": {
+        "title": "Vuoi davvero uscire?",
+        "message": "Se esci, i dati inseriti andranno persi."
+      },
+      "toast-message": {
+        "success": {
+          "title": "Stima inviata. Grazie!",
+          "message": "Stima inviata. Grazie!"
+        },
+        "error": {
+          "title": "Si è verificato un errore e la stima non è stata inviata. Riprova.",
+          "message": "Si è verificato un errore e la stima non è stata inviata. Riprova."
+        }
       }
     },
-    "toast-message": {
-      "success": {
-        "title": "Stima inviata. Grazie!",
-        "message": "Stima inviata. Grazie!"
+
+    "detail": {
+      "label": {
+        "breadcrumb-root": "Stime",
+        "breadcrumb-leaf": "Dettaglio",
+        "month-info": "Stima per il mese di "
       },
-      "error": {
-        "title": "Si è verificato un errore e la stima non è stata inviata. Riprova.",
-        "message": "Si è verificato un errore e la stima non è stata inviata. Riprova."
+      "button": {
+        "go-back-detail": "Indietro"
+      },
+      "data-info": {
+        "period-title": "PERIODO",
+        "period-reference": "Mese di riferimento",
+        "period-deadline": "Data di scadenza",
+        "period-last-modified-date": "Data di ultima modifica",
+        "period-status": "Stato",
+
+        "usage-estimate-title": "STIMA",
+        "usage-estimate-digital-notif": "Numero notifiche per via digitale",
+        "usage-estimate-analog-notif": "Numero notifiche per via analogica tramite A/R",
+        "usage-estimate-analog-890-notif": "Numero notifiche per via analogica tramite 890",
+        "usage-estimate-total-notif": "Totale notifiche stimate",
+        "usage-estimate-total-digital-notif": "Per via digitale",
+        "usage-estimate-total-analog-notif": "Per via analogica",
+
+        "billing-title": "DATI AGGIUNTIVI PER LA FATTURAZIONE",
+        "billing-sdi-code": "Codice SDI",
+        "billing-split-payment": "Soggetto Split Payment",
+        "billing-email": "Indirizzo e-mail amministrativo",
+        "billing-other-description": "Altre informazioni utili alla fatturazione",
+
+        "pa-info-title": "INFORMAZIONI SULL'ENTE",
+        "pa-info-subject-name": "Soggetto aderente",
+        "pa-info-business-name": "Sede legale",
+        "pa-info-tax-id": "Partita IVA"
       }
+    },
+
+    "history": {
+      "title-history": "Stime di invio",
+      "subtitle-history": "Ogni mese, inserisci quante notifiche prevedi di inviare il mese successivo tra PEC, raccomandate A/R e raccomandate 890. In questo modo riceverai fatture basate il più possibile sugli invii reali ed eviterai eventuali conguagli.",
+      "edit-button-label": "Modifica",
+
+      "history-table": {
+        "reference-month": "Mese di riferimento",
+        "last-modified-date": "Ultima modifica",
+        "deadline-date": "Termine per l'invio",
+        "final-balance": "Consuntivi",
+        "status": "Stato",
+        "show-detail": "Mostra dettagli"
+      }
+    },
+
+    "dialog": {
+      "send-dialog-title": "Vuoi inviare la stima di ",
+      "send-dialog-message": "Se hai bisogno di modificarla, potrai farlo fino alle ",
+      "abort-dialog": "Annulla",
+      "send-dialog": "Invia"
+    },
+
+    "status-chip": {
+      "draft-label-tooltip": "Stime non ancora inviate",
+      "draft-label-chip": "In bozza",
+      "validated-label-tooltip": "Stime inviate",
+      "validated-label-chip": "Inviata",
+      "absent-label-tooltip": "Stime non inserite o mai inviate",
+      "absent-label-chip": "Assente"
     }
   },
-  "profiling-history": {
-    "title-history": "Gestione Profilazione",
-    "subtitle-history": "In questa sezione potrai inserire il profilo di fatturazione per la tua PA."
+
+  "profiling": {
+    "history": {
+      "title-history": "Gestione Profilazione",
+      "subtitle-history": "In questa sezione potrai inserire il profilo di fatturazione per la tua PA.",
+
+      "history-table": {
+        "reference-year": "Anno di riferimento",
+        "last-modified-date": "Ultima modifica",
+        "deadline-date": "Termine per l'invio",
+        "final-balance": "Consuntivi",
+        "status": "Stato",
+        "show-detail": "Mostra dettagli"
+      }
+    },
+
+    "detail": {
+      "label": {
+        "breadcrumb-root": "Profilazione",
+        "breadcrumb-leaf": "Dettaglio",
+        "year-info": "Profilazione per l'anno "
+      },
+      "button": {
+        "go-back-detail": "Indietro"
+      },
+      "data-info": {
+        "period-title": "PERIODO",
+        "period-reference": "Mese di riferimento",
+        "period-deadline": "Data di scadenza",
+        "period-last-modified-date": "Data di ultima modifica",
+        "period-status": "Stato",
+
+        "billing-title": "DATI AGGIUNTIVI PER LA FATTURAZIONE",
+        "billing-sdi-code": "Codice SDI",
+        "billing-split-payment": "Soggetto Split Payment",
+        "billing-email": "Indirizzo e-mail amministrativo",
+        "billing-other-description": "Altre informazioni utili alla fatturazione",
+
+        "pa-info-title": "INFORMAZIONI SULL'ENTE",
+        "pa-info-subject-name": "Soggetto aderente",
+        "pa-info-business-name": "Sede legale",
+        "pa-info-tax-id": "Partita IVA"
+      }
+    },
+
+    "edit": {
+      "label": {
+        "breadcrumb-root": "Profilazione",
+        "breadcrumb-leaf": "Modifica",
+        "title": "Profilazione del ",
+        "abstract-pre": "Hai tempo fino alle ",
+        "abstract-post": " per inviare la profilazione del prossimo anno. Puoi crearla ora, salvarla in bozza e inviarla in un secondo momento.",
+        "mandatory-fields": "*Campi obbligatori",
+        "radio-split-payment-yes": "Sì",
+        "radio-split-payment-no": "No",
+        "date-time-format": "del"
+      },
+      "button": {
+        "go-back-edit": "Indietro",
+        "save-edit": "Salva bozza",
+        "send-edit": "Invia",
+        "edit": "Modifica"
+      },
+      "form": {
+        "mandatory": "Obbligatorio",
+        "split-payment": "Split Payment*",
+        "mailAddress": "Indirizzo e-mail",
+        "mailAddress-error": "Indirizzo e-mail non valido",
+        "mailAddress-placeholder": "Indirizzo e-mail amministrativo",
+        "description-other-info": "Altre informazioni utili alla fatturazione (opzionale)",
+        "description-placeholder": "Scrivi massimo 256 caratteri",
+        "bill-title": "Informazioni per la fatturazione"
+      },
+
+      "toast-message": {
+        "success": {
+          "title": "Profilazione inviata. Grazie!",
+          "message": "Profilazione inviata. Grazie!"
+        },
+        "error": {
+          "title": "Si è verificato un errore e la profilazione non è stata inviata. Riprova.",
+          "message": "Si è verificato un errore e la profilazione non è stata inviata. Riprova."
+        }
+      }
+    },
+
+    "status-chip": {
+      "draft-label-tooltip": "Profilazione non ancora inviata",
+      "draft-label-chip": "In bozza",
+      "validated-label-tooltip": "Profilazione inviata",
+      "validated-label-chip": "Inviata",
+      "absent-label-tooltip": "Profilazione non inserite o mai inviate",
+      "absent-label-chip": "Assente"
+    },
+
+    "dialog": {
+      "send-dialog-title": "Vuoi inviare la profilazione di ",
+      "send-dialog-message": "Se hai bisogno di modificarla, potrai farlo fino alle ",
+      "abort-dialog": "Annulla",
+      "send-dialog": "Invia"
+    }
   }
 }

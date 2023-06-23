@@ -10,11 +10,11 @@ import {
   getDateString,
   getFormattedDateTime,
   getFormattedDateTimeAbstract,
-  localeStringReferenceMonth
+  localeStringReferenceId
 } from "../../../../../utils/utility";
 import {EstimateStatusChip} from "../../Common/statusChip/index";
 import {GET_EDIT_ESTIMATE_PATH} from "../../../../../navigation/routes.const";
-import {SendEstimateDialog} from "../form/dialog/SendEstimateDialog";
+import {SendDialog} from "../form/dialog/SendDialog";
 import {validatedEstimate} from "../../../../../redux/usageEstimates/estimate/actions";
 import {useAppDispatch} from "../../../../../redux/hooks";
 
@@ -26,7 +26,7 @@ interface ActualEstimateCardProps {
 
 
 export function ActualEstimateCard (props:ActualEstimateCardProps) {
-  const { t } = useTranslation(['estimate']);
+  const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.actual"});
 
   return <>
     <Card sx={{
@@ -38,35 +38,35 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
       <Stack spacing={2}>
         <Grid container direction={"row"} justifyContent={"space-between"}>
           <Typography fontWeight={"600"} variant={"h6"}>
-            {t('actual-estimate.card.label.number-notify-estimate').concat(localeStringReferenceMonth(props.data.referenceMonth))}
+            {t('card.label.number-notify-estimate').concat(localeStringReferenceId(props.data.referenceMonth))}
           </Typography>
           {
-            (props.data.lastModifiedDate) && <EstimateStatusChip data={props.data.status}/>
+            (props.data.lastModifiedDate) && <EstimateStatusChip data={props.data.status} prefix={'estimate'}/>
           }
         </Grid>
         <Grid container direction={"row"} justifyContent={"space-between"}>
           <Stack direction={"column"}>
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
-              {t('actual-estimate.card.label.digital-notif-estimate')}
+              {t('card.label.digital-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
-              {props.data?.estimate?.totalDigitalNotif || t('actual-estimate.card.label.estimate-to-complete')}
+              {props.data?.estimate?.totalDigitalNotif || t('card.label.estimate-to-complete')}
             </Typography>
           </Stack>
           <Stack direction={"column"}>
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
-              {t('actual-estimate.card.label.analog-890-notif-estimate')}
+              {t('card.label.analog-890-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
-              {props.data?.estimate?.total890Notif || t('actual-estimate.card.label.estimate-to-complete')}
+              {props.data?.estimate?.total890Notif || t('card.label.estimate-to-complete')}
             </Typography>
           </Stack>
           <Stack direction={"column"}>
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
-              {t('actual-estimate.card.label.analog-notif-estimate')}
+              {t('card.label.analog-notif-estimate')}
             </Typography>
             <Typography variant={"h5"} fontWeight={600} color={"primary"}>
-              {props.data?.estimate?.totalAnalogNotif || t('actual-estimate.card.label.estimate-to-complete')}
+              {props.data?.estimate?.totalAnalogNotif || t('card.label.estimate-to-complete')}
             </Typography>
           </Stack>
         </Grid>
@@ -83,17 +83,17 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
 
 
 const TagEditDate = (props: {data: EstimatePeriod}) => {
-  const {t} = useTranslation(['estimate']);
+  const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.actual"});
 
   return <Stack direction={"column"} sx={{alignSelf: "end"}} spacing={.5}>
     {
       (props.data.lastModifiedDate) && <Typography fontWeight={"400"} variant={"caption"} color={"#5C6F82"}>
-        {t('actual-estimate.card.label.last-modify').concat(getDateString(props.data.lastModifiedDate))}
+        {t('card.label.last-modify').concat(getDateString(props.data.lastModifiedDate))}
         </Typography>
     }
     <Tag
       color={(props.data.lastModifiedDate) ? "warning" : "default"}
-      value={t('actual-estimate.card.label.editable').concat(`${getFormattedDateTime(props.data.deadlineDate)}`)}
+      value={t('card.label.editable').concat(`${getFormattedDateTime(props.data.deadlineDate)}`)}
       variant="default"
     />
   </Stack>;
@@ -101,7 +101,7 @@ const TagEditDate = (props: {data: EstimatePeriod}) => {
 
 const ButtonsGroup = (props: ActualEstimateCardProps) => {
   const navigate = useNavigate();
-  const { t } = useTranslation(['estimate']);
+  const { t } = useTranslation(['estimate'], {keyPrefix: "estimate.actual"});
 
   if (!props.data.lastModifiedDate && props.data.status === EstimateStatusEnum.DRAFT){
     return <Button data-testid="create-button-test-id"
@@ -109,7 +109,7 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
                    onClick={() => {
                      navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
                    }}>
-      {t('actual-estimate.card.button.create-estimate')}
+      {t('card.button.create-estimate')}
     </Button>;
   } else if (props.data.lastModifiedDate && props.data.status === EstimateStatusEnum.DRAFT) {
     return <>
@@ -117,7 +117,7 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
               onClick={() => {
                 navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
               }}>
-        {t('actual-estimate.card.button.edit-estimate')}
+        {t('card.button.edit-estimate')}
       </Button>
 
       <ButtonSendEstimate data-testid="send-estimate-button-draft-test-id"  paId={props.paId} referenceMonth={props.data.referenceMonth} deadlineDate={props.data.deadlineDate}/>
@@ -128,7 +128,7 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
                     onClick={() => {
                      navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
                    }}>
-      {t('actual-estimate.card.button.edit-estimate')}
+      {t('card.button.edit-estimate')}
     </Button>;
   }
   return null;
@@ -136,7 +136,7 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
 
 const ButtonSendEstimate = (props: {paId: string; referenceMonth: string; deadlineDate: string}) => {
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation(['estimate']);
+  const {t} = useTranslation(['estimate'], {keyPrefix: "estimate"});
   const dispatch = useAppDispatch();
 
   const handlePositive = () => {
@@ -146,15 +146,15 @@ const ButtonSendEstimate = (props: {paId: string; referenceMonth: string; deadli
     })).unwrap()
       .then(()=> {
         dispatch(appStateActions.addSuccess({
-          title: t('actual-estimate.toast-message.success.title'),
-          message: t('actual-estimate.toast-message.success.message')
+          title: t('actual.toast-message.success.title'),
+          message: t('actual.toast-message.success.message')
         }));
         setOpen(false);
       })
       .catch(()=>{
         dispatch(appStateActions.addError({
-          title: t('actual-estimate.toast-message.error.title'),
-          message: t('actual-estimate.toast-message.error.message')
+          title: t('actual.toast-message.error.title'),
+          message: t('actual.toast-message.error.message')
         }));
         setOpen(false);
       });
@@ -173,14 +173,15 @@ const ButtonSendEstimate = (props: {paId: string; referenceMonth: string; deadli
                    variant={"contained"}
                    type="button"
                    onClick={()=> onSendClick()}>
-      {t('actual-estimate.card.button.send-estimate')}
+      {t('actual.card.button.send-estimate')}
     </LoadingButton>
 
-    <SendEstimateDialog data-testid="dialog-send-estimate-test-id"
-                        title={t('dialog.send-dialog-title') + " " + localeStringReferenceMonth(props.referenceMonth) + "?"}
-                        message={t('dialog.send-dialog-message') + getFormattedDateTimeAbstract(props.deadlineDate, t('edit-estimate.label.date-time-format'))}
-                        open={open}
-                        onClickNegative={handleNegative}
-                        onClickPositive={handlePositive}/>
+    <SendDialog data-testid="dialog-send-estimate-test-id"
+                title={t('dialog.send-dialog-title') + " " + localeStringReferenceId(props.referenceMonth) + "?"}
+                message={t('dialog.send-dialog-message') + getFormattedDateTimeAbstract(props.deadlineDate, t('edit.label.date-time-format'))}
+                open={open}
+                onClickNegative={handleNegative}
+                onClickPositive={handlePositive}
+                prefix={'estimate'}/>
   </>;
 };

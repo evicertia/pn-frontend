@@ -23,7 +23,7 @@ export function EstimatePage ()  {
   const pagination = useAppSelector((state: RootState) => state.usageEstimateState.pagination);
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const isMobile = useIsMobile();
-  const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
+  const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.history"});
 
   const fetchHistory= useCallback( () => {
     void dispatch(getAllEstimate(

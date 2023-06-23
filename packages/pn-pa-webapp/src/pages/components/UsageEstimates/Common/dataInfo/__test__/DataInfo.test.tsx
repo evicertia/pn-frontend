@@ -1,8 +1,8 @@
 import {render, cleanup, screen} from "@testing-library/react";
 import {DataInfo} from "../DataInfo";
-import {usageBillingDataPA, usageEstimations, usageInfoPA, usagePeriod} from "../rows";
+import {usageBillingDataPA, usageEstimations, usageInfoPA, usagePeriod} from "../model/EstimateRows";
 import {EstimateStatusEnum} from "../../../../../../models/UsageEstimation";
-import {localeStringReferenceMonth} from "../../../../../../utils/utility";
+import {localeStringReferenceId} from "../../../../../../utils/utility";
 
 
 const ScenarioUsageInfoPA = () => {
@@ -76,7 +76,7 @@ describe("whenDataArePassedToDataInfo", () => {
     render(<ScenarioUsagePeriod />);
     expect(screen.getByText("15/06/2023, ore 23:59")).toBeInTheDocument();
     expect(screen.getByText("22/05/2023, ore 13:36")).toBeInTheDocument();
-    expect(screen.getByText(localeStringReferenceMonth("LUG-2023"))).toBeInTheDocument();
+    expect(screen.getByText(localeStringReferenceId("LUG-2023"))).toBeInTheDocument();
   });
 
   it("checkDataCorrectlyInsertedIntoTheRowsOfusageBillingDataPAtype", async () => {

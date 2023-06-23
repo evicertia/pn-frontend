@@ -17,7 +17,10 @@ export const ESTIMATE_DETAIL = `${ESTIMATE}/:referenceMonth`;
 
 const EDIT = "/edit";
 export const ESTIMATE_EDIT = `${ESTIMATE}/:referenceMonth${EDIT}`;
+
 export const PROFILING = '/profiling';
+export const PROFILING_DETAIL = `${PROFILING}/:referenceYear`;
+export const PROFILING_EDIT = `${PROFILING}/:referenceYear${EDIT}`;
 
 export const USERS_SEGMENT = '/users';
 export const GROUPS_SEGMENT = '/groups';
@@ -39,6 +42,8 @@ export const GROUPS = (idOrganization: string) =>
 export const GET_DETTAGLIO_NOTIFICA_PATH = (id: string) => `${DASHBOARD}/${id}${NOTIFICA}`;
 export const NOT_ACCESSIBLE = '/non-accessibile';
 
-
 export const GET_DETAIL_ESTIMATE_PATH = (referenceMonth: string) => `${ESTIMATE}/${referenceMonth}`;
 export const GET_EDIT_ESTIMATE_PATH = (referenceMonth: string) => `${ESTIMATE}/${referenceMonth}${EDIT}`;
+
+export const GET_DETAIL_PROFILING_PATH = (referenceYear: string) => `${PROFILING}/${referenceYear}`;
+export const GET_EDIT_PROFILING_PATH = (referenceYear: string) => `${PROFILING}/${referenceYear}${EDIT}`;

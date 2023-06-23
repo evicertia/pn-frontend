@@ -1,7 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import { performThunkAction} from "@pagopa-pn/pn-commons";
 import {
-  FilterRequestEstimate,
+  FilterRequestProfiling,
   HistoryProfilings,
   ProfilingBodyRequest,
   ProfilingDetail,
@@ -30,9 +30,9 @@ interface UpdateProfilingParams {
   body: ProfilingBodyRequest;
 }
 
-export const getAllProfiling = createAsyncThunk<HistoryProfilings, FilterRequestEstimate>(
+export const getAllProfiling = createAsyncThunk<HistoryProfilings, FilterRequestProfiling>(
   PROFILING_ACTIONS.GET_ALL_PROFILING,
-  performThunkAction((params:FilterRequestEstimate) => ProfilingApi.getAllProfiling(params))
+  performThunkAction((params:FilterRequestProfiling) => ProfilingApi.getAllProfiling(params))
 );
 
 export const getDetailProfiling = createAsyncThunk<ProfilingDetail, DetailProfilingParams>(

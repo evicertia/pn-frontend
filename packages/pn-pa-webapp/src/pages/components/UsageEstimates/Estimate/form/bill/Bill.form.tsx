@@ -16,7 +16,7 @@ import {EstimateFormProps} from "../formik/Formik.config";
 
 export function BillForm({formikInstance}: EstimateFormProps){
   const isMobile = useIsMobile();
-  const { t } = useTranslation(['estimate']);
+  const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.edit"});
 
   const handleTextInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     formikInstance.handleChange(event);
@@ -50,7 +50,7 @@ export function BillForm({formikInstance}: EstimateFormProps){
             color="text.primary"
             variant="h6"
           >
-            {t("edit-estimate.form.bill-title")}
+            {t("form.bill-title")}
           </Typography>
         </Grid>
 
@@ -58,7 +58,7 @@ export function BillForm({formikInstance}: EstimateFormProps){
           <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">
               <Typography variant="body2" fontWeight={"600"} mt={1.5}>
-                {t('edit-estimate.form.split-payment')}
+                {t('form.split-payment')}
               </Typography>
             </FormLabel>
           </FormControl>
@@ -70,13 +70,13 @@ export function BillForm({formikInstance}: EstimateFormProps){
               aria-labelledby="demo-radio-buttons-group-label"
               onChange={handleRadioInputChange}
               defaultChecked={formikInstance.values.splitPayment}
-              defaultValue={t('edit-estimate.label.radio-split-payment-no')}
+              defaultValue={t('label.radio-split-payment-no')}
               value={getRadioValue()}
               sx={{ marginLeft: '30px'}}
               data-testid={"bill-radio"}
             >
-              <FormControlLabel value={"Y"} control={<Radio data-testid={"bill-radio-yes"} />} label={t('edit-estimate.label.radio-split-payment-yes')} />
-              <FormControlLabel value={"N"} control={<Radio data-testid={"bill-radio-no"} sx={{marginLeft: '30px'}} />} label={t('edit-estimate.label.radio-split-payment-no')} />
+              <FormControlLabel value={"Y"} control={<Radio data-testid={"bill-radio-yes"} />} label={t('label.radio-split-payment-yes')} />
+              <FormControlLabel value={"N"} control={<Radio data-testid={"bill-radio-no"} sx={{marginLeft: '30px'}} />} label={t('label.radio-split-payment-no')} />
             </RadioGroup>
           </FormControl>
         </Stack>
@@ -86,8 +86,8 @@ export function BillForm({formikInstance}: EstimateFormProps){
             id="mailAddress"
             value={formikInstance.values.mailAddress}
             onChange={handleTextInputChange}
-            label={t('edit-estimate.form.mailAddress')}
-            placeholder={t('edit-estimate.form.mailAddress-placeholder')}
+            label={t('form.mailAddress')}
+            placeholder={t('form.mailAddress-placeholder')}
             name="mailAddress"
             required
             error={formikInstance.touched.mailAddress && Boolean(formikInstance.errors.mailAddress)}
@@ -101,7 +101,7 @@ export function BillForm({formikInstance}: EstimateFormProps){
             id="description"
             value={formikInstance.values.description}
             onChange={handleTextInputChange}
-            label={t('edit-estimate.form.description-other-info')}
+            label={t('form.description-other-info')}
             name="description"
             error={formikInstance.touched.description && Boolean(formikInstance.errors.description)}
             helperText={formikInstance.touched.description && formikInstance.errors.description}
@@ -110,7 +110,7 @@ export function BillForm({formikInstance}: EstimateFormProps){
             data-testid={"bill-textfield-description"}
           />
           <Typography variant="body2" sx={{marginBottom: isMobile ? '20px' : '0', marginLeft: '10px', fontSize: '12px', fontColor: '#5C6F82'}} >
-            {t('edit-estimate.form.description-placeholder')}
+            {t('form.description-placeholder')}
           </Typography>
           </Stack>
         </Stack>

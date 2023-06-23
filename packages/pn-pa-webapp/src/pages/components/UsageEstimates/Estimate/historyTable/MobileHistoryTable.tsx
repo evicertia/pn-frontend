@@ -9,30 +9,27 @@ import {
   CardAction,
 } from '@pagopa-pn/pn-commons';
 import { ButtonNaked } from '@pagopa/mui-italia';
-
 import * as routes from '../../../../../navigation/routes.const';
 import {EstimateHistory, EstimateStatusEnum} from "../../../../../models/UsageEstimation";
-import {EstimateStatusChip} from "../../Common/statusChip/index";
-import {getFormattedDateTime, localeStringReferenceMonth} from "../../../../../utils/utility";
+import {EstimateStatusChip} from "../../Common/statusChip";
+import {getFormattedDateTime, localeStringReferenceId} from "../../../../../utils/utility";
 
 
 type Props = {
   estimates: Array<EstimateHistory>;
 };
 
-export const MobileHistoryTable = (
-  { estimates}: Props) => {
-  const { t } = useTranslation(['estimate'], {keyPrefix: "estimate-history"});
+export const MobileHistoryTable = ({estimates}: Props) => {
+  const { t } = useTranslation(['estimate'], {keyPrefix: "estimate.history.history-table"});
   const navigate = useNavigate();
-
 
   const cardHeader: [CardElement, CardElement] = [
     //  Parameters with only value but not description
     {
       id: 'referenceMonth',
-      label: t('history-table.reference-month'),
+      label: t('reference-month'),
       getLabel(value: string) {
-        return localeStringReferenceMonth(value);
+        return localeStringReferenceId(value);
       },
       gridProps: {
         xs: 12,
@@ -41,9 +38,9 @@ export const MobileHistoryTable = (
     },
     {
       id: 'status',
-      label: t('history-table.status'),
+      label: t('.status'),
       getLabel(value: EstimateStatusEnum) {
-        return <EstimateStatusChip data={value}/>;
+        return <EstimateStatusChip data={value} prefix={'estimate'}/>;
       },
       gridProps: {
         xs: 12,
@@ -55,7 +52,7 @@ export const MobileHistoryTable = (
   const cardBody: Array<CardElement> = [
     {
       id: 'lastModifiedDate',
-      label: t('history-table.last-modified-date'),
+      label: t('last-modified-date'),
       getLabel(value: string) {
         return getFormattedDateTime(value);
       },
@@ -63,18 +60,17 @@ export const MobileHistoryTable = (
     },
     {
       id: 'deadlineDate',
-      label: t('history-table.deadline-date'),
+      label: t('deadline-date'),
       getLabel(value: string) {
         return getFormattedDateTime(value);
       },
-    },
-
+    }
   ];
 
   // Navigation handlers
   const handleRowClick = (row: Item) => {
     if (row?.status && row.status === EstimateStatusEnum.VALIDATED) {
-      navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id as string));
+      navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id));
     }
   };
 
@@ -87,15 +83,13 @@ export const MobileHistoryTable = (
         </ButtonNaked>
       ),
       onClick: handleRowClick,
-    },
+    }
   ];
 
-  const cardData: Array<Item> = estimates.map((n: EstimateHistory) => ({
-    ...n,
-    id: n.referenceMonth,
+  const cardData: Array<Item> = estimates.map((element: EstimateHistory) => ({
+    ...element,
+    id: element.referenceMonth,
   }));
-
-
 
   return (
     <Fragment>

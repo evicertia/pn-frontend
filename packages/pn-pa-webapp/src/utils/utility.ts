@@ -1,7 +1,7 @@
 import {format} from "date-fns";
 import {monthMap} from "../models/UsageEstimation";
 
-export const localeStringReferenceMonth = (referenceId: string) => {
+export const localeStringReferenceId = (referenceId: string) => {
   if(referenceId.includes('-')) {
     const [month, year] = referenceId.split(/-/);
     const monthLocale = monthMap[month];
@@ -12,7 +12,7 @@ export const localeStringReferenceMonth = (referenceId: string) => {
 };
 
 export const getFormattedDateTime = (dataValue: string, pathHour:string="alle") : string=> {
-  if(dataValue !== null) {
+  if(dataValue !== null && dataValue !== "" && dataValue.includes("T")) {
     return getUTCDateAndTime(dataValue, pathHour);
   } else {
     return "---------------------";

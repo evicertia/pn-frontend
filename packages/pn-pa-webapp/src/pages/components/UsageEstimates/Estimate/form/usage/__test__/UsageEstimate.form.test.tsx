@@ -1,6 +1,6 @@
 import {act, screen, cleanup, render, fireEvent, waitFor} from "@testing-library/react";
 import {FormikErrors, FormikState, FormikValues, useFormik} from "formik";
-import {EstimateFormProps, validationSchemaUsageEstimate} from "../../formik/Formik.config";
+import {EstimateFormProps, validationSchemaEstimate} from "../../formik/Formik.config";
 import {ChangeEvent, cloneElement} from "react";
 import {UsageEstimateForm} from "../UsageEstimate.form";
 import * as yup from "yup";
@@ -55,7 +55,7 @@ const UsageEstimateFormEmptyValueCase = () => {
     totalAnalogNotif: 0,
     total890Notif: 0
   }
-  return scenaries(<UsageEstimateForm formikInstance={initialFormik({})}/>, initEstimate, yup.object({...validationSchemaUsageEstimate(t)}));
+  return scenaries(<UsageEstimateForm formikInstance={initialFormik({})}/>, initEstimate, yup.object({...validationSchemaEstimate(t)}));
 
 };
 
@@ -66,7 +66,7 @@ const UsageEstimateFormNotEmptyValueCase = () => {
     totalAnalogNotif: 8,
     total890Notif: 10
   }
-  return scenaries(<UsageEstimateForm formikInstance={initialFormik({})}/>, initEstimate, yup.object({...validationSchemaUsageEstimate(t)}));
+  return scenaries(<UsageEstimateForm formikInstance={initialFormik({})}/>, initEstimate, yup.object({...validationSchemaEstimate(t)}));
 };
 
 const UsageEstimateFormTypingFields = () => {
@@ -76,7 +76,7 @@ const UsageEstimateFormTypingFields = () => {
     totalAnalogNotif: 0,
     total890Notif: 0
   }
-  return scenaries(<UsageEstimateForm formikInstance={initialFormik({})}/>, initEstimate, yup.object({...validationSchemaUsageEstimate(t)}));
+  return scenaries(<UsageEstimateForm formikInstance={initialFormik({})}/>, initEstimate, yup.object({...validationSchemaEstimate(t)}));
 };
 
 describe("UsageEstimate.form.test", () => {

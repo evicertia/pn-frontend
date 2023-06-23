@@ -1,19 +1,20 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {useTranslation} from "react-i18next";
 
-interface SendEstimateDialogProps {
+interface SendDialogProps {
   open: boolean;
   title: string;
   message: string;
   onClickNegative ?: () => void;
   onClickPositive : () => void;
+  prefix: string;
 }
 
-export function SendEstimateDialog(props: SendEstimateDialogProps){
-  const { t } = useTranslation(['estimate']);
+export function SendDialog(props: SendDialogProps){
+  const {t} = useTranslation(['estimate'], {keyPrefix: props.prefix});
 
   return <>
-    <Dialog open={props.open} onClose={props.onClickNegative} data-testid={'send-estimate-dialog'}>
+    <Dialog open={props.open} onClose={props.onClickNegative} data-testid={'send-dialog'}>
       <DialogTitle sx={{mt: 2}}>{props.title}</DialogTitle>
       <DialogContent>
         <DialogContentText>

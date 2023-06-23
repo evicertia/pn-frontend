@@ -64,7 +64,7 @@ describe('MobileHistoryTable', () => {
 
         // Assert the presence and text content of the table rows
         mockEstimates.forEach((estimate) => {
-            expect(screen.getByText(util.localeStringReferenceMonth(estimate.referenceMonth))).toBeInTheDocument();
+            expect(screen.getByText(util.localeStringReferenceId(estimate.referenceMonth))).toBeInTheDocument();
             expect(screen.getByText(util.getFormattedDateTime(estimate.deadlineDate))).toBeInTheDocument();
             expect(screen.getByText(util.getFormattedDateTime(estimate.lastModifiedDate))).toBeInTheDocument();
         });

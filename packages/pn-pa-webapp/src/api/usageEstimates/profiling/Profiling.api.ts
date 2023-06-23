@@ -1,11 +1,11 @@
 import {apiClient} from "../../apiClients";
 import {
   ProfilingDetail,
-  FilterRequestEstimate,
+  FilterRequestProfiling,
   HistoryProfilings,
   ProfilingBodyRequest,
   ProfilingPeriod,
-  StatusUpdateEnum
+  StatusUpdateEnum,
 } from "../../../models/UsageEstimation";
 import {
   PAGINATION_LIST_PROFILING,
@@ -21,13 +21,13 @@ export const ProfilingApi = {
    * @returns Promise
    * @param paId
    */
-  getAllProfiling: async (params: FilterRequestEstimate): Promise<HistoryProfilings> => {
+  getAllProfiling: async (params: FilterRequestProfiling): Promise<HistoryProfilings> => {
     const config = {
       headers:{
         // originFe: "PN-PLATFORM-NOTIFICATION-FE"
       }
     };
-    const response = await apiClient.get<HistoryProfilings>(PAGINATION_LIST_PROFILING(params.paId, params.page, params.size), config);
+    const response = await apiClient.get<HistoryProfilings>(PAGINATION_LIST_PROFILING(params.paId, params.taxId, params.ipaId, params.page, params.size), config);
     return response.data;
   },
 

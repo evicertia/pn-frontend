@@ -484,7 +484,7 @@ describe("ActualEstimateCardRender", () => {
 
             // Simulate positive action
             await act(async () => {
-                const positiveButton : SendEstimateDialog=
+                const positiveButton : SendDialog=
                     screen.getByTestId('dialog-send-estimate-test-id');
                 fireEvent.click(positiveButton.onclickPositive);
 

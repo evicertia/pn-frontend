@@ -1,13 +1,13 @@
 import {ApiError, PnBreadcrumb, useIsMobile} from "@pagopa-pn/pn-commons";
 import {Fragment, useCallback, useEffect} from "react";
-import EmailIcon from "@mui/icons-material/Email";
+import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import {useTranslation} from "react-i18next";
 import {Box, Stack, Typography} from "@mui/material";
 import {Navigate, useParams} from "react-router-dom";
 import * as routes from "../navigation/routes.const";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {RootState} from "../redux/store";
-import {localeStringReferenceMonth} from "../utils/utility";
+import {localeStringReferenceId} from "../utils/utility";
 import {getDetailEstimate} from "../redux/usageEstimates/estimate/actions";
 import {resetDetailState} from "../redux/usageEstimates/estimate/reducers";
 import {DataInfo} from "./components/UsageEstimates/Common/dataInfo/DataInfo";
@@ -16,17 +16,16 @@ import {
   usageEstimations,
   usageInfoPA,
   usagePeriod
-} from "./components/UsageEstimates/Common/dataInfo/rows";
+} from "./components/UsageEstimates/Common/dataInfo/model/EstimateRows";
 
 
 export function EstimateDetailPage(){
-  const { t } = useTranslation(['estimate', 'common', 'notifiche']);
+  const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.detail"});
   const isMobile = useIsMobile();
   const {detail, error} = useAppSelector(state => state.usageEstimateState);
   const dispatch = useAppDispatch();
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const {referenceMonth} = useParams();
-
 
   const fetching = useCallback(() => {
     void dispatch(getDetailEstimate({
@@ -49,12 +48,12 @@ export function EstimateDetailPage(){
       linkRoute={routes.ESTIMATE}
       linkLabel={
         <Fragment>
-          <EmailIcon sx={{ mr: 0.5 }} />
-          {t('label.estimate-root', { ns: 'estimate' })}
+          <RequestQuoteIcon sx={{ mr: 0.5 }} />
+          {t('label.breadcrumb-root')}
         </Fragment>
       }
-      currentLocationLabel={t('label.estimate-detail', { ns: 'estimate' })}
-      goBackLabel={t('button.indietro', { ns: 'common' })}
+      currentLocationLabel={t('label.breadcrumb-leaf')}
+      goBackLabel={t('button.go-back-detail')}
     />
   );
 
@@ -65,7 +64,7 @@ export function EstimateDetailPage(){
          mb={3}
          alignItems="center">
       <Typography variant="h5" fontWeight={"600"} mt={1}>
-        {t('label.estimate-detail-info', { ns: 'estimate' }) + localeStringReferenceMonth((referenceMonth) || "")}
+        {t('label.month-info').concat(localeStringReferenceId((referenceMonth) || ""))}
       </Typography>
     </Box>
   </Fragment>);
@@ -74,14 +73,12 @@ export function EstimateDetailPage(){
     return <Navigate to={routes.ESTIMATE} />;
   }
 
-
   if (error) {
     return <Box p={3}>
       {header}
       <ApiError onClick={() => fetching()} mt={3}/>
     </Box>;
   }
-
 
   return <Fragment>
     <Box p={3}>
@@ -90,19 +87,19 @@ export function EstimateDetailPage(){
         {
           (detail) ?
             <Fragment>
-              <DataInfo title={t("period-title")}
+              <DataInfo title={t("data-info.period-title")}
                         data={detail}
                         rows={usagePeriod}/>
 
-              <DataInfo title={t("usage-estimate-title")}
+              <DataInfo title={t("data-info.usage-estimate-title")}
                         data={detail.estimate}
                         rows={usageEstimations}/>
 
-              <DataInfo title={t("billing-title")}
+              <DataInfo title={t("data-info.billing-title")}
                         data={detail.billing}
                         rows={usageBillingDataPA}/>
 
-              <DataInfo title={t("pa-info-title")}
+              <DataInfo title={t("data-info.pa-info-title")}
                         data={detail.paInfo}
                         rows={usageInfoPA}/>
             </Fragment>

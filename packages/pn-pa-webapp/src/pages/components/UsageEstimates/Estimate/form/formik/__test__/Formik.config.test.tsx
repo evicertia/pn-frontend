@@ -1,5 +1,5 @@
 import {cleanup} from "@testing-library/react";
-import {UsageEstimatesInitialValue} from "../Formik.config";
+import {EstimateInitialValue} from "../Formik.config";
 
 describe("Formik.config.test", () => {
 
@@ -18,7 +18,7 @@ describe("Formik.config.test", () => {
       description: "Lorem"
     }
 
-    const formikInitialValue = UsageEstimatesInitialValue(initEstimate, initBilling);
+    const formikInitialValue = EstimateInitialValue(initEstimate, initBilling);
 
     expect(formikInitialValue.totalDigitalNotif).toEqual(initEstimate.totalDigitalNotif);
     expect(formikInitialValue.totalAnalogNotif).toEqual(initEstimate.totalAnalogNotif);

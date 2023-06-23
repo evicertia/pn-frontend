@@ -3,8 +3,8 @@ import {useTranslation} from "react-i18next";
 import {EstimateStatusEnum} from "../../../../../models/UsageEstimation";
 
 
-export function EstimateStatusChip(props:{data:EstimateStatusEnum}) {
-  const { t } = useTranslation("estimate", {keyPrefix:"status"});
+export function EstimateStatusChip(props: {data: EstimateStatusEnum; prefix: string}) {
+  const {t} = useTranslation("estimate", {keyPrefix: props.prefix + ".status-chip"});
 
   if (props.data === EstimateStatusEnum.DRAFT) {
       return <Tooltip title={t("draft-label-tooltip")}>

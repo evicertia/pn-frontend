@@ -10,7 +10,7 @@ describe("StatusChip.test", () => {
     const estimateStatus = {
       data: EstimateStatusEnum.DRAFT
     };
-    render(<EstimateStatusChip data={estimateStatus.data} />);
+    render(<EstimateStatusChip data={estimateStatus.data} prefix={'estimate'}/>);
     const chipInfo = screen.getByTestId("chip-info");
     expect(chipInfo).toBeInTheDocument();
     expect(chipInfo).toHaveStyle('background-color: #0288d1');
@@ -20,7 +20,7 @@ describe("StatusChip.test", () => {
     const estimateStatus = {
       data: EstimateStatusEnum.VALIDATED
     };
-    render(<EstimateStatusChip data={estimateStatus.data} />);
+    render(<EstimateStatusChip data={estimateStatus.data} prefix={'estimate'}/>);
     const chipInfo = screen.getByTestId("chip-success");
     expect(chipInfo).toBeInTheDocument();
     expect(chipInfo).toHaveStyle('background-color: #2e7d32');
@@ -30,7 +30,7 @@ describe("StatusChip.test", () => {
     const estimateStatus = {
       data: EstimateStatusEnum.ABSENT
     };
-    render(<EstimateStatusChip data={estimateStatus.data} />);
+    render(<EstimateStatusChip data={estimateStatus.data} prefix={'estimate'}/>);
     const chipInfo = screen.getByTestId("chip-error");
     expect(chipInfo).toBeInTheDocument();
     expect(chipInfo).toHaveStyle('background-color: #d32f2f');
@@ -42,7 +42,7 @@ describe("StatusChip.test", () => {
     };
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    render(<EstimateStatusChip data={estimateStatus.data} />);
+    render(<EstimateStatusChip data={estimateStatus.data} prefix={'estimate'}/>);
     const chipInfo = screen.getByTestId("chip-empty");
     expect(chipInfo).toBeInTheDocument();
   });

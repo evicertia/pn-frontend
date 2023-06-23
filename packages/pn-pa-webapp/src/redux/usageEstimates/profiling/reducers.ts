@@ -1,11 +1,13 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {AxiosError} from "axios";
 import {
   FilterRequest,
   HistoryProfilings,
   ProfilingDetail,
   ProfilingPeriod
 } from "../../../models/UsageEstimation";
-import {getAllProfiling} from "./actions";
+import {getAllProfiling, getDetailProfiling, updateProfiling} from "../profiling/actions";
+
 
 interface ProfilingState {
   historyProfilings: HistoryProfilings;
@@ -54,7 +56,40 @@ const profilingSlice = createSlice({
     builder.addCase(getAllProfiling.rejected, (state) => {
       state.historyProfilings = {} as HistoryProfilings;
       state.loading = false;
-      state.error = "ERROR with history profilings";
+      state.error = "ERROR with history profiling";
+    });
+
+    builder.addCase(getDetailProfiling.pending, (state, action) => {
+      state.loading = true;
+      state.detail = action.payload;
+      state.error = undefined;
+    });
+    builder.addCase(getDetailProfiling.fulfilled, (state, action) => {
+      state.loading = false;
+      state.detail = action.payload;
+      state.formData = {
+        ...action.payload
+      } as ProfilingPeriod;
+    });
+    builder.addCase(getDetailProfiling.rejected, (state, action) => {
+      state.detail = undefined;
+      state.loading = false;
+      console.log("ERROR DETAIL ", action);
+      const tmp = action.payload as AxiosError;
+      state.error = (tmp?.response?.status) || "ERROR with detail profiling";
+    });
+
+    builder.addCase(updateProfiling.pending, (state) => {
+      state.loading = true;
+      state.error = undefined;
+    });
+    builder.addCase(updateProfiling.fulfilled, (state, action) => {
+      state.loading = false;
+      state.formData = action.payload;
+    });
+    builder.addCase(updateProfiling.rejected, (state) => {
+      state.loading = false;
+      state.error = "ERROR with update profiling";
     });
   }
 });
