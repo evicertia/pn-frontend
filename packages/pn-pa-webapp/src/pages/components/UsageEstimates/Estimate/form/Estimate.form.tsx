@@ -9,14 +9,14 @@ import {updateEstimate} from "../../../../../redux/usageEstimates/estimate/actio
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
 import {RootState} from "../../../../../redux/store";
 import {getFormattedDateTimeAbstract, localeStringReferenceId} from "../../../../../utils/utility";
-import {BillForm} from "./bill/Bill.form";
+import {BillForm} from "../../Common/form/bill/Bill.form";
 import {UsageEstimateForm} from "./usage/UsageEstimate.form";
 import {
   EstimateInitialValue,
   validationSchemaBilling,
   validationSchemaEstimate
-} from "./formik/Formik.config";
-import {SendDialog} from "./dialog/SendDialog";
+} from "../../Common/formik/Formik.config";
+import {SendDialog} from "../../Common/dialog/SendDialog";
 
 
 interface EstimateFormProps {

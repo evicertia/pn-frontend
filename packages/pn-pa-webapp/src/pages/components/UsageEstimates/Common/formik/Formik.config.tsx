@@ -1,7 +1,7 @@
 import {FormikErrors, FormikState, FormikTouched, FormikValues} from "formik";
 import {ChangeEvent} from "react";
 import * as yup from "yup";
-import {BillingDetail, Estimate} from "../../../../../../models/UsageEstimation";
+import {BillingDetail, Estimate} from "../../../../../models/UsageEstimation";
 
 
 export type EstimateFormProps = {

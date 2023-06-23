@@ -1,6 +1,6 @@
 import {act, screen, cleanup, render, fireEvent, waitFor} from "@testing-library/react";
 import {FormikErrors, FormikState, FormikValues, useFormik} from "formik";
-import {EstimateFormProps, validationSchemaEstimate} from "../../formik/Formik.config";
+import {EstimateFormProps, validationSchemaEstimate} from "../../../../Common/formik/Formik.config";
 import {ChangeEvent, cloneElement} from "react";
 import {UsageEstimateForm} from "../UsageEstimate.form";
 import * as yup from "yup";

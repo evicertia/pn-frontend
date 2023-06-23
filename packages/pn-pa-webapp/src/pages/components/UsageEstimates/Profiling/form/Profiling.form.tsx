@@ -9,9 +9,9 @@ import {updateProfiling} from "../../../../../redux/usageEstimates/profiling/act
 import {useAppDispatch, useAppSelector} from "../../../../../redux/hooks";
 import {RootState} from "../../../../../redux/store";
 import {getFormattedDateTimeAbstract, localeStringReferenceId} from "../../../../../utils/utility";
-import {SendDialog } from "../../Estimate/form/dialog/SendDialog";
-import {BillForm } from "../../Estimate/form/bill/Bill.form";
-import {ProfilingInitialValue, validationSchemaBilling} from "../../Estimate/form/formik/Formik.config";
+import {SendDialog } from "../../Common/dialog/SendDialog";
+import {BillForm } from "../../Common/form/bill/Bill.form";
+import {ProfilingInitialValue, validationSchemaBilling} from "../../Common/formik/Formik.config";
 
 
 interface ProfilingFormProps {

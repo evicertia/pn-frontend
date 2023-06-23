@@ -14,7 +14,7 @@ import {
 } from "../../../../../utils/utility";
 import {EstimateStatusChip} from "../../Common/statusChip/index";
 import {GET_EDIT_ESTIMATE_PATH} from "../../../../../navigation/routes.const";
-import {SendDialog} from "../form/dialog/SendDialog";
+import {SendDialog} from "../../Common/dialog/SendDialog";
 import {validatedEstimate} from "../../../../../redux/usageEstimates/estimate/actions";
 import {useAppDispatch} from "../../../../../redux/hooks";
 

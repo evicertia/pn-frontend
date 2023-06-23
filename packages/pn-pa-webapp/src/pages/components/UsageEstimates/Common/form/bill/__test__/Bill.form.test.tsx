@@ -1,7 +1,7 @@
 import {ChangeEvent, cloneElement} from "react";
 import {act, waitFor, screen, cleanup, fireEvent, render} from "@testing-library/react";
 import {BillForm} from "../Bill.form";
-import {EstimateFormProps, validationSchemaBilling} from "../../formik/Formik.config";
+import {EstimateFormProps, validationSchemaBilling} from "../../../formik/Formik.config";
 import {FormikErrors, FormikState, FormikValues, useFormik} from "formik";
 import {useTranslation} from "react-i18next";
 import * as yup from "yup";
