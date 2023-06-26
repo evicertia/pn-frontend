@@ -25,13 +25,12 @@ export const ProfilingHistoryTable = ({profilings}: Props) => {
   const navigate = useNavigate();
 
   const handleRowClick = (row: Item) => {
-    if (row?.status && row.status === EstimateStatusEnum.DRAFT && row.showEdit) {
+    if (row?.showEdit && row.status === EstimateStatusEnum.DRAFT && row.showEdit) {
       navigate(routes.GET_EDIT_PROFILING_PATH(row.id));
     }
-
-    // if (row?.status && row.status === EstimateStatusEnum.VALIDATED && !row.showEdit) {
-    //   navigate(routes.GET_DETAIL_PROFILING_PATH(row.id));
-    // }
+    if (!row?.showEdit && row.status === EstimateStatusEnum.VALIDATED) {
+      navigate(routes.GET_DETAIL_PROFILING_PATH(row.id));
+    }
   };
 
   const columns: Array<Column<ProfilingHistoryColumn>> = [
