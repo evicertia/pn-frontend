@@ -84,7 +84,6 @@ export const ProfilingHistoryTable = ({profilings}: Props) => {
   const rows: Array<Item> = profilings.map((element: ProfilingHistory) => ({
     ...element,
     id: element.referenceYear,
-    // showEdit: element.showEdit
   }));
 
   return (

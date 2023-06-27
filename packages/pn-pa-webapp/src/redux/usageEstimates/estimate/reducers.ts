@@ -82,7 +82,6 @@ const usageEstimateSlice = createSlice({
     builder.addCase(getDetailEstimate.rejected, (state, action) => {
       state.detail = undefined;
       state.loading = false;
-      console.log("ERROR DETAIL ", action);
       const tmp = action.payload as AxiosError;
       state.error = (tmp?.response?.status) || "ERROR with detail estimate";
     });

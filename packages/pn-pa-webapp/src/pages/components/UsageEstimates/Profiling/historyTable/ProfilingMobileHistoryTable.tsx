@@ -70,7 +70,7 @@ export const ProfilingMobileHistoryTable = ({profilings}: Props) => {
   // Navigation handlers
   const handleRowClick = (row: Item) => {
     if (row?.status && row.status === EstimateStatusEnum.VALIDATED) {
-      navigate(routes.GET_DETAIL_ESTIMATE_PATH(row.id));
+      navigate(routes.GET_DETAIL_PROFILING_PATH(row.id));
     }
   };
 

@@ -6,7 +6,7 @@ import {
   ProfilingDetail,
   ProfilingPeriod
 } from "../../../models/UsageEstimation";
-import {getAllProfiling, getDetailProfiling, updateProfiling} from "../profiling/actions";
+import {getAllProfiling, getDetailProfiling, updateProfiling, validatedProfiling} from "../profiling/actions";
 
 
 interface ProfilingState {
@@ -90,6 +90,19 @@ const profilingSlice = createSlice({
     builder.addCase(updateProfiling.rejected, (state) => {
       state.loading = false;
       state.error = "ERROR with update profiling";
+    });
+
+    builder.addCase(validatedProfiling.pending, (state,) => {
+      state.loading = true;
+      state.error = undefined;
+    });
+    builder.addCase(validatedProfiling.fulfilled, (state, action) => {
+      state.loading = false;
+      state.historyProfilings.actual = action.payload;
+    });
+    builder.addCase(validatedProfiling.rejected, (state) => {
+      state.loading = false;
+      state.error = "ERROR with history profiling";
     });
   }
 });

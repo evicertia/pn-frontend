@@ -3,12 +3,13 @@ import {ApiErrorWrapper, calculatePages, CustomPagination, PaginationData, useIs
 import {useTranslation} from "react-i18next";
 import {useCallback, useEffect} from "react";
 import {FilterRequest, HistoryProfilings} from "../models/UsageEstimation";
-import {setPagination} from "../redux/usageEstimates/estimate/reducers";
+import {setPagination} from "../redux/usageEstimates/profiling/reducers";
 import {PROFILING_ACTIONS, getAllProfiling} from "../redux/usageEstimates/profiling/actions";
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {RootState} from "../redux/store";
 import {ProfilingMobileHistoryTable} from "./components/UsageEstimates/Profiling/historyTable/ProfilingMobileHistoryTable";
 import {ProfilingHistoryTable} from "./components/UsageEstimates/Profiling/historyTable/ProfilingHistoryTable";
+import {ActualProfilingCard} from "./components/UsageEstimates/Profiling/actualProfilingCard/ActualProfilingCard";
 
 
 export function ProfilingPage() {
@@ -50,6 +51,14 @@ export function ProfilingPage() {
         </Typography>
       </Box>
 
+      {
+        (historyProfilings?.actual && loggedUser?.organization.id)
+          ?
+          <ActualProfilingCard paId={loggedUser.organization.id} data={historyProfilings.actual}/>
+          :
+          null
+      }
+
       <ApiErrorWrapper apiId={PROFILING_ACTIONS.GET_ALL_PROFILING} reloadAction={() => fetchHistory()} mt={3}>
         {
           (historyProfilings?.history?.content)
@@ -82,19 +91,10 @@ export function ProfilingPage() {
   );
 }
 
-function getHistoryContent(historyProfilings: HistoryProfilings) {
-  return [{status: historyProfilings.actual.status,
-    deadlineDate: historyProfilings.actual.deadlineDate,
-    referenceYear: historyProfilings.actual.referenceYear,
-    lastModifiedDate: historyProfilings.actual?.lastModifiedDate ? historyProfilings.actual.lastModifiedDate : "",
-    showEdit: historyProfilings.actual.showEdit},
-    ...historyProfilings.history.content];
-};
-
 function getTable(isMobile: boolean, historyProfilings: HistoryProfilings) {
   if(isMobile) {
-    return <ProfilingMobileHistoryTable profilings={getHistoryContent(historyProfilings)}/>;
+    return <ProfilingMobileHistoryTable profilings={historyProfilings.history.content}/>;
   } else {
-    return <ProfilingHistoryTable profilings={getHistoryContent(historyProfilings)}/>;
+    return <ProfilingHistoryTable profilings={historyProfilings.history.content}/>;
   }
 }

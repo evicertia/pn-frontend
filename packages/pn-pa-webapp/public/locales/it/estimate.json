@@ -153,6 +153,33 @@
   },
 
   "profiling": {
+    "actual": {
+      "card": {
+        "label": {
+          "profiling-year": "Profilazione per l'anno ",
+          "last-modify": "Ultima modifica ",
+          "editable": "Da inviare entro il "
+        },
+        "button": {
+          "create-profiling": "Crea profilazione",
+          "edit-profiling": "Modifica",
+          "send-profiling": "Invia"
+        }
+      },
+
+      "toast-message": {
+        "success": {
+          "title": "Profilazione inviata. Grazie!",
+          "message": "Profilazione inviata. Grazie!"
+        },
+        "error": {
+          "title": "Si è verificato un errore e la profilazione non è stata inviata. Riprova.",
+          "message": "Si è verificato un errore e la profilazione non è stata inviata. Riprova."
+        }
+      }
+    },
+
+
     "history": {
       "title-history": "Gestione Profilazione",
       "subtitle-history": "In questa sezione potrai inserire il profilo di fatturazione per la tua PA.",
@@ -247,7 +274,7 @@
     },
 
     "dialog": {
-      "send-dialog-title": "Vuoi inviare la profilazione di ",
+      "send-dialog-title": "Vuoi inviare la profilazione per l'anno ",
       "send-dialog-message": "Se hai bisogno di modificarla, potrai farlo fino alle ",
       "abort-dialog": "Annulla",
       "send-dialog": "Invia"

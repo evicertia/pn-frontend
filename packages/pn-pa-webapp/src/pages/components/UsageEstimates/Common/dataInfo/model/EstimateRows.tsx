@@ -8,23 +8,23 @@ import {RowDataInfo} from "../DataInfo";
 export const usagePeriod: Array<RowDataInfo<EstimatePeriod>> = [
   {
     id: "reference",
-    label: "detail-estimate.data-info.period-reference",
+    label: "estimate.detail.data-info.period-reference",
     type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{localeStringReferenceId(data.referenceMonth)}</Typography>
   },{
     id: "deadlineDate",
-    label: "detail-estimate.data-info.period-deadline",
+    label: "estimate.detail.data-info.period-deadline",
     type: "ROW",
     render: (data) =><Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.deadlineDate) ? getFormattedDateTime(data.deadlineDate, "ore") : "-"}</Typography>
   },
   {
     id: "lastModifiedDate",
-    label: "detail-estimate.data-info.period-last-modified-date",    type: "ROW",
+    label: "estimate.detail.data-info.period-last-modified-date",    type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.lastModifiedDate) ? getFormattedDateTime(data.lastModifiedDate, "ore") : "-"}</Typography>
   },
   {
     id: "status",
-    label: "detail-estimate.data-info.period-status",
+    label: "estimate.detail.data-info.period-status",
     type: "ROW",
     render: (data) => <EstimateStatusChip data={data.status} prefix={'estimate'}/>
   }
@@ -33,7 +33,7 @@ export const usagePeriod: Array<RowDataInfo<EstimatePeriod>> = [
 export const usageEstimations: Array<RowDataInfo<Estimate>> = [
   {
     id: "totalDigitalNotif",
-    label: "detail-estimate.data-info.usage-estimate-digital-notif",
+    label: "estimate.detail.data-info.usage-estimate-digital-notif",
     type: "ROW",
     render: (data) => (
       <Typography variant="body2"
@@ -45,7 +45,7 @@ export const usageEstimations: Array<RowDataInfo<Estimate>> = [
   },
   {
     id: "totalPaperNationalNotif",
-    label: "detail-estimate.data-info.usage-estimate-analog-notif",
+    label: "estimate.detail.data-info.usage-estimate-analog-notif",
     type: "ROW",
     render: (data) => (
       <Typography variant="body2"
@@ -57,7 +57,7 @@ export const usageEstimations: Array<RowDataInfo<Estimate>> = [
   },
   {
     id: "totalPaperInternationalNotif",
-    label: "detail-estimate.data-info.usage-estimate-analog-890-notif",
+    label: "estimate.detail.data-info.usage-estimate-analog-890-notif",
     type: "ROW",
     render: (data) =>(
       <Typography variant="body2"
@@ -74,7 +74,7 @@ export const usageEstimations: Array<RowDataInfo<Estimate>> = [
   },
   {
     id: "totalNotif",
-    label: "detail-estimate.data-info.usage-estimate-total-notif",
+    label: "estimate.detail.data-info.usage-estimate-total-notif",
     type: "ROW",
     labelWeight: "bold",
     labelVariant: "subtitle1",
@@ -92,7 +92,7 @@ export const usageEstimations: Array<RowDataInfo<Estimate>> = [
   },
   {
     id: "totDigitalNotif",
-    label: "detail-estimate.data-info.usage-estimate-total-digital-notif",
+    label: "estimate.detail.data-info.usage-estimate-total-digital-notif",
     type: "ROW",
     labelWeight: "600",
     render: (data) => (
@@ -105,7 +105,7 @@ export const usageEstimations: Array<RowDataInfo<Estimate>> = [
   },
   {
     id: "totAnalogNotif",
-    label: "detail-estimate.data-info.usage-estimate-total-analog-notif",
+    label: "estimate.detail.data-info.usage-estimate-total-analog-notif",
     type: "ROW",
     labelWeight: "600",
     render: (data) => (
@@ -121,25 +121,25 @@ export const usageEstimations: Array<RowDataInfo<Estimate>> = [
 export const usageBillingDataPA: Array<RowDataInfo<BillingDetail>> = [
   {
     id: "sdiCode",
-    label: "detail-estimate.data-info.billing-sdi-code",
+    label: "estimate.detail.data-info.billing-sdi-code",
     type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.sdiCode) ? data.sdiCode : "-"}</Typography>
   },
   {
     id: "splitPayment",
-    label: "detail-estimate.data-info.billing-split-payment",
+    label: "estimate.detail.data-info.billing-split-payment",
     type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.splitPayment) ? "Si" : "No"}</Typography>
   },
   {
     id: "mailAddress",
-    label: "detail-estimate.data-info.billing-email",
+    label: "estimate.detail.data-info.billing-email",
     type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.mailAddress) ? data.mailAddress : "-"}</Typography>
   },
   {
     id: "description",
-    label: "detail-estimate.data-info.billing-other-description",
+    label: "estimate.detail.data-info.billing-other-description",
     type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{(data?.description) ? data.description : "-"}</Typography>
   },
@@ -148,19 +148,19 @@ export const usageBillingDataPA: Array<RowDataInfo<BillingDetail>> = [
 export const usageInfoPA: Array<RowDataInfo<PaInfo>> = [
   {
     id: "paName",
-    label: "detail-estimate.data-info.pa-info-subject-name",
+    label: "estimate.detail.data-info.pa-info-subject-name",
     type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.paName}</Typography>
   },
   {
     id: "businessName",
-    label: "detail-estimate.data-info.pa-info-business-name",
+    label: "estimate.detail.data-info.pa-info-business-name",
     type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.address}</Typography>
   },
   {
     id: "taxId",
-    label: "detail-estimate.data-info.pa-info-tax-id",
+    label: "estimate.detail.data-info.pa-info-tax-id",
     type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.taxId}</Typography>
   }
