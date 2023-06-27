@@ -1,27 +1,22 @@
 import {act, cleanup, fireEvent, render, screen, waitFor} from "@testing-library/react";
-import {EstimatePeriod, EstimateStatusEnum} from "../../../../../../models/UsageEstimation";
-import {EstimateForm} from "../Estimate.form";
+import {ProfilingPeriod, EstimateStatusEnum} from "../../../../../../models/UsageEstimation";
+import {ProfilingForm} from "../Profiling.form";
 import * as reactRedux from "../../../../../../redux/hooks";
 
 
-const setScenario = (initialValues: EstimatePeriod, stat: EstimateStatusEnum) => {
+const setScenario = (initialValues: ProfilingPeriod, stat: EstimateStatusEnum) => {
   return {
     ...initialValues,
     status: stat
   }
 }
 
-const initEstimatePeriod = {
+const initProfilingPeriod = {
   status: EstimateStatusEnum.DRAFT,
   showEdit: true,
   deadlineDate: "2023-06-15T23:59:00.000+00:00",
-  referenceMonth: "LUG-2023",
+  referenceYear: "2023",
   lastModifiedDate: "",
-  estimate: {
-    total890Notif: 10,
-    totalAnalogNotif: 10,
-    totalDigitalNotif: 10
-  },
   billing: {
     sdiCode: "",
     splitPayment: false,
@@ -51,15 +46,6 @@ jest.mock("../../../Common/form/bill/Bill.form",
   })
 );
 
-jest.mock("../usage/UsageEstimate.form",
-  () => ({
-    UsageEstimateForm: () => {
-      // @ts-ignore
-      return <mock-table data-testid="usage-form-mock"/>;
-    },
-  })
-);
-
 jest.mock('react-i18next', () => ({
   // this mock makes sure any components using the translate hook can use it without a warning being shown
   useTranslation: () => ({
@@ -71,7 +57,8 @@ jest.mock('@pagopa-pn/pn-commons', () => ({
   ...jest.requireActual('@pagopa-pn/pn-commons')
 }));
 
-describe("Estimate.form.test", () => {
+
+describe("Profiling.form.test", () => {
   const mockSelector = jest.fn();
   const mockDispatch = jest.fn().mockImplementation(() => Promise.resolve());
   const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
@@ -101,13 +88,13 @@ describe("Estimate.form.test", () => {
     spyOnDispatch.mockReset();
   });
 
-  it("whenEstimateIsSaved", async () => {
-    const mockOnEstimateValidated = jest.fn()
+  it("whenProfilingIsSaved", async () => {
+    const mockOnProfilingValidated = jest.fn()
 
-    const initialValue = setScenario(initEstimatePeriod, EstimateStatusEnum.DRAFT);
-    render(<EstimateForm detail={initialValue} onEstimateValidated={mockOnEstimateValidated}/>);
+    const initialValue = setScenario(initProfilingPeriod, EstimateStatusEnum.DRAFT);
+    render(<ProfilingForm detail={initialValue} onProfilingValidated={mockOnProfilingValidated}/>);
 
-    const saveButton = await screen.queryByTestId("btn-save-estimate");
+    const saveButton = await screen.queryByTestId("btn-save-profiling");
     screen.debug(saveButton);
     expect(saveButton).toBeInTheDocument();
     expect(saveButton).not.toBeDisabled();
@@ -120,10 +107,10 @@ describe("Estimate.form.test", () => {
     })
   })
 
-  it("whenEstimateIsValidated", async () => {
-    const mockOnEstimateValidated = jest.fn()
-    const initialValue = setScenario(initEstimatePeriod, EstimateStatusEnum.VALIDATED);
-    render(<EstimateForm detail={initialValue} onEstimateValidated={mockOnEstimateValidated}/>);
+  it("whenProfilingIsValidated", async () => {
+    const mockOnProfilingValidated = jest.fn()
+    const initialValue = setScenario(initProfilingPeriod, EstimateStatusEnum.VALIDATED);
+    render(<ProfilingForm detail={initialValue} onProfilingValidated={mockOnProfilingValidated}/>);
 
     const openDialogButton = await screen.queryByTestId("btn-open-dialog");
     // screen.debug(openDialogButton);
@@ -150,10 +137,10 @@ describe("Estimate.form.test", () => {
     })
   })
 
-  it("whenEstimateIsNotValidated", async () => {
-    const mockOnEstimateValidated = jest.fn()
-    const initialValue = setScenario(initEstimatePeriod, EstimateStatusEnum.VALIDATED);
-    render(<EstimateForm detail={initialValue} onEstimateValidated={mockOnEstimateValidated}/>);
+  it("whenProfilingIsNotValidated", async () => {
+    const mockOnProfilingValidated = jest.fn()
+    const initialValue = setScenario(initProfilingPeriod, EstimateStatusEnum.VALIDATED);
+    render(<ProfilingForm detail={initialValue} onProfilingValidated={mockOnProfilingValidated}/>);
 
     const openDialogButton = await screen.queryByTestId("btn-open-dialog");
     // screen.debug(openDialogButton);

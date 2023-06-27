@@ -1,20 +1,20 @@
 import * as React from 'react'
 import * as reactRedux from "../../redux/hooks";
 import {act, cleanup, fireEvent, render, screen} from "@testing-library/react";
-import {EstimateEditPage} from "../EstimateEdit.page";
-import {EstimatePeriod, EstimateStatusEnum} from "../../models/UsageEstimation";
+import {EstimateStatusEnum, ProfilingPeriod} from "../../models/UsageEstimation";
 import * as routes from "../../navigation/routes.const";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {ProfilingEditPage} from "../ProfilingEdit.page";
 
 
 const mockDispatchFn = jest.fn();
 const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
 const spyOnSelector = jest.spyOn(reactRedux, "useAppSelector");
 
-const mockingStore = (estimateDetailStore = { }, userStore= { }, errorStore= undefined) => {
+const mockingStore = (profilingDetailStore = { }, userStore= { }, errorStore= undefined) => {
   const reduxStore = {
-    usageEstimateState: {
-      formData: estimateDetailStore,
+    profilingState: {
+      formData: profilingDetailStore,
       error: errorStore,
     },
     userState: {
@@ -30,26 +30,21 @@ const ScenarioWithStatusAndError = (props:{status: EstimateStatusEnum; showEdit:
     status: props.status,
     showEdit: props.showEdit,
     deadlineDate: "2023-06-15T23:59:00.000+00:00",
-    referenceMonth: "LUG-2023",
+    referenceYear: "2023",
     lastModifiedDate: (!props.emptyField) ? "2023-06-1T23:59:00.000+00:00" : undefined,
-    estimate: {
-      total890Notif: (props.emptyField) ? null : 100,
-      totalAnalogNotif: (props.emptyField) ? null : 100,
-      totalDigitalNotif: (props.emptyField) ? null : 100
-    },
     billing: {
       splitPayment: (props.emptyField) ? null : true,
       description: (props.emptyField) ? null : "ABCDDDDD",
       mailAddress: (props.emptyField) ? null : "C.P@gmail.com"
     }
-  } as EstimatePeriod;
+  } as ProfilingPeriod;
 
   mockingStore(stateFormData, stateUser, props.error);
   return (
     <BrowserRouter >
       <Routes>
-        <Route path={"/"} element={<EstimateEditPage/>}/>
-        <Route path={routes.ESTIMATE} element={<h1 data-testid={"estimate-page"}>Estimate page route</h1>}/>
+        <Route path={"/"} element={<ProfilingEditPage/>}/>
+        <Route path={routes.PROFILING} element={<h1 data-testid={"profiling-page"}>Profiling page route</h1>}/>
       </Routes>
     </BrowserRouter>
   );
@@ -83,16 +78,16 @@ jest.mock('@pagopa-pn/pn-commons', () => ({
   useIsMobile: () => false,
 }));
 
-jest.mock("../components/UsageEstimates/Estimate/form/Estimate.form",
- () => ({
-   EstimateForm: (props:{detail:{}, onEstimateValidated: () => void}) => {
-     // @ts-ignore
-     return <button data-testid="estimate-form-mock" onClick={props.onEstimateValidated}>Salva</button>;
-   },
- })
+jest.mock("../components/UsageEstimates/Profiling/form/Profiling.form",
+  () => ({
+    ProfilingForm: (props:{detail:{}, onProfilingValidated: () => void}) => {
+      // @ts-ignore
+      return <button data-testid="profiling-form-mock" onClick={props.onProfilingValidated}>Salva</button>;
+    },
+  })
 );
 
-describe("EstimateEdit.page.test", () => {
+describe("ProfilingEdit.page.test", () => {
 
   beforeEach(() => {
     spyOnDispatch.mockReturnValue(mockDispatchFn);
@@ -115,44 +110,44 @@ describe("EstimateEdit.page.test", () => {
     })
   });
 
-  it("whenReceivedRestError404ThenGoBackOnTableEstimate", async () => {
+  it("whenReceivedRestError404ThenGoBackOnTableProfiling", async () => {
     render(<ScenarioWithStatusAndError status={"DRAFT"} showEdit={true} emptyField={true} error={404}/> );
 
     await act(async () => {
-      expect(location.pathname).toEqual(routes.ESTIMATE);
-      expect(screen.getByTestId("estimate-page")).toBeInTheDocument()
+      expect(location.pathname).toEqual(routes.PROFILING);
+      expect(screen.getByTestId("profiling-page")).toBeInTheDocument()
       expect(mockDispatchFn).toBeCalledTimes(1);
     })
   });
 
-  it("whenReceivedShowEditFalseThenGoBackOnTableEstimate", async () => {
+  it("whenReceivedShowEditFalseThenGoBackOnTableProfiling", async () => {
 
     render(<ScenarioWithStatusAndError status={"VALIDATED"} showEdit={false} emptyField={false}/>);
 
     await act(async () => {
-      expect(location.pathname).toEqual(routes.ESTIMATE);
-      expect(screen.getByTestId("estimate-page")).toBeInTheDocument()
+      expect(location.pathname).toEqual(routes.PROFILING);
+      expect(screen.getByTestId("profiling-page")).toBeInTheDocument()
       expect(mockDispatchFn).toBeCalledTimes(1);
     })
   });
 
 
-  it("whenReceivedStatusABSENTThenGoBackOnTableEstimate", async () => {
+  it("whenReceivedStatusABSENTThenGoBackOnTableProfiling", async () => {
     render(<ScenarioWithStatusAndError status={"ABSENT"} showEdit={false} emptyField={true}/>);
-      await act(async () => {
-        expect(location.pathname).toEqual(routes.ESTIMATE);
-        expect(screen.getByTestId("estimate-page")).toBeInTheDocument()
-        expect(mockDispatchFn).toBeCalledTimes(1);
-      })
+    await act(async () => {
+      expect(location.pathname).toEqual(routes.PROFILING);
+      expect(screen.getByTestId("profiling-page")).toBeInTheDocument()
+      expect(mockDispatchFn).toBeCalledTimes(1);
+    })
   });
 
-  it("whenReceivedStatusABSENTAndShowEditThenGoBackOnTableEstimate", async () => {
+  it("whenReceivedStatusABSENTAndShowEditThenGoBackOnTableProfiling", async () => {
     render(<ScenarioWithStatusAndError status={"ABSENT"} showEdit={true} emptyField={true}/>);
-      await act(async () => {
-        expect(location.pathname).toEqual(routes.ESTIMATE);
-        expect(screen.getByTestId("estimate-page")).toBeInTheDocument()
-        expect(mockDispatchFn).toBeCalledTimes(1);
-      })
+    await act(async () => {
+      expect(location.pathname).toEqual(routes.PROFILING);
+      expect(screen.getByTestId("profiling-page")).toBeInTheDocument()
+      expect(mockDispatchFn).toBeCalledTimes(1);
+    })
   });
 
   it("whenReceivedRestError503ThenShowRetryGetDetail", async () => {
@@ -168,10 +163,10 @@ describe("EstimateEdit.page.test", () => {
     expect(mockDispatchFn).toBeCalledTimes(2);
   });
 
-  it("whenValidatedWithOKThenShowToastAndGoBackOnTableEstimate", async () => {
+  it("whenValidatedWithOKThenShowToastAndGoBackOnTableProfiling", async () => {
     render(<ScenarioWithStatusAndError status={"VALIDATED"} showEdit={true} emptyField={false} />);
 
-    const formScreenButton = screen.getByTestId("estimate-form-mock");
+    const formScreenButton = screen.getByTestId("profiling-form-mock");
     expect(formScreenButton).toBeInTheDocument();
 
     fireEvent.click(formScreenButton);
@@ -184,8 +179,8 @@ describe("EstimateEdit.page.test", () => {
           message: 'toast-message.success.message',
         }
       })
-      expect(location.pathname).toEqual(routes.ESTIMATE);
-      expect(screen.getByTestId("estimate-page")).toBeInTheDocument()
+      expect(location.pathname).toEqual(routes.PROFILING);
+      expect(screen.getByTestId("profiling-page")).toBeInTheDocument()
       expect(mockDispatchFn).toBeCalledTimes(2);
     })
   });

@@ -134,21 +134,6 @@ describe("Estimate.page.test", () => {
         }
       })
     });
-
-    // const changeSize = screen.getByTestId("simulate-tracking-page-size");
-    // expect(changeSize).toBeInTheDocument();
-    // fireEvent.click(changeSize);
-    // await act(async () => {
-    //   expect(mockDispatchFn).toBeCalledTimes(3);
-    //   expect(mockDispatchFn).toBeCalledWith({
-    //     type: "usageEstimateSlice/setPagination",
-    //     payload: {
-    //       size: 10,
-    //       page: 1
-    //     }
-    //   })
-    // });
-
   });
 
 });

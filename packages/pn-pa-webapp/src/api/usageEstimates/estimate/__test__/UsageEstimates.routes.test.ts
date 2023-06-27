@@ -10,7 +10,7 @@ import {StatusUpdateEnum} from "../../../../models/UsageEstimation";
 const PA_ID = "1234";
 const REF_MONTH = "MARZO-2023"
 
-describe('UsageEstimatesTest', function () {
+describe('UsageEstimatesRouteTest', function () {
 
 
   it('should compile pagination estimates', function () {

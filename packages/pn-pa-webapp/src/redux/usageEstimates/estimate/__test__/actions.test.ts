@@ -54,7 +54,7 @@ const estimateDetail :EstimateDetail = {
 }
 
 
-describe("actionstest", () =>{
+describe("estimateActionsTest", () =>{
     mockAuthentication();
     afterEach(cleanup);
 

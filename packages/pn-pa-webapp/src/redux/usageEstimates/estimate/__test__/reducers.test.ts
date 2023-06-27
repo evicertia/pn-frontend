@@ -2,6 +2,7 @@ import usageEstimateSlice, { setPagination, resetDetailState } from '../reducers
 import {HistoryEstimates} from "../../../../models/UsageEstimation";
 import {getAllEstimate, getDetailEstimate, updateEstimate, validatedEstimate} from "../actions";
 
+
 describe('usageEstimateSlice', () => {
     const initialState = {
         historyEstimates: {} as HistoryEstimates,
@@ -15,7 +16,7 @@ describe('usageEstimateSlice', () => {
         error: undefined
     };
 
-    describe('reducer', () => {
+    describe('estimateReducer', () => {
         it('should handle setPagination', () => {
 
 
@@ -201,7 +202,7 @@ describe('usageEstimateSlice', () => {
 
             expect(nextState.detail).toBeUndefined();
             expect(nextState.loading).toBe(false);
-            expect(nextState.error).toBe('ERROR DETAIL ESTIMATE');
+            expect(nextState.error).toBe('ERROR with detail estimate');
         });
 
         it('handle updateEstimate.pending', () => {

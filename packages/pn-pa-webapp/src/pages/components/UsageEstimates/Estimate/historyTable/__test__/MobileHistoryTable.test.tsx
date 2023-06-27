@@ -3,7 +3,6 @@ import {BrowserRouter, BrowserRouter as Router, Route, Routes} from 'react-route
 import {MobileHistoryTable} from '../MobileHistoryTable';
 import {EstimateStatusEnum} from "../../../../../../models/UsageEstimation";
 import * as util from "../../../../../../utils/utility"
-import {HistoryTable} from "../HistoryTable";
 import {GET_DETAIL_ESTIMATE_PATH} from "../../../../../../navigation/routes.const";
 
 

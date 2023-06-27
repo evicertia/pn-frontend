@@ -188,7 +188,7 @@ describe('ActualEstimateCardFunctionalities', () => {
                        element={<h1 data-testid={"estimate-edit-page"}>Estimate page route</h1>}/>
             </Routes>
         </BrowserRouter>);
-        const estimateButton = screen.getByText("actual-estimate.card.button.edit-estimate");
+        const estimateButton = screen.getByText("card.button.edit-estimate");
         fireEvent.click(estimateButton);
         await act(async () => {
             await waitFor(() => {
@@ -211,11 +211,11 @@ describe('ActualEstimateCardFunctionalities', () => {
             </Routes>
         </BrowserRouter>);
 
-        const sendEstimateButton = screen.getByText("actual-estimate.card.button.send-estimate");
+        const sendEstimateButton = screen.getByText("actual.card.button.send-estimate");
         fireEvent.click(sendEstimateButton);
         await act(async () => {
             await waitFor(() => {
-                expect(screen.getByTestId("send-estimate-dialog")).toBeInTheDocument()
+                expect(screen.getByTestId("send-dialog")).toBeInTheDocument()
             })
         })
 
@@ -266,7 +266,7 @@ describe('ActualEstimateCardFunctionalities', () => {
             </Routes>
         </BrowserRouter>);
 
-        const editEstimateButton = screen.getByText("actual-estimate.card.button.edit-estimate");
+        const editEstimateButton = screen.getByText("card.button.edit-estimate");
         fireEvent.click(editEstimateButton);
         await act(async () => {
             await waitFor(() => {
@@ -336,7 +336,7 @@ describe("ActualEstimateCardRender", () => {
             </Provider>
         );
 
-        expect(screen.getAllByText("actual-estimate.card.label.estimate-to-complete").at(0)).toBeInTheDocument();
+        expect(screen.getAllByText("card.label.estimate-to-complete").at(0)).toBeInTheDocument();
 
     });
 
@@ -366,7 +366,7 @@ describe("ActualEstimateCardRender", () => {
             expect(openDialogButton).toBeInTheDocument();
 
             fireEvent.click(openDialogButton);
-            const sendDialog = screen.getByTestId("send-estimate-dialog");
+            const sendDialog = screen.getByTestId("send-dialog");
             expect(sendDialog).toBeInTheDocument();
 
             const buttons = sendDialog.querySelectorAll('button');
@@ -415,7 +415,7 @@ describe("ActualEstimateCardRender", () => {
             expect(openDialogButton).toBeInTheDocument();
 
             fireEvent.click(openDialogButton);
-            const sendDialog = screen.getByTestId("send-estimate-dialog");
+            const sendDialog = screen.getByTestId("send-dialog");
             const buttons = sendDialog.querySelectorAll('button');
 
             buttons.forEach((btn, index) => {

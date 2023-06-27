@@ -27,7 +27,7 @@ describe("SendDialog.test", () => {
     const sendDialog = screen.getByTestId('send-dialog');
     expect(sendDialog).toBeInTheDocument();
     // @ts-ignore
-    fireEvent.click(sendEstimateDialog["firstChild"]);
+    fireEvent.click(sendDialog["firstChild"]);
     await act(async () => { await expect(screen.queryByTestId('sendDialog')).not.toBeInTheDocument() });
   });
 });

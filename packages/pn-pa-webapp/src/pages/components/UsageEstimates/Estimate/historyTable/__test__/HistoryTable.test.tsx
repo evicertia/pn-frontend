@@ -3,9 +3,8 @@ import {BrowserRouter, BrowserRouter as Router, Route, Routes} from 'react-route
 import {HistoryTable} from '../HistoryTable';
 import {EstimateStatusEnum} from "../../../../../../models/UsageEstimation";
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
-import {ActualEstimateCard} from "../../actualEstimateCard/ActualEstimateCard";
-import {GET_DETAIL_ESTIMATE_PATH, GET_EDIT_ESTIMATE_PATH} from "../../../../../../navigation/routes.const";
+import {createMemoryHistory} from 'history';
+import {GET_DETAIL_ESTIMATE_PATH} from "../../../../../../navigation/routes.const";
 
 const mockEstimates = [
    {
