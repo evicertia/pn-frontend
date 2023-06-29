@@ -17,7 +17,7 @@ const initProfilingPeriod = {
   deadlineDate: "2023-06-15T23:59:00.000+00:00",
   referenceYear: "2023",
   lastModifiedDate: "",
-  billing: {
+  profilation: {
     sdiCode: "",
     splitPayment: false,
     description: "",

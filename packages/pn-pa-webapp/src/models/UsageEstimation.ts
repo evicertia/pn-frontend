@@ -139,7 +139,7 @@ export interface ProfilingDetail {
   deadlineDate: string;
   referenceYear: string;
   lastModifiedDate: string;
-  billing: BillingDetail;
+  profilation: BillingDetail;
 }
 
 export interface ProfilingPeriod {
@@ -148,7 +148,7 @@ export interface ProfilingPeriod {
   deadlineDate: string;
   referenceYear: string;
   lastModifiedDate?: string;
-  billing: BillingDetail;
+  profilation: BillingDetail;
 }
 
 export interface HistoryProfilings {

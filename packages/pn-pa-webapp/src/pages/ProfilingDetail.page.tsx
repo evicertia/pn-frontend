@@ -91,7 +91,7 @@ export function ProfilingDetailPage() {
                         rows={profilingPeriod}/>
 
               <DataInfo title={t("data-info.billing-title")}
-                        data={detail.billing}
+                        data={detail.profilation}
                         rows={profilingBillingDataPA}/>
 
               <DataInfo title={t("data-info.pa-info-title")}

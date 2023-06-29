@@ -27,7 +27,7 @@ export function ProfilingForm(props: ProfilingFormProps) {
   const validationSchema = yup.object({...validationSchemaBilling(t)});
 
   const formik = useFormik({
-    initialValues: ProfilingInitialValue(props.detail.billing),
+    initialValues: ProfilingInitialValue(props.detail.profilation),
     validationSchema,
     onSubmit: (values) => {
       const estimateBodyRequest = {
