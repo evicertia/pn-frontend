@@ -11,7 +11,6 @@ import * as routes from '../../navigation/routes.const';
 import { render } from '../../__test__/test-utils';
 import * as actions from '../../redux/notification/actions';
 import {
-  fixedMandateId,
   notificationToFe,
   notificationToFeTwoRecipients,
   overrideNotificationMock
@@ -19,6 +18,7 @@ import {
 import NotificationDetail from '../NotificationDetail.page';
 import { mockDispatchAndActions, renderComponentBase } from './NotificationDetail.page.test-utils';
 
+const fixedMandateId = 'ALFA-BETA-GAMMA';
 
 /* eslint-disable functional/no-let */
 let mockUseParamsFn;
@@ -98,8 +98,6 @@ describe('NotificationDetail Page', () => {
     expect(mockActionFn).toBeCalledTimes(1);
     expect(mockActionFn).toBeCalledWith({
       iun: 'mocked-id',
-      currentUserTaxId: mockedUserInStore.fiscal_number,
-      delegatorsFromStore: [],
       mandateId: undefined,
     });
   });
@@ -117,8 +115,6 @@ describe('NotificationDetail Page', () => {
     expect(mockActionFn).toBeCalledTimes(1);
     expect(mockActionFn).toBeCalledWith({
       iun: 'mocked-id',
-      currentUserTaxId: mockedUserInStore.fiscal_number,
-      delegatorsFromStore: [],
       mandateId: undefined,
     });
   });
@@ -136,8 +132,6 @@ describe('NotificationDetail Page', () => {
     expect(mockActionFn).toBeCalledTimes(1);
     expect(mockActionFn).toBeCalledWith({
       iun: 'mocked-id',
-      currentUserTaxId: mockedUserInStore.fiscal_number,
-      delegatorsFromStore: [],
       mandateId: undefined,
     });
   });
@@ -155,8 +149,6 @@ describe('NotificationDetail Page', () => {
     expect(mockActionFn).toBeCalledTimes(1);
     expect(mockActionFn).toBeCalledWith({
       iun: 'mocked-id',
-      currentUserTaxId: mockedUserInStore.fiscal_number,
-      delegatorsFromStore: [],
       mandateId: undefined,
     });
   });
@@ -174,8 +166,6 @@ describe('NotificationDetail Page', () => {
     expect(mockActionFn).toBeCalledTimes(1);
     expect(mockActionFn).toBeCalledWith({
       iun: 'mocked-id',
-      currentUserTaxId: mockedUserInStore.fiscal_number,
-      delegatorsFromStore: [],
       mandateId: undefined,
     });
   });
@@ -280,7 +270,7 @@ describe('NotificationDetail Page', () => {
       notificationToFeTwoRecipients('TTTUUU29J84Z600X', 'CGNNMO80A03H501U', false)
     );
     const breadcrumbLinkComponent = screen.queryByTestId("mock-breadcrumb-link");
-    expect(breadcrumbLinkComponent).toHaveTextContent(new RegExp(`^${routes.NOTIFICHE}$`));
+    expect(breadcrumbLinkComponent).toHaveTextContent(routes.NOTIFICHE);
   });
 
   it("'notifiche' link for mandate", async () => {
@@ -290,6 +280,6 @@ describe('NotificationDetail Page', () => {
       notificationToFeTwoRecipients('TTTUUU29J84Z600X', 'CGNNMO80A03H501U', true), fixedMandateId
     );
     const breadcrumbLinkComponent = screen.queryByTestId("mock-breadcrumb-link");
-    expect(breadcrumbLinkComponent).toHaveTextContent(new RegExp(`^${routes.GET_NOTIFICHE_DELEGATO_PATH(fixedMandateId)}$`));
+    expect(breadcrumbLinkComponent).toHaveTextContent(routes.NOTIFICHE_DELEGATO);
   });
 });

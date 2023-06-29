@@ -12,7 +12,6 @@
     "accept_title": "Inserisci il codice di verifica",
     "accept_description": "Per accettare la delega, inserisci il codice che {{name}} ha condiviso con te.",
     "add": "Aggiungi una delega",
-    "invalid_code": "Codice di verifica non valido",
     "revoke": "Revoca",
     "reject": "Rifiuta",
     "accept": "Accetta",
@@ -29,9 +28,9 @@
     "show_code_title": "Codice di verifica per la delega a {{name}}",
     "show_code_subtitle": "Condividi questo codice con la persona delegata: dovrà inserirlo all’accettazione della delega.",
     "verification_code": "Codice di verifica",
+    "code_copied": "Codice copiato",
     "table": {
       "name": "Nome",
-      "email": "Email",
       "delegationStart": "Inizio delega",
       "delegationEnd": "Fine delega",
       "permissions": "Permessi",
@@ -51,8 +50,8 @@
     "backToDelegations": "Torna alle deleghe",
     "createdTitle": "La tua richiesta di delega è stata creata con successo",
     "createdDescription": "Condividi il codice di verifica con la persona delegata: dovrà inserirlo al primo accesso a SEND e accettare la tua richiesta.",
-    "title": "Le tue deleghe",
-    "subtitle": "Inserisci i dati del soggetto giuridico a cui vuoi delegare la gestione delle tue notifiche",
+    "title": "Aggiungi una delega",
+    "subtitle": "Inserisci i dati della persona fisica o giuridica a cui vuoi delegare la lettura delle tue notifiche.",
     "form": {
       "personType": "Soggetto giuridico*:",
       "naturalPerson": "Persona fisica",
@@ -60,12 +59,12 @@
       "firstName": "Nome*",
       "lastName": "Cognome*",
       "fiscalCode": "Codice Fiscale*",
-      "email": "Email*",
       "businessName": "Ragione Sociale*",
       "viewFrom": "Potrà visualizzare le notifiche da parte di*:",
       "allEntities": "Tutti gli enti",
-      "onlySelected": "Solo gli enti selezionati",
+      "onlySelected": "Solo  enti selezionati",
       "selectEntities": "Seleziona enti",
+      "date-duration": "Periodo di validità della delega*",
       "endDate": "Termine delega",
       "verificationCode": "Codice di verifica",
       "verificationCodeDescr": "Condividi questo codice con la persona delegata: dovrà inserirlo all’accettazione della delega.",
@@ -77,10 +76,6 @@
       "fiscalCode": {
         "required": "Il Codice Fiscale è obbligatorio",
         "wrong": "Il Codice Fiscale inserito non è corretto"
-      },
-      "email": {
-        "wrong": "Email non formattata correttamente",
-        "required": "Email obbligatoria"
       },
       "name": {
         "required": "Il nome è obbligatorio"
@@ -102,6 +97,10 @@
       "title": "Errore",
       "message": "Delega non trovata"
     },
+    "delivery_mandate_not_found": {
+      "title": "Errore",
+      "message": "Questa delega non è più attiva."
+    },
     "already_exists": {
       "title": "Delega già presente",
       "message": "La persona che hai indicato ha già una delega per questo ente."
@@ -115,8 +114,8 @@
       "message": "Non è possibile delegare se stessi"
     },
     "invalid_verification_code": {
-      "title": "Codice non valido",
-      "message": "Codice di verifica non valido"
+      "title": "Il codice è sbagliato",
+      "message": "Controllalo e inseriscilo di nuovo"
     },
     "fiscal_code": {
       "title": "Codice fiscale non valido",

@@ -20,12 +20,14 @@ import {
 } from '@pagopa-pn/pn-commons';
 import { ButtonNaked } from '@pagopa/mui-italia';
 
+import { useAppSelector } from '../../redux/hooks';
+import { RootState } from '../../redux/store';
+import { Organization } from '../../redux/auth/types';
 import * as routes from '../../navigation/routes.const';
 import { getNewNotificationBadge } from '../NewNotificationBadge/NewNotificationBadge';
 import { trackEventByType } from '../../utils/mixpanel';
 import { TrackEventType } from '../../utils/events';
 import { NotificationColumn } from '../../models/Notifications';
-import { Delegator } from '../../models/Deleghe';
 
 import FilterNotifications from './FilterNotifications';
 
@@ -36,7 +38,7 @@ type Props = {
   /** The function to be invoked if the user change sorting */
   onChangeSorting?: (s: Sort<NotificationColumn>) => void;
   /** Delegator */
-  currentDelegator?: Delegator;
+  isDelegatedPage?: boolean;
 };
 
 /**
@@ -51,10 +53,34 @@ type Props = {
  */
 const IS_SORT_ENABLED = false;
 
-const MobileNotifications = ({ notifications, sort, onChangeSorting, currentDelegator }: Props) => {
+// to avoid cognitive complexity warning - PN-5323
+function mainEmptyMessage(
+  filtersApplied: boolean,
+  isDelegatedPage: boolean,
+  organization: Organization,
+  t: any
+) {
+  return filtersApplied
+    ? undefined
+    : isDelegatedPage
+    ? t('empty-state.delegate', { name: organization.name })
+    : t('empty-state.message', { name: organization.name });
+}
+
+const MobileNotifications = ({
+  notifications,
+  sort,
+  onChangeSorting,
+  isDelegatedPage = false,
+}: Props) => {
   const navigate = useNavigate();
   const { t } = useTranslation('notifiche');
-  const filterNotificationsRef = useRef({ filtersApplied: false, cleanFilters: () => void 0 });
+  const filterNotificationsRef = useRef({
+    filtersApplied: false,
+    cleanFilters: () => void 0,
+  });
+
+  const organization = useAppSelector((state: RootState) => state.userState.user.organization);
 
   const handleEventTrackingTooltip = () => {
     trackEventByType(TrackEventType.NOTIFICATION_TABLE_ROW_TOOLTIP);
@@ -81,7 +107,7 @@ const MobileNotifications = ({ notifications, sort, onChangeSorting, currentDele
         return <Typography variant="body2">{row.sentAt}</Typography>;
       },
       gridProps: {
-        xs: 12,
+        xs: 4,
         sm: 5,
       },
     },
@@ -103,7 +129,7 @@ const MobileNotifications = ({ notifications, sort, onChangeSorting, currentDele
         );
       },
       gridProps: {
-        xs: 12,
+        xs: 8,
         sm: 7,
       },
     },
@@ -133,6 +159,23 @@ const MobileNotifications = ({ notifications, sort, onChangeSorting, currentDele
     },
   ];
 
+  if (isDelegatedPage) {
+    const recipientField = {
+      id: 'recipients',
+      label: t('table.destinatario'),
+      getLabel(value: Array<string>) {
+        return value.map((v) => (
+          <Typography key={v} variant="body2">
+            {v}
+          </Typography>
+        ));
+      },
+    };
+
+    // eslint-disable-next-line functional/immutable-data
+    cardBody.splice(3, 0, recipientField);
+  }
+
   const cardData: Array<Item> = notifications.map((n, i) => ({
     ...n,
     id: i.toString(),
@@ -161,34 +204,19 @@ const MobileNotifications = ({ notifications, sort, onChangeSorting, currentDele
     return arr;
   }, [] as Array<CardSort<NotificationColumn>>);
 
-  const handleRouteContacts = () => {
-    navigate(routes.RECAPITI);
-  };
-
   const filtersApplied: boolean = filterNotificationsRef.current.filtersApplied;
 
   const EmptyStateProps = {
-    emptyActionLabel: filtersApplied ? undefined : 'I tuoi Recapiti',
-    emptyActionCallback: filtersApplied
-      ? filterNotificationsRef.current.cleanFilters
-      : handleRouteContacts,
-    emptyMessage: filtersApplied
-      ? undefined
-      : 'Non hai ricevuto nessuna notifica. Vai alla sezione',
+    emptyActionCallback: filtersApplied ? filterNotificationsRef.current.cleanFilters : undefined,
+    emptyMessage: mainEmptyMessage(filtersApplied, isDelegatedPage, organization, t),
     sentimentIcon: filtersApplied ? KnownSentiment.DISSATISFIED : KnownSentiment.NONE,
-    secondaryMessage: filtersApplied
-      ? undefined
-      : {
-          emptyMessage:
-            'e inserisci uno più recapiti di cortesia: così, se riceverai una notifica, te lo comunicheremo.',
-        },
   };
 
   // Navigation handlers
   const handleRowClick = (row: Item) => {
-    if (currentDelegator) {
+    if (isDelegatedPage) {
       navigate(
-        routes.GET_DETTAGLIO_NOTIFICA_DELEGATO_PATH(row.iun as string, currentDelegator.mandateId)
+        routes.GET_DETTAGLIO_NOTIFICA_DELEGATO_PATH(row.iun as string, row.mandateId as string)
       );
     } else {
       navigate(routes.GET_DETTAGLIO_NOTIFICA_PATH(row.iun as string));
@@ -215,11 +243,7 @@ const MobileNotifications = ({ notifications, sort, onChangeSorting, currentDele
     <Fragment>
       <Grid container direction="row" sx={{ marginBottom: '16px' }}>
         <Grid item xs={6}>
-          <FilterNotifications
-            ref={filterNotificationsRef}
-            showFilters={showFilters}
-            currentDelegator={currentDelegator}
-          />
+          <FilterNotifications ref={filterNotificationsRef} showFilters={showFilters} />
         </Grid>
         <Grid item xs={6} textAlign="right">
           {/**
@@ -245,7 +269,7 @@ const MobileNotifications = ({ notifications, sort, onChangeSorting, currentDele
           cardData={cardData}
           cardActions={cardActions}
           headerGridProps={{
-            direction: { xs: 'column-reverse', sm: 'row' },
+            direction: { xs: 'row', sm: 'row' },
             alignItems: { xs: 'flex-start', sm: 'center' },
           }}
         />

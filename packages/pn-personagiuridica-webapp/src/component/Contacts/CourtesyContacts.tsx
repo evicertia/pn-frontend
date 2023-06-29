@@ -22,14 +22,20 @@ const CourtesyContacts: React.FC<Props> = ({ recipientId, contacts }) => {
       /**
        * Waiting for Mail icon to be available in mui-italia (<IllusSms /> as placeholder)
        * */
-      avatar={<IllusEmail />}
+      avatar={<IllusEmail size={60} />}
     >
       <Box sx={{ width: { xs: '100%', lg: '50%' } }}>
         <CourtesyContactsList recipientId={recipientId} contacts={contacts} />
       </Box>
-      <Alert sx={{ mt: 4 }} severity="info" data-testid="contacts disclaimer">
-        <Typography component="span" variant="body1">
-          {t('courtesy-contacts.disclaimer-message', { ns: 'recapiti' })}{' '}
+      <Alert
+        tabIndex={0}
+        aria-label={t('courtesy-contacts.disclaimer-message', { ns: 'recapiti' })}
+        sx={{ mt: 4 }}
+        severity="info"
+        data-testid="contacts disclaimer"
+      >
+        <Typography role="banner" component="span" variant="body1">
+          {t('courtesy-contacts.disclaimer-message', { ns: 'recapiti' })}
         </Typography>
         {/** 
            * Waiting for FAQs

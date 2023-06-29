@@ -1,5 +1,5 @@
 {
-    "PAGOPA_HELP_EMAIL": "enti-pn@assistenza.pagopa.it",
+    "PAGOPA_HELP_EMAIL": "enti-send@assistenza.pagopa.it",
     "SELFCARE_URL_FE_LOGIN": "https://uat.selfcare.pagopa.it/auth/login",
     "SELFCARE_BASE_URL": "https://uat.selfcare.pagopa.it",
     "API_BASE_URL": "https://webapi.dev.pn.pagopa.it/",
@@ -9,5 +9,6 @@
     "ONE_TRUST_DRAFT_MODE": true,
     "ONE_TRUST_PP": "4824a110-316e-42fd-b492-8e2b0513db70",
     "ONE_TRUST_TOS": "083fb982-149c-4241-be09-12ae67d88b66",
-    "IS_PAYMENT_ENABLED": false
+    "IS_PAYMENT_ENABLED": false,
+    "LANDING_SITE_URL": "https://www.dev.pn.pagopa.it"
 }

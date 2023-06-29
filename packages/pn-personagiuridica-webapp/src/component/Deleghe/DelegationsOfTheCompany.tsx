@@ -1,9 +1,9 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import _ from 'lodash';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Autocomplete,
   AutocompleteRenderOptionState,
   Box,
   Checkbox,
@@ -19,20 +19,25 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {
   ApiErrorWrapper,
+  CustomTagGroup,
   EmptyState,
   Item,
   KnownSentiment,
   PaginationData,
+  PnAutocomplete,
   SmartFilter,
   SmartTable,
   SmartTableData,
+  dataRegex,
   useIsMobile,
-  useSearchStringChangeInput,
 } from '@pagopa-pn/pn-commons';
+import { Tag } from '@pagopa/mui-italia';
 
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { RootState } from '../../redux/store';
+import { GroupStatus } from '../../models/groups';
 import { DELEGATION_ACTIONS, getDelegators } from '../../redux/delegation/actions';
+import { setFilters } from '../../redux/delegation/reducers';
 import delegationToItem from '../../utils/delegation.utility';
 import { getDelegationStatusLabelAndColor } from '../../utils/status.utility';
 import {
@@ -43,28 +48,33 @@ import {
 } from '../../models/Deleghe';
 import { AcceptButton, Menu, OrganizationsList } from './DelegationsElements';
 
+const initialEmptyValues: {
+  taxId: string;
+  groups: Array<{ id: string; name: string }>;
+  status: Array<DelegationStatus>;
+} = {
+  groups: [],
+  status: [],
+  taxId: '',
+};
+
 const DelegationsOfTheCompany = () => {
   const { t } = useTranslation(['deleghe', 'common']);
   const dispatch = useAppDispatch();
   const isMobile = useIsMobile();
-  const [filters, setFilters] = useState<DelegatorsFormFilters>({ size: 10, page: 0 });
   const firstUpdate = useRef(true);
-  const handleSearchStringChangeInput = useSearchStringChangeInput();
-  const organization = useAppSelector((state: RootState) => state.userState.user.organization);
+  const { hasGroup, organization } = useAppSelector((state: RootState) => state.userState.user);
+  const filters = useAppSelector((state: RootState) => state.delegationsState.filters);
+
   const delegators = useAppSelector(
     (state: RootState) => state.delegationsState.delegations.delegators
   );
   const pagination = useAppSelector((state: RootState) => state.delegationsState.pagination);
   const groups = useAppSelector((state: RootState) => state.delegationsState.groups);
-  const names = useAppSelector((state: RootState) => state.delegationsState.delegatorsNames);
   const statuses = (Object.keys(DelegationStatus) as Array<keyof typeof DelegationStatus>).map(
     (key) => ({ id: DelegationStatus[key], label: t(`deleghe.table.${DelegationStatus[key]}`) })
   );
-  const [nameInputValue, setNameInputValue] = useState('');
   const [groupInputValue, setGroupInputValue] = useState('');
-  const handleChangeInput = (newInputValue: string, action: Dispatch<SetStateAction<string>>) =>
-    handleSearchStringChangeInput(newInputValue, action);
-
   const rows: Array<Item> = delegationToItem(delegators);
   // back end return at most the next three pages
   // we have flag moreResult to check if there are more pages
@@ -134,9 +144,15 @@ const DelegationsOfTheCompany = () => {
       id: 'groups',
       label: t('deleghe.table.groups'),
       getValue(value: Array<{ id: string; name: string }>) {
-        if (value) {
+        if (value.length > 0) {
           return (
-            <OrganizationsList organizations={value.map((group) => group.name)} visibleItems={3} />
+            <CustomTagGroup visibleItems={3}>
+              {value.map((group) => (
+                <Box sx={{ mb: 1, mr: 1, display: 'inline-block' }} key={group.id}>
+                  <Tag value={group.name} />
+                </Box>
+              ))}
+            </CustomTagGroup>
           );
         }
         return '';
@@ -158,12 +174,11 @@ const DelegationsOfTheCompany = () => {
         if (value === DelegationStatus.ACTIVE) {
           return <Chip label={label} color={color} data-testid={`statusChip-${label}`} />;
         } else {
-          return <AcceptButton id={row.id} name={row.name as string} />;
+          return <AcceptButton id={row.id} name={row.name as string} onAccept={handleAccept} />;
         }
       },
       tableConfiguration: {
         width: '20%',
-        align: 'center',
       },
       cardConfiguration: {
         position: 'header',
@@ -172,11 +187,15 @@ const DelegationsOfTheCompany = () => {
         },
       },
     },
-    {
+  ];
+
+  if (!hasGroup) {
+    /* eslint-disable-next-line functional/immutable-data */
+    smartCfg.push({
       id: 'id',
       label: '',
-      getValue(value: string) {
-        return <Menu menuType={'delegators'} id={value} />;
+      getValue(value: string, data: Item) {
+        return <Menu menuType={'delegators'} id={value} row={data} onAction={handleUpdate} />;
       },
       tableConfiguration: {
         width: '5%',
@@ -187,8 +206,8 @@ const DelegationsOfTheCompany = () => {
           xs: 4,
         },
       },
-    },
-  ];
+    });
+  }
 
   const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
   const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -198,7 +217,7 @@ const DelegationsOfTheCompany = () => {
     option: { name: string; id: string },
     { selected }: AutocompleteRenderOptionState
   ) => (
-    <li {...props}>
+    <li {...props} key={option.id}>
       <Checkbox
         icon={icon}
         checkedIcon={checkedIcon}
@@ -210,17 +229,19 @@ const DelegationsOfTheCompany = () => {
   );
 
   const initialValues: {
-    delegatorIds: Array<{ id: string; name: string }>;
+    taxId: string;
     groups: Array<{ id: string; name: string }>;
-    status: Array<string>;
+    status: Array<DelegationStatus>;
   } = {
-    delegatorIds: [],
-    groups: [],
-    status: [],
+    taxId: filters.taxId || '',
+    groups: filters.groups ? groups.filter((group) => filters.groups?.includes(group.id)) : [],
+    status: filters.status || [],
   };
 
   const validationSchema = yup.object({
-    delegatorIds: yup.array(),
+    taxId: yup
+      .string()
+      .matches(dataRegex.pIvaAndFiscalCode, t('deleghe.validation.pIvaAndFiscalCode.wrong')),
     groups: yup.array(),
     status: yup.array(),
   });
@@ -228,15 +249,16 @@ const DelegationsOfTheCompany = () => {
   const formik = useFormik({
     initialValues,
     validationSchema,
+    enableReinitialize: true,
     onSubmit: (values) => {
       const params = {
         size: filters.size,
         page: 0,
         status: values.status,
-        delegatorIds: values.delegatorIds.map((d) => d.id.toString()),
-        groups: values.groups.map((d) => d.id.toString()),
+        taxId: values.taxId,
+        groups: values.groups.map((d) => d.id),
       } as DelegatorsFormFilters;
-      setFilters(params);
+      dispatch(setFilters(params));
     },
   });
 
@@ -245,8 +267,7 @@ const DelegationsOfTheCompany = () => {
       size: filters.size,
       page: 0,
     } as DelegatorsFormFilters;
-    setFilters(params);
-    formik.resetForm();
+    dispatch(setFilters(params));
   };
 
   const handleChangeTouched = async (e: any) => {
@@ -263,11 +284,51 @@ const DelegationsOfTheCompany = () => {
   };
 
   const handleChangePage = (paginationData: PaginationData) => {
-    setFilters((prevParams) => ({
-      ...prevParams,
-      size: paginationData.size,
-      page: paginationData.page,
-    }));
+    dispatch(
+      setFilters({
+        ...filters,
+        size: paginationData.size,
+        page: paginationData.page,
+      })
+    );
+  };
+
+  const handleAccept = () => {
+    // when a mandate is accepted, we must check if there are filters applied that can change the view
+    // for the acceptance, the only filter to check is the status one
+    if (
+      filters.status &&
+      filters.status.length > 0 &&
+      !filters.status.includes(DelegationStatus.ACTIVE)
+    ) {
+      // because the filters applied don't contain the status ACTIVE, we must redo the api call
+      getDelegatorsData();
+    }
+  };
+
+  const handleUpdate = (newGroups: Array<{ id: string; name: string }>) => {
+    // when a mandate is updated, we must check if there are filters applied that can change the view
+    // for the update, the only filter to check is the groups one
+    if (
+      filters.groups &&
+      filters.groups.length > 0 &&
+      // no group must be in common between updated groups and those in filters
+      !filters.groups.some((fGroups) => newGroups.findIndex((nGroup) => nGroup.id === fGroups) > -1)
+    ) {
+      // because the filters applied don't contain the updated groups, we must redo the api call
+      getDelegatorsData();
+    }
+  };
+
+  const getDelegatorsData = () => {
+    const delegatorsFilters = {
+      size: filters.size,
+      nextPageKey: filters.page ? pagination.nextPagesKey[filters.page - 1] : undefined,
+      taxId: filters.taxId || undefined,
+      groups: filters.groups,
+      status: filters.status,
+    } as GetDelegatorsFilters;
+    void dispatch(getDelegators(delegatorsFilters));
   };
 
   useEffect(() => {
@@ -276,14 +337,7 @@ const DelegationsOfTheCompany = () => {
       firstUpdate.current = false;
       return;
     }
-    const delegatorsFilters = {
-      size: filters.size,
-      nextPageKey: filters.page ? pagination.nextPagesKey[filters.page - 1] : undefined,
-      delegatorIds: filters.delegatorIds,
-      groups: filters.groups,
-      status: filters.status,
-    } as GetDelegatorsFilters;
-    void dispatch(getDelegators(delegatorsFilters));
+    getDelegatorsData();
   }, [filters]);
 
   return (
@@ -296,7 +350,7 @@ const DelegationsOfTheCompany = () => {
         reloadAction={() => dispatch(getDelegators(filters))}
         mainText={t('deleghe.delegatorsApiErrorMessage')}
       >
-        {rows.length > 0 ? (
+        {rows.length > 0 || !_.isEqual({ size: 10, page: 0 }, filters) ? (
           <SmartTable
             conf={smartCfg}
             data={rows}
@@ -307,6 +361,12 @@ const DelegationsOfTheCompany = () => {
               numOfDisplayedPages: Math.min(pagination.nextPagesKey.length + 1, 3),
               onChangePage: handleChangePage,
             }}
+            emptyStateProps={{
+              sentimentIcon: KnownSentiment.DISSATISFIED,
+              emptyMessage: t('deleghe.no_delegators_after_filters'),
+              emptyActionLabel: t('button.annulla filtro', { ns: 'common' }),
+              emptyActionCallback: clearFiltersHandler,
+            }}
           >
             <SmartFilter
               filterLabel={t('button.filtra', { ns: 'common' })}
@@ -315,49 +375,28 @@ const DelegationsOfTheCompany = () => {
               onClear={clearFiltersHandler}
               formIsValid={formik.isValid}
               formValues={formik.values}
-              initialValues={initialValues}
+              initialValues={initialEmptyValues}
             >
               <Grid item xs={12} lg>
-                <Autocomplete
-                  id="delegatorIds"
+                <TextField
+                  id="taxId"
+                  value={formik.values.taxId}
+                  onChange={handleChangeTouched}
+                  label={t('deleghe.table.tax-id')}
+                  name="taxId"
+                  error={formik.touched.taxId && Boolean(formik.errors.taxId)}
+                  helperText={formik.touched.taxId && formik.errors.taxId}
                   size="small"
                   fullWidth
-                  options={names}
-                  disableCloseOnSelect
-                  multiple
-                  noOptionsText={t('deleghe.table.no-name-found')}
-                  getOptionLabel={getOptionLabel}
-                  isOptionEqualToValue={(option, value) => option.id === value.id}
-                  popupIcon={<SearchIcon />}
-                  sx={{
-                    [`& .MuiAutocomplete-popupIndicator`]: {
-                      transform: 'none',
-                    },
-                    marginBottom: isMobile ? '20px' : '0',
-                  }}
-                  renderOption={renderOption}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label={t('deleghe.table.name')}
-                      placeholder={t('deleghe.table.name')}
-                      name="delegatorIds"
-                    />
-                  )}
-                  value={formik.values.delegatorIds}
-                  onChange={handleChangeTouched}
-                  onInputChange={(_event, newInputValue) =>
-                    handleChangeInput(newInputValue, setNameInputValue)
-                  }
-                  inputValue={nameInputValue}
+                  sx={{ marginBottom: isMobile ? '20px' : '0' }}
                 />
               </Grid>
               <Grid item xs={12} lg={3}>
-                <Autocomplete
+                <PnAutocomplete
                   id="groups"
                   size="small"
                   fullWidth
-                  options={groups}
+                  options={groups.filter((group) => group.status === GroupStatus.ACTIVE)}
                   disableCloseOnSelect
                   multiple
                   noOptionsText={t('deleghe.table.no-group-found')}
@@ -385,9 +424,7 @@ const DelegationsOfTheCompany = () => {
                   }
                   data-testid="groups"
                   inputValue={groupInputValue}
-                  onInputChange={(_event, newInputValue) =>
-                    handleChangeInput(newInputValue, setGroupInputValue)
-                  }
+                  onInputChange={(_event, newInputValue) => setGroupInputValue(newInputValue)}
                 />
               </Grid>
               <Grid item xs={12} lg={3}>
@@ -426,7 +463,7 @@ const DelegationsOfTheCompany = () => {
         ) : (
           <EmptyState
             sentimentIcon={KnownSentiment.NONE}
-            emptyMessage={t('deleghe.no_delegators', { recipient: organization.name })}
+            emptyMessage={t('deleghe.no_delegators', { organizationName: organization.name })}
           />
         )}
       </ApiErrorWrapper>

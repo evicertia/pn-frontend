@@ -22,12 +22,12 @@ import {
   useUnload,
 } from '@pagopa-pn/pn-commons';
 import { PartyEntity, ProductSwitchItem } from '@pagopa/mui-italia';
-import { ErrorInfo, useEffect, useMemo } from 'react';
+import { ErrorInfo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
 import Router from './navigation/routes';
-import { AUTH_ACTIONS, getOrganizationParty, logout } from './redux/auth/actions';
+import { AUTH_ACTIONS, logout } from './redux/auth/actions';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { RootState, store } from './redux/store';
 import { getMenuItems } from './utils/role.utility';
@@ -42,16 +42,36 @@ import { setUpInterceptor } from './api/interceptors';
 import { getConfiguration } from './services/configuration.service';
 
 
+// Cfr. PN-6096
+// --------------------
+// The i18n initialization must execute before the *first* time anything is actually rendered.
+// Cfr. comment in packages/pn-personafisica-webapp/src/App.tsx
+// --------------------
 const App = () => {
+  const { t } = useTranslation(['common', 'notifiche']);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!isInitialized) {
+      setIsInitialized(true);
+      // init localization
+      initLocalization((namespace, path, data) => t(path, { ns: namespace, ...data }));
+      // eslint-disable-next-line functional/immutable-data
+      errorFactoryManager.factory = new PAAppErrorFactory((path, ns) => t(path, { ns }));
+    }
+  }, [isInitialized]);
+
+  return isInitialized ? <ActualApp /> : <div/>;
+};
+
+const ActualApp = () => {
   useUnload(() => {
     trackEventByType(TrackEventType.APP_UNLOAD);
   });
   setUpInterceptor(store);
 
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
-  const loggedUserOrganizationParty = useAppSelector(
-    (state: RootState) => state.userState.organizationParty
-  );
+  const loggedUserOrganizationParty = loggedUser.organization;
   const { tosConsent, privacyConsent } = useAppSelector((state: RootState) => state.userState);
   const currentStatus = useAppSelector((state: RootState) => state.appStatus.currentStatus);
 
@@ -60,8 +80,8 @@ const App = () => {
   const { hasApiErrors } = useErrors();
 
   // TODO check if it can exist more than one role on user
-  const role = loggedUser.organization?.roles[0];
-  const idOrganization = loggedUser.organization?.id;
+  const role = loggedUserOrganizationParty?.roles[0];
+  const idOrganization = loggedUserOrganizationParty?.id;
   const sessionToken = loggedUser.sessionToken;
 
   const configuration = useMemo(() => getConfiguration(), []);
@@ -149,7 +169,7 @@ const App = () => {
     () => [
       {
         id: '0',
-        name: loggedUserOrganizationParty.name,
+        name: loggedUserOrganizationParty?.name,
         // productRole: role?.role,
         productRole: t(`roles.${role?.role}`),
         logoUrl: undefined,
@@ -163,20 +183,7 @@ const App = () => {
     [role, loggedUserOrganizationParty]
   );
 
-  useEffect(() => {
-    // init localization
-    initLocalization((namespace, path, data) => t(path, { ns: namespace, ...data }));
-    // eslint-disable-next-line functional/immutable-data
-    errorFactoryManager.factory = new PAAppErrorFactory((path, ns) => t(path, { ns }));
-  }, []);
-
   useTracking(configuration.MIXPANEL_TOKEN, process.env.NODE_ENV);
-
-  useEffect(() => {
-    if (idOrganization) {
-      void dispatch(getOrganizationParty(idOrganization));
-    }
-  }, [idOrganization]);
 
   useEffect(() => {
     if (sessionToken) {
@@ -256,8 +263,10 @@ const App = () => {
         }
         showSideMenu={
           !!sessionToken &&
-          tosConsent && tosConsent.accepted &&
-          privacyConsent && privacyConsent.accepted &&
+          tosConsent &&
+          tosConsent.accepted &&
+          privacyConsent &&
+          privacyConsent.accepted &&
           !hasFetchOrganizationPartyError &&
           !isPrivacyPage
         }

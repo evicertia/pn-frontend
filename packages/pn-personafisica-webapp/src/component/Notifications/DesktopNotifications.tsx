@@ -58,7 +58,6 @@ const DesktopNotifications = ({
       onClick(row: Item) {
         handleRowClick(row);
       },
-      disableAccessibility: true,
     },
     {
       id: 'sentAt',
@@ -71,7 +70,6 @@ const DesktopNotifications = ({
       onClick(row: Item) {
         handleRowClick(row);
       },
-      disableAccessibility: true,
     },
     {
       id: 'sender',
@@ -84,7 +82,6 @@ const DesktopNotifications = ({
       onClick(row: Item) {
         handleRowClick(row);
       },
-      disableAccessibility: true,
     },
     {
       id: 'subject',
@@ -96,7 +93,6 @@ const DesktopNotifications = ({
       onClick(row: Item) {
         handleRowClick(row);
       },
-      disableAccessibility: true,
     },
     {
       id: 'iun',
@@ -113,13 +109,23 @@ const DesktopNotifications = ({
       id: 'status',
       label: t('table.status'),
       width: '18%',
-      align: 'center',
       sortable: false, // TODO: will be re-enabled in PN-1124
       getCellLabel(_: string, row: Item) {
         const { label, tooltip, color } = getNotificationStatusInfos(
-          row.notificationStatus as NotificationStatus, {recipients: row.recipients as Array<string>}
+          row.notificationStatus as NotificationStatus,
+          { recipients: row.recipients as Array<string> }
         );
-        return <StatusTooltip label={label} tooltip={tooltip} color={color} eventTrackingCallback={handleEventTrackingTooltip}></StatusTooltip>;
+        return (
+          <StatusTooltip
+            label={label}
+            tooltip={tooltip}
+            color={color}
+            eventTrackingCallback={handleEventTrackingTooltip}
+          ></StatusTooltip>
+        );
+      },
+      onClick(row: Item) {
+        handleRowClick(row);
       },
     },
   ];
@@ -135,19 +141,24 @@ const DesktopNotifications = ({
   const filtersApplied: boolean = filterNotificationsRef.current.filtersApplied;
 
   const EmptyStateProps = {
-    emptyActionLabel: filtersApplied ? undefined : 'I tuoi Recapiti',
+    emptyActionLabel: filtersApplied ? undefined : t('empty-state.action'),
     emptyActionCallback: filtersApplied
       ? filterNotificationsRef.current.cleanFilters
+      : currentDelegator
+      ? undefined
       : handleRouteContacts,
     emptyMessage: filtersApplied
       ? undefined
-      : 'Non hai ricevuto nessuna notifica. Vai alla sezione',
+      : currentDelegator
+      ? t('empty-state.delegate', { name: currentDelegator.delegator?.displayName })
+      : t('empty-state.first-message'),
     sentimentIcon: filtersApplied ? KnownSentiment.DISSATISFIED : KnownSentiment.NONE,
-    secondaryMessage: filtersApplied
-      ? undefined
-      : {
-          emptyMessage: 'e inserisci uno più recapiti di cortesia: così, se riceverai una notifica, te lo comunicheremo.',
-        },
+    secondaryMessage:
+      filtersApplied || currentDelegator
+        ? undefined
+        : {
+            emptyMessage: t('empty-state.second-message'),
+          },
   };
 
   const showFilters = notifications?.length > 0 || filtersApplied;
@@ -155,7 +166,9 @@ const DesktopNotifications = ({
   // Navigation handlers
   const handleRowClick = (row: Item) => {
     if (currentDelegator) {
-      navigate(routes.GET_DETTAGLIO_NOTIFICA_DELEGATO_PATH(row.iun as string, currentDelegator.mandateId));
+      navigate(
+        routes.GET_DETTAGLIO_NOTIFICA_DELEGATO_PATH(row.iun as string, currentDelegator.mandateId)
+      );
     } else {
       navigate(routes.GET_DETTAGLIO_NOTIFICA_PATH(row.iun as string));
     }

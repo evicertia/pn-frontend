@@ -28,7 +28,7 @@ jest.mock('../../component/Deleghe/DelegationsOfTheCompany', () => ({
 }));
 
 describe('Deleghe page', () => {
-  it('renders deleghe page - no delegates', () => {
+  it('renders deleghe page', () => {
     const mock = mockApi(apiClient, 'GET', DELEGATIONS_BY_DELEGATOR(), 200, undefined, []);
     mockApi(mock, 'POST', DELEGATIONS_BY_DELEGATE({ size: 10 }), 200, undefined, {
       resultsPage: [],
@@ -36,14 +36,13 @@ describe('Deleghe page', () => {
       moreResult: false,
     });
     mockApi(mock, 'GET', GET_GROUPS(), 200, undefined, []);
-    mockApi(mock, 'GET', DELEGATIONS_NAME_BY_DELEGATE(), 200, undefined, []);
     const result = render(<Deleghe />);
     expect(result.container).toHaveTextContent(/deleghe.title/i);
     expect(result.container).toHaveTextContent(/deleghe.description/i);
-    expect(result.container).toHaveTextContent(/DelegatesByCompany/i);
+    expect(result.container).not.toHaveTextContent(/DelegatesByCompany/i);
     expect(result.container).toHaveTextContent(/deleghe.tab_delegati/i);
     expect(result.container).toHaveTextContent(/deleghe.tab_deleghe/i);
-    expect(result.container).not.toHaveTextContent(/DelegationsOfTheCompany/i);
+    expect(result.container).toHaveTextContent(/DelegationsOfTheCompany/i);
     mock.reset();
     mock.restore();
   });
@@ -56,11 +55,10 @@ describe('Deleghe page', () => {
       moreResult: false,
     });
     mockApi(mock, 'GET', GET_GROUPS(), 200, undefined, []);
-    mockApi(mock, 'GET', DELEGATIONS_NAME_BY_DELEGATE(), 200, undefined, []);
     const result = render(<Deleghe />);
-    const tab2 = result.getByTestId('tab2');
+    const tab2 = result.getByTestId('tab1');
     fireEvent.click(tab2);
-    expect(result.container).toHaveTextContent(/DelegationsOfTheCompany/i);
+    expect(result.container).toHaveTextContent(/DelegatesByCompany/i);
     mock.reset();
     mock.restore();
   });

@@ -1,7 +1,5 @@
 import { ConsentsApi } from '../../../api/consents/Consents.api';
-import { ExternalRegistriesAPI } from '../../../api/external-registries/External-registries.api';
 import { Consent, ConsentType } from '../../../models/consents';
-import { Party } from '../../../models/party';
 import { PartyRole, PNRole } from '../../../models/user';
 import { store } from '../../store';
 import { acceptToS, getOrganizationParty } from '../actions';
@@ -35,10 +33,6 @@ describe('Auth redux state tests', () => {
             },
             desired_exp: 0,
           },
-      organizationParty: {
-        id: '',
-        name: '',
-      } as Party,
       isUnauthorizedUser: false,
       fetchedTos: false,
       fetchedPrivacy: false,
@@ -109,18 +103,12 @@ describe('Auth redux state tests', () => {
   });
 
   it('Should NOT be able to fetch the tos approval', async () => {
-    const tosMock = {
-      recipientId: 'mock-recipient-id',
-      consentType: ConsentType.TOS,
-      accepted: false,
-      isFirstAccept: true,
-    };
+    const tosErrorResponse = { response: { data: 'error-tos', status: 500 }};
     const apiSpy = jest.spyOn(ConsentsApi, 'getConsentByType');
-    apiSpy.mockRejectedValue(tosMock);
+    apiSpy.mockRejectedValue(tosErrorResponse);
     const action = await store.dispatch(getToSApproval());
-    const payload = action.payload as Consent;
     expect(action.type).toBe('getToSApproval/rejected');
-    expect(payload).toEqual(tosMock);
+    expect(action.payload).toEqual(tosErrorResponse);
     apiSpy.mockRestore();
   });
 
@@ -135,13 +123,12 @@ describe('Auth redux state tests', () => {
   });
 
   it('Should NOT be able to fetch tos acceptance', async () => {
-    const tosAcceptanceMock = 'error';
+    const tosErrorResponse = { response: { data: 'error-tos-acceptance', status: 500 }};
     const apiSpy = jest.spyOn(ConsentsApi, 'setConsentByType');
-    apiSpy.mockRejectedValue(tosAcceptanceMock);
+    apiSpy.mockRejectedValue(tosErrorResponse);
     const action = await store.dispatch(acceptToS('mock-version-1'));
-    const payload = action.payload as string;
     expect(action.type).toBe('acceptToS/rejected');
-    expect(payload).toEqual(tosAcceptanceMock);
+    expect(action.payload).toEqual(tosErrorResponse);
   });
 
   it('Should be able to fetch the privacy approval', async () => {
@@ -162,18 +149,12 @@ describe('Auth redux state tests', () => {
   });
 
   it('Should NOT be able to fetch the privacy approval', async () => {
-    const tosMock = {
-      recipientId: 'mock-recipient-id',
-      consentType: ConsentType.DATAPRIVACY,
-      accepted: false,
-      isFirstAccept: true,
-    };
+    const tosErrorResponse = { response: { data: 'error-privacy-approval', status: 500 }};
     const apiSpy = jest.spyOn(ConsentsApi, 'getConsentByType');
-    apiSpy.mockRejectedValue(tosMock);
+    apiSpy.mockRejectedValue(tosErrorResponse);
     const action = await store.dispatch(getToSApproval());
-    const payload = action.payload as Consent;
     expect(action.type).toBe('getToSApproval/rejected');
-    expect(payload).toEqual(tosMock);
+    expect(action.payload).toEqual(tosErrorResponse);
     apiSpy.mockRestore();
   });
 
@@ -188,29 +169,12 @@ describe('Auth redux state tests', () => {
   });
 
   it('Should NOT be able to fetch privacy acceptance', async () => {
-    const tosAcceptanceMock = 'error';
+    const tosErrorResponse = { response: { data: 'error-privacy-acceptance', status: 500 }};
     const apiSpy = jest.spyOn(ConsentsApi, 'setConsentByType');
-    apiSpy.mockRejectedValue(tosAcceptanceMock);
+    apiSpy.mockRejectedValue(tosErrorResponse);
     const action = await store.dispatch(acceptToS('mock-version-1'));
-    const payload = action.payload as string;
     expect(action.type).toBe('acceptToS/rejected');
-    expect(payload).toEqual(tosAcceptanceMock);
+    expect(action.payload).toEqual(tosErrorResponse);
   });
 
-  it('Should be able to fetch the organization party', async () => {
-    const partyMock = { id: 'b6c5b42a-8a07-436f-96ce-8c2ab7f4dbd2', name: 'Comune di Valsamoggia' };
-    const apiSpy = jest.spyOn(ExternalRegistriesAPI, 'getOrganizationParty');
-    apiSpy.mockResolvedValue(partyMock);
-    const action = await store.dispatch(getOrganizationParty('mocked-organization-id'));
-    const payload = action.payload as Party;
-    expect(action.type).toBe('getOrganizationParty/fulfilled');
-    expect(payload).toEqual(partyMock);
-    // this kind of restore are not usually needed because most tests integrate the
-    // mockAuthorization function, which clears all mocks/spies after each test file.
-    // As this particular test file involves authorization, then it is not convenient to
-    // call mockAuthorization, hence the mocks/spies must be cleaned in each test.
-    // ------------
-    // Carlos Lombardi, 2022.07.28
-    apiSpy.mockRestore();
-  });
 });

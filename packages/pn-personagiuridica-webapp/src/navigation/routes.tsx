@@ -2,12 +2,10 @@ import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AppNotAccessible, LoadingPage, NotFound, PrivateRoute } from '@pagopa-pn/pn-commons';
 
-import { useAppSelector } from '../redux/hooks';
 import { RootState } from '../redux/store';
+import { useAppSelector } from '../redux/hooks';
 import { PNRole } from '../redux/auth/types';
-import { trackEventByType } from '../utils/mixpanel';
-import { TrackEventType } from '../utils/events';
-import { getConfiguration } from '../services/configuration.service';
+import { getConfiguration } from "../services/configuration.service";
 import * as routes from './routes.const';
 import SessionGuard from './SessionGuard';
 import RouteGuard from './RouteGuard';
@@ -24,19 +22,14 @@ const PrivacyPolicyPage = React.lazy(() => import('../pages/PrivacyPolicy.page')
 const TermsOfServicePage = React.lazy(() => import('../pages/TermsOfService.page'));
 
 const handleAssistanceClick = () => {
-  const { PAGOPA_HELP_EMAIL } = getConfiguration();
-  trackEventByType(TrackEventType.CUSTOMER_CARE_MAILTO, { source: 'postlogin' });
   /* eslint-disable-next-line functional/immutable-data */
-  window.location.href = `mailto:${PAGOPA_HELP_EMAIL}`;
+  window.location.href = getConfiguration().LANDING_SITE_URL;
 };
 
 function Router() {
-  const loggedUser = useAppSelector((state: RootState) => state.userState.user);
+  const { organization, hasGroup } = useAppSelector((state: RootState) => state.userState.user);
   const currentRoles =
-    loggedUser.organization && loggedUser.organization.roles
-      ? loggedUser.organization.roles.map((role) => role.role)
-      : [];
-
+    organization && organization.roles ? organization.roles.map((role) => role.role) : [];
   return (
     <Suspense fallback={<LoadingPage />}>
       <Routes>
@@ -45,8 +38,34 @@ function Router() {
           <Route path="/" element={<RouteGuard />}>
             <Route path="/" element={<ToSGuard />}>
               <Route path="/" element={<AARGuard />}>
-                <Route path={routes.NOTIFICHE} element={<Notifiche />} />
-                <Route path={routes.DETTAGLIO_NOTIFICA} element={<NotificationDetail />} />
+                <Route
+                  path={routes.NOTIFICHE}
+                  element={
+                    <PrivateRoute
+                      currentRoles={[]}
+                      requiredRoles={[]}
+                      additionalCondition={!hasGroup}
+                      redirectTo={<NotFound />}
+                    >
+                      <Notifiche />
+                    </PrivateRoute>
+                  }
+                />
+                <Route path={routes.NOTIFICHE_DELEGATO} element={<Notifiche isDelegatedPage />} />
+                <Route
+                  path={routes.DETTAGLIO_NOTIFICA}
+                  element={
+                    <PrivateRoute
+                      currentRoles={[]}
+                      requiredRoles={[]}
+                      additionalCondition={!hasGroup}
+                      redirectTo={<NotFound />}
+                    >
+                      <NotificationDetail />
+                    </PrivateRoute>
+                  }
+                />
+                <Route path={routes.DETTAGLIO_NOTIFICA_DELEGATO} element={<NotificationDetail />} />
                 <Route
                   path={routes.DELEGHE}
                   element={
@@ -66,6 +85,7 @@ function Router() {
                       currentRoles={currentRoles}
                       requiredRoles={[PNRole.ADMIN]}
                       redirectTo={<NotFound />}
+                      additionalCondition={!hasGroup}
                     >
                       <NuovaDelega />
                     </PrivateRoute>
@@ -77,6 +97,7 @@ function Router() {
                     <PrivateRoute
                       currentRoles={currentRoles}
                       requiredRoles={[PNRole.ADMIN]}
+                      additionalCondition={!hasGroup}
                       redirectTo={<NotFound />}
                     >
                       <Contacts />

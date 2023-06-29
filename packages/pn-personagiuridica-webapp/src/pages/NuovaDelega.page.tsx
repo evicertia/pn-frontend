@@ -18,7 +18,6 @@ import {
   MenuItem,
   Stack,
   Paper,
-  Autocomplete,
 } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
 import { IllusCompleted } from '@pagopa/mui-italia';
@@ -37,6 +36,7 @@ import {
   searchStringLimitReachedText,
   useSearchStringChangeInput,
   RecipientType,
+  PnAutocomplete,
 } from '@pagopa-pn/pn-commons';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { createDelegation, getAllEntities } from '../redux/newDelegation/actions';
@@ -70,7 +70,6 @@ const NuovaDelega = () => {
   const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
   const { entities, created } = useAppSelector((state: RootState) => state.newDelegationState);
-  const organization = useAppSelector((state: RootState) => state.userState.user.organization);
   const handleSearchStringChangeInput = useSearchStringChangeInput();
   const [senderInputValue, setSenderInputValue] = useState('');
   const { DELEGATIONS_TO_PG_ENABLED } = getConfiguration();
@@ -105,7 +104,7 @@ const NuovaDelega = () => {
   const validationSchema = yup.object({
     selectPersonaFisicaOrPersonaGiuridica: yup
       .string()
-      .required(t('nuovaDelega.validation.email.required')),
+      .required(t('required-field', { ns: 'common' })),
     codiceFiscale: yup
       .string()
       .required(t('nuovaDelega.validation.fiscalCode.required'))
@@ -199,7 +198,7 @@ const NuovaDelega = () => {
       />
       <TitleBox
         title={t('nuovaDelega.title')}
-        subTitle={t('nuovaDelega.subtitle', { organizationName: organization.name })}
+        subTitle={t('nuovaDelega.subtitle')}
         variantTitle="h3"
         variantSubTitle="body1"
         sx={{ pt: '20px' }}
@@ -374,7 +373,7 @@ const NuovaDelega = () => {
 
                             {values.selectTuttiEntiOrSelezionati === 'entiSelezionati' && (
                               <FormControl fullWidth>
-                                <Autocomplete
+                                <PnAutocomplete
                                   id="enti-select"
                                   data-testid="enti-select"
                                   multiple
@@ -409,6 +408,9 @@ const NuovaDelega = () => {
                         </Stack>
                       </FormControl>
                       <Box sx={{ marginTop: '1rem', width: '100%' }}>
+                        <Typography fontWeight="bold" marginBottom={2}>
+                          {t('nuovaDelega.form.date-duration')}
+                        </Typography>
                         <FormControl fullWidth>
                           <LocalizationProvider
                             dateAdapter={AdapterDateFns}
@@ -446,8 +448,8 @@ const NuovaDelega = () => {
                           </LocalizationProvider>
                         </FormControl>
                       </Box>
-                      <Divider sx={{ marginTop: '1rem' }} />
-                      <Typography fontWeight={'bold'} sx={{ marginTop: '1rem' }}>
+                      <Divider sx={{ my: 3 }} />
+                      <Typography fontWeight={'bold'}>
                         {t('nuovaDelega.form.verificationCode')}
                       </Typography>
                       <Stack
@@ -460,12 +462,8 @@ const NuovaDelega = () => {
                         </Typography>
                         <VerificationCodeComponent code={values.verificationCode} />
                       </Stack>
-                      <Divider sx={{ marginTop: '1rem' }} />
-                      <Stack
-                        sx={{ mt: '1rem' }}
-                        alignItems="flex-start"
-                        justifyContent={'flex-start'}
-                      >
+                      <Divider sx={{ my: 3 }} />
+                      <Stack alignItems="flex-start" justifyContent={'flex-start'}>
                         <Stack>
                           <Button
                             sx={{ marginTop: '1rem', margin: 'auto' }}

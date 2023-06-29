@@ -3,6 +3,7 @@ import { ScheduleDigitalWorkflowStep } from './ScheduleDigitalWorkflowStep';
 import { TimelineStep } from './TimelineStep';
 import { DefaultStep } from './DefaultStep';
 import { SendAnalogFlowStep } from './SendAnalogFlowStep';
+import { AnalogFailureWorkflowStep } from './AnalogFailureWorkflowStep';
 import { SendCourtesyMessageStep } from './SendCourtesyMessageStep';
 import { SendDigitalDomicileStep } from './SendDigitalDomicileStep';
 import { SendDigitalFeedbackStep } from './SendDigitalFeedbackStep';
@@ -16,6 +17,8 @@ export class TimelineStepFactory {
     switch (step.category) {
       case TimelineCategory.SCHEDULE_DIGITAL_WORKFLOW:
         return new ScheduleDigitalWorkflowStep();
+      case TimelineCategory.ANALOG_FAILURE_WORKFLOW:
+        return new AnalogFailureWorkflowStep();
       case TimelineCategory.SEND_COURTESY_MESSAGE:
         return new SendCourtesyMessageStep();
       case TimelineCategory.SEND_DIGITAL_DOMICILE:
@@ -34,7 +37,7 @@ export class TimelineStepFactory {
         return new SendAnalogFlowStep();
       case TimelineCategory.SEND_ANALOG_PROGRESS:
         return new SendAnalogFlowStep();
-      case TimelineCategory.SIMPLE_REGISTERED_LETTER_PROGRESS:
+      case TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS:
         return new SendAnalogFlowStep();
       // -------------------------------------------
         

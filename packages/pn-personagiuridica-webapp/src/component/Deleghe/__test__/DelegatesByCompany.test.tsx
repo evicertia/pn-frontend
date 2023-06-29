@@ -1,8 +1,10 @@
 import React from 'react';
 
-import { fireEvent, render, waitFor } from '../../../__test__/test-utils';
+import { fireEvent, mockApi, render, waitFor, within } from '../../../__test__/test-utils';
 import { arrayOfDelegates } from '../../../redux/delegation/__test__/test.utils';
 import * as routes from '../../../navigation/routes.const';
+import { REVOKE_DELEGATION } from '../../../api/delegations/delegations.routes';
+import { apiClient } from '../../../api/apiClients';
 import DelegatesByCompany from '../DelegatesByCompany';
 
 const mockNavigateFn = jest.fn();
@@ -76,28 +78,62 @@ describe('Delegates Component - assuming delegates API works properly', () => {
           delegations: {
             delegates: arrayOfDelegates,
           },
-          sortDelegates: {
-            orderBy: '',
-            order: 'desc',
+        },
+      },
+    });
+    const menu = result.getAllByTestId('delegationMenuIcon');
+    fireEvent.click(menu[0]);
+    const menuOpen = await waitFor(async () => result.getByTestId('delegationMenu'));
+    const menuItems = menuOpen.querySelectorAll('[role="menuitem"]');
+    expect(menuItems).toHaveLength(2);
+    expect(menuItems[0]).toHaveTextContent(/deleghe.show/i);
+    fireEvent.click(menuItems[0]);
+    await waitFor(() => {
+      const dialog = result.getByTestId('codeDialog');
+      const arrayOfVerificationCode = arrayOfDelegates[0].verificationCode.split('');
+      const codeInputs = dialog?.querySelectorAll('input');
+      codeInputs?.forEach((input, index) => {
+        expect(input).toHaveValue(arrayOfVerificationCode[index]);
+      });
+    });
+  });
+
+  it('revoke mandate', async () => {
+    const mock = mockApi(apiClient, 'PATCH', REVOKE_DELEGATION(arrayOfDelegates[0].mandateId), 204);
+    const result = render(<DelegatesByCompany />, {
+      preloadedState: {
+        delegationsState: {
+          delegations: {
+            delegates: arrayOfDelegates,
+            delegators: [],
           },
         },
       },
     });
     const menu = result.getAllByTestId('delegationMenuIcon');
     fireEvent.click(menu[0]);
-    const menuOpen = await waitFor(async () => result.getAllByTestId('delegationMenu'));
-    expect(menuOpen[0]).toHaveTextContent(/deleghe.show/i);
-    fireEvent.click(menuOpen[0].querySelectorAll('[role="menuitem"]')[0]);
+    const menuOpen = await waitFor(async () => result.getByTestId('delegationMenu'));
+    const menuItems = menuOpen.querySelectorAll('[role="menuitem"]');
+    expect(menuItems).toHaveLength(2);
+    expect(menuItems[1]).toHaveTextContent(/deleghe.revoke/i);
+    fireEvent.click(menuItems[1]);
+    const dialog = await waitFor(() => result.getByTestId('confirmationDialog'));
+    expect(dialog).toBeInTheDocument();
+    const dialogAction = within(dialog).getAllByTestId('dialogAction');
+    // click on confirm button
+    fireEvent.click(dialogAction[1]);
     await waitFor(() => {
-      const dialog = result.getAllByTestId('codeDialog');
-      const arrayOfVerificationCode = arrayOfDelegates[0].verificationCode.split('');
-      const inputsValue = dialog[0].getElementsByTagName('input');
-      expect(inputsValue[0].value).toBe(arrayOfVerificationCode[0]);
-      expect(inputsValue[1].value).toBe(arrayOfVerificationCode[1]);
-      expect(inputsValue[2].value).toBe(arrayOfVerificationCode[2]);
-      expect(inputsValue[3].value).toBe(arrayOfVerificationCode[3]);
-      expect(inputsValue[4].value).toBe(arrayOfVerificationCode[4]);
-      expect(inputsValue[5].value).toBe(arrayOfVerificationCode[5]);
+      expect(mock.history.patch.length).toBe(1);
+      expect(mock.history.patch[0].url).toContain(
+        `mandate/api/v1/mandate/${arrayOfDelegates[0].mandateId}/revoke`
+      );
+      expect(dialog).not.toBeInTheDocument();
     });
+    const table = result.getByTestId('table(notifications)');
+    expect(table).toBeInTheDocument();
+    expect(table).not.toHaveTextContent('Marco Verdi');
+    expect(table).toHaveTextContent('Davide Legato');
+    mock.reset();
+    mock.restore();
   });
 });

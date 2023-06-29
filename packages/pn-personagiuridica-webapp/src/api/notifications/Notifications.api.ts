@@ -14,7 +14,6 @@ import { AxiosResponse } from 'axios';
 import { parseNotificationDetailForRecipient } from '../../utils/notification.utility';
 import { NotificationDetailForRecipient } from '../../models/NotificationDetail';
 import { NotificationId } from '../../models/Notifications';
-import { Delegator } from '../../models/Deleghe';
 import { apiClient } from '../apiClients';
 import {
   NOTIFICATIONS_LIST,
@@ -38,28 +37,32 @@ const getDownloadUrl = (response: AxiosResponse): { url: string } => {
 export const NotificationsApi = {
   /**
    * Gets current user notifications
-   * @param  {string} startDate
-   * @param  {string} endDate
+   * @param {GetNotificationsParams & { isDelegatedPage: boolean }} params
+   *
    * @returns Promise
    */
-  getReceivedNotifications: (params: GetNotificationsParams): Promise<GetNotificationsResponse> =>
-    apiClient.get<GetNotificationsResponse>(NOTIFICATIONS_LIST(params)).then((response) => {
-      if (response.data && response.data.resultsPage) {
-        const notifications = response.data.resultsPage.map((d) => ({
-          ...d,
-          sentAt: formatDate(d.sentAt),
-        }));
+  getReceivedNotifications:
+    (params: GetNotificationsParams & { isDelegatedPage: boolean }): Promise<GetNotificationsResponse> => {
+      const { isDelegatedPage, ...payload } = params;
+      return apiClient.get<GetNotificationsResponse>(NOTIFICATIONS_LIST(payload, isDelegatedPage)).then((response) => {
+        if (response.data && response.data.resultsPage) {
+
+          const notifications = response.data.resultsPage.map((d) => ({
+            ...d,
+            sentAt: formatDate(d.sentAt),
+          }));
+          return {
+            ...response.data,
+            resultsPage: notifications,
+          };
+        }
         return {
-          ...response.data,
-          resultsPage: notifications,
+          resultsPage: [],
+          moreResult: false,
+          nextPagesKey: [],
         };
-      }
-      return {
-        resultsPage: [],
-        moreResult: false,
-        nextPagesKey: [],
-      };
-    }),
+      });
+  },
 
   /**
    * Gets current user notification detail
@@ -71,22 +74,16 @@ export const NotificationsApi = {
    */
   getReceivedNotification: (
     iun: string,
-    currentUserTaxId: string,
-    delegatorsFromStore: Array<Delegator>,
     mandateId?: string
   ): Promise<NotificationDetailForRecipient> =>
     apiClient.get<NotificationDetail>(NOTIFICATION_DETAIL(iun, mandateId)).then((response) => {
       if (response.data) {
-        return parseNotificationDetailForRecipient(
-          response.data,
-          currentUserTaxId,
-          delegatorsFromStore,
-          mandateId
-        );
+        return parseNotificationDetailForRecipient(response.data);
       } else {
         return {} as NotificationDetailForRecipient;
       }
     }),
+
 
   /**
    * Get notification iun and mandate id from aar link

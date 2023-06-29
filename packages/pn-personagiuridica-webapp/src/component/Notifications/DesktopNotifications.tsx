@@ -14,13 +14,15 @@ import {
   KnownSentiment,
 } from '@pagopa-pn/pn-commons';
 
+import { Typography } from '@mui/material';
+import { useAppSelector } from '../../redux/hooks';
+import { RootState } from '../../redux/store';
+import { Organization } from '../../redux/auth/types';
 import * as routes from '../../navigation/routes.const';
 import { getNewNotificationBadge } from '../NewNotificationBadge/NewNotificationBadge';
 import { trackEventByType } from '../../utils/mixpanel';
 import { TrackEventType } from '../../utils/events';
 import { NotificationColumn } from '../../models/Notifications';
-import { Delegator } from '../../models/Deleghe';
-
 import FilterNotifications from './FilterNotifications';
 
 type Props = {
@@ -29,19 +31,35 @@ type Props = {
   sort?: Sort<NotificationColumn>;
   /** The function to be invoked if the user change sorting */
   onChangeSorting?: (s: Sort<NotificationColumn>) => void;
-  /** Delegator */
-  currentDelegator?: Delegator;
+  /** Defines if the component is in delegated page */
+  isDelegatedPage?: boolean;
 };
+
+// to avoid cognitive complexity warning - PN-5323
+function mainEmptyMessage(
+  filtersApplied: boolean,
+  isDelegatedPage: boolean,
+  organization: Organization,
+  t: any
+) {
+  return filtersApplied
+    ? undefined
+    : isDelegatedPage
+    ? t('empty-state.delegate', { name: organization.name })
+    : t('empty-state.message', { name: organization.name });
+}
 
 const DesktopNotifications = ({
   notifications,
   sort,
   onChangeSorting,
-  currentDelegator,
+  isDelegatedPage = false,
 }: Props) => {
   const navigate = useNavigate();
-  const { t } = useTranslation('notifiche');
+  const { t } = useTranslation(['notifiche', 'common']);
   const filterNotificationsRef = useRef({ filtersApplied: false, cleanFilters: () => void 0 });
+
+  const organization = useAppSelector((state: RootState) => state.userState.user.organization);
 
   const handleEventTrackingTooltip = () => {
     trackEventByType(TrackEventType.NOTIFICATION_TABLE_ROW_TOOLTIP);
@@ -58,7 +76,6 @@ const DesktopNotifications = ({
       onClick(row: Item) {
         handleRowClick(row);
       },
-      disableAccessibility: true,
     },
     {
       id: 'sentAt',
@@ -71,7 +88,6 @@ const DesktopNotifications = ({
       onClick(row: Item) {
         handleRowClick(row);
       },
-      disableAccessibility: true,
     },
     {
       id: 'sender',
@@ -84,19 +100,17 @@ const DesktopNotifications = ({
       onClick(row: Item) {
         handleRowClick(row);
       },
-      disableAccessibility: true,
     },
     {
       id: 'subject',
       label: t('table.oggetto'),
-      width: '23%',
+      width: '22%',
       getCellLabel(value: string) {
         return value.length > 65 ? value.substring(0, 65) + '...' : value;
       },
       onClick(row: Item) {
         handleRowClick(row);
       },
-      disableAccessibility: true,
     },
     {
       id: 'iun',
@@ -113,7 +127,6 @@ const DesktopNotifications = ({
       id: 'status',
       label: t('table.status'),
       width: '18%',
-      align: 'center',
       sortable: false, // TODO: will be re-enabled in PN-1124
       getCellLabel(_: string, row: Item) {
         const { label, tooltip, color } = getNotificationStatusInfos(
@@ -129,43 +142,54 @@ const DesktopNotifications = ({
           ></StatusTooltip>
         );
       },
+      onClick(row: Item) {
+        handleRowClick(row);
+      },
     },
   ];
+
+  if (isDelegatedPage) {
+    const recipientField = {
+      id: 'recipients' as NotificationColumn,
+      label: t('table.destinatario'),
+      width: '15%',
+      sortable: false,
+      getCellLabel(value: Array<string>) {
+        return value.map((v) => (
+          <Typography key={v} variant="body2">
+            {v}
+          </Typography>
+        ));
+      },
+      onClick(row: Item) {
+        handleRowClick(row);
+      },
+      disableAccessibility: true,
+    };
+    // eslint-disable-next-line functional/immutable-data
+    columns.splice(3, 0, recipientField);
+  }
+
   const rows: Array<Item> = notifications.map((n, i) => ({
     ...n,
     id: n.paProtocolNumber + i.toString(),
   }));
 
-  const handleRouteContacts = () => {
-    navigate(routes.RECAPITI);
-  };
-
   const filtersApplied: boolean = filterNotificationsRef.current.filtersApplied;
 
   const EmptyStateProps = {
-    emptyActionLabel: filtersApplied ? undefined : 'I tuoi Recapiti',
-    emptyActionCallback: filtersApplied
-      ? filterNotificationsRef.current.cleanFilters
-      : handleRouteContacts,
-    emptyMessage: filtersApplied
-      ? undefined
-      : 'Non hai ricevuto nessuna notifica. Vai alla sezione',
+    emptyActionCallback: filtersApplied ? filterNotificationsRef.current.cleanFilters : undefined,
+    emptyMessage: mainEmptyMessage(filtersApplied, isDelegatedPage, organization, t),
     sentimentIcon: filtersApplied ? KnownSentiment.DISSATISFIED : KnownSentiment.NONE,
-    secondaryMessage: filtersApplied
-      ? undefined
-      : {
-          emptyMessage:
-            'e inserisci uno più recapiti di cortesia: così, se riceverai una notifica, te lo comunicheremo.',
-        },
   };
 
   const showFilters = notifications?.length > 0 || filtersApplied;
 
   // Navigation handlers
   const handleRowClick = (row: Item) => {
-    if (currentDelegator) {
+    if (isDelegatedPage) {
       navigate(
-        routes.GET_DETTAGLIO_NOTIFICA_DELEGATO_PATH(row.iun as string, currentDelegator.mandateId)
+        routes.GET_DETTAGLIO_NOTIFICA_DELEGATO_PATH(row.iun as string, row.mandateId as string)
       );
     } else {
       navigate(routes.GET_DETTAGLIO_NOTIFICA_PATH(row.iun as string));
@@ -176,11 +200,7 @@ const DesktopNotifications = ({
 
   return (
     <Fragment>
-      <FilterNotifications
-        ref={filterNotificationsRef}
-        showFilters={showFilters}
-        currentDelegator={currentDelegator}
-      />
+      <FilterNotifications ref={filterNotificationsRef} showFilters={showFilters} />
       {rows.length ? (
         <ItemsTable columns={columns} rows={rows} sort={sort} onChangeSorting={onChangeSorting} />
       ) : (

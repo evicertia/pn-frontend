@@ -108,6 +108,7 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
   const contactAlreadyExists = (): boolean =>
     !!addresses.find(
       (elem) =>
+        elem.value !== '' &&
         elem.value === modalProps.value &&
         (elem.senderId !== modalProps.senderId ||
           elem.channelType !== modalProps.digitalDomicileType)
@@ -144,9 +145,14 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
         if (noCallback) {
           return;
         }
-
-        if (res && res.pecValid) {
-          // contact has already been verified
+        // contact to verify
+        // open code modal
+        if (!res) {
+          setOpen(true);
+          return;
+        }
+        // contact has already been verified
+        if (res.pecValid || modalProps.digitalDomicileType !== LegalChannelType.PEC) {
           // show success message
           dispatch(
             appStateActions.addSuccess({
@@ -157,13 +163,12 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
             })
           );
           handleClose('validated');
+          return;
         }
-        if (res && !res.pecValid) {
-          handleClose('validated');
-          setPecValidationOpen(true);
-        } else {
-          setOpen(true);
-        }
+        // contact must be validated
+        // open validation modal
+        handleClose('validated');
+        setPecValidationOpen(true);
       });
   };
 
@@ -281,14 +286,15 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
             ` ${modalProps.value}`
           }
           subtitle={
-            <Trans
-              i18nKey={`${modalProps.labelRoot}.${modalProps.labelType}-verify-descr`}
-              ns="recapiti"
-            />
+            <Typography variant="body1">
+              <Trans
+                i18nKey={`${modalProps.labelRoot}.${modalProps.labelType}-verify-descr`}
+                ns="recapiti"
+              />
+            </Typography>
           }
           open={open}
           initialValues={new Array(5).fill('')}
-          handleClose={() => handleClose()}
           codeSectionTitle={t(`${modalProps.labelRoot}.insert-code`, { ns: 'recapiti' })}
           codeSectionAdditional={
             <Box>
@@ -298,9 +304,9 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
               </Typography>
               <ButtonNaked
                 onClick={() => handleCodeVerification(undefined, true)}
-                sx={{verticalAlign: 'unset'}}
+                sx={{ verticalAlign: 'unset' }}
               >
-                <Typography color="primary">
+                <Typography color="primary" variant="body2" sx={{ textDecoration: 'underline' }}>
                   {t(`${modalProps.labelRoot}.new-code-link`, { ns: 'recapiti' })}.
                 </Typography>
               </ButtonNaked>
@@ -338,7 +344,7 @@ const DigitalContactsCodeVerificationProvider: FC<ReactNode> = ({ children }) =>
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={pecValidationOpen}>
+      <Dialog open={pecValidationOpen} data-testid="validationDialog">
         <DialogTitle id="dialog-title" sx={{ pt: 4, px: 4 }}>
           {t('legal-contacts.validation-progress-title', { ns: 'recapiti' })}
         </DialogTitle>

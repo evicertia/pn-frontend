@@ -7,7 +7,15 @@ import {
 } from '@pagopa-pn/pn-commons';
 import { createSlice } from '@reduxjs/toolkit';
 import * as yup from 'yup';
-import { acceptToS, acceptPrivacy, exchangeToken, getToSApproval, getPrivacyApproval, logout } from './actions';
+
+import {
+  acceptToS,
+  acceptPrivacy,
+  exchangeToken,
+  getToSApproval,
+  getPrivacyApproval,
+  logout,
+} from './actions';
 import { PartyRole, PNRole, User } from './types';
 
 const roleMatcher = yup.object({
@@ -35,6 +43,7 @@ const userDataMatcher = yup
     jti: yup.string().matches(dataRegex.lettersNumbersAndDashs),
     organization: organizationMatcher,
     desired_exp: yup.number(),
+    hasGroup: yup.boolean(),
   })
   .noUnknown(true);
 
@@ -58,6 +67,7 @@ const noLoggedUserData = {
     fiscal_code: '',
   },
   desired_exp: 0,
+  hasGroup: false,
 } as User;
 
 const emptyUnauthorizedMessage = { title: '', message: '' };

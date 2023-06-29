@@ -1,17 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AppNotAccessible, NotFound } from '@pagopa-pn/pn-commons';
 
-import { getConfiguration } from '../services/configuration.service';
 import Dashboard from '../pages/Dashboard.page';
 import NewNotification from '../pages/NewNotification.page';
 import ApiKeys from '../pages/ApiKeys.page';
 import NewApiKey from '../pages/NewApiKey.page';
-import Statistics from '../pages/Statistics.page';
+// import Statistics from '../pages/Statistics.page';
 import NotificationDetail from '../pages/NotificationDetail.page';
 import PrivacyPolicyPage from '../pages/PrivacyPolicy.page';
 import TermsOfServicePage from '../pages/TermsOfService.page';
-import { trackEventByType } from '../utils/mixpanel';
-import { TrackEventType } from '../utils/events';
 import { PNRole } from '../models/user';
 import AppStatus from '../pages/AppStatus.page';
 import {ProfilingPage} from "../pages/Profiling.page";
@@ -20,55 +17,52 @@ import {EstimateEditPage} from "../pages/EstimateEdit.page";
 import {EstimateDetailPage} from "../pages/EstimateDetail.page";
 import {ProfilingEditPage} from "../pages/ProfilingEdit.page";
 import {ProfilingDetailPage} from "../pages/ProfilingDetail.page";
+import { getConfiguration } from '../services/configuration.service';
 import * as routes from './routes.const';
 import SessionGuard from './SessionGuard';
 import RouteGuard from './RouteGuard';
 import ToSGuard from './ToSGuard';
-import OrganizationPartyGuard from './OrganizationPartyGuard';
 
 const handleAssistanceClick = () => {
-  trackEventByType(TrackEventType.CUSTOMER_CARE_MAILTO, { source: 'postlogin' });
   /* eslint-disable-next-line functional/immutable-data */
-  window.location.href = `mailto:${getConfiguration().PAGOPA_HELP_EMAIL}`;
+  window.location.href = getConfiguration().LANDING_SITE_URL;
 };
 
 function Router() {
   return (
     <Routes>
       <Route path="/" element={<SessionGuard />}>
-        <Route path="/" element={<OrganizationPartyGuard />}>
-          {/* protected routes */}
-          <Route path="/" element={<RouteGuard roles={[PNRole.ADMIN, PNRole.OPERATOR]} />}>
-            <Route path="/" element={<ToSGuard />}>
-              <Route path={routes.DASHBOARD} element={<Dashboard />} />
-              <Route path={routes.DETTAGLIO_NOTIFICA} element={<NotificationDetail />} />
-              <Route path={routes.NUOVA_NOTIFICA} element={<NewNotification />} />
-              <Route path={routes.APP_STATUS} element={<AppStatus />} />
-              {/**
-               * Refers to PN-1741
-               * Commented out because beyond MVP scope
-               *
-               * LINKED TO:
-               * - "const BasicMenuItems" in packages/pn-pa-webapp/src/utils/role.utility.ts
-               * - BasicMenuItems in packages/pn-pa-webapp/src/utils/__TEST__/role.utilitytest.ts
-               *
-               * <Route path={routes.API_KEYS} element={<ApiKeys />} />
-               * */}
-              <Route path={routes.API_KEYS} element={<ApiKeys />} />
-              <Route path={routes.NUOVA_API_KEY} element={<NewApiKey />} />
-              <Route path={routes.STATISTICHE} element={<Statistics />} />
-              <Route path={routes.ESTIMATE} element={<EstimatePage />} />
-              <Route path={routes.ESTIMATE_EDIT} element={<EstimateEditPage />} />
-              <Route path={routes.ESTIMATE_DETAIL} element={<EstimateDetailPage />} />
-              <Route path={routes.PROFILING} element={<ProfilingPage />} />
-              <Route path={routes.PROFILING_EDIT} element={<ProfilingEditPage />} />
-              <Route path={routes.PROFILING_DETAIL} element={<ProfilingDetailPage />} />
-              <Route path="/" element={<Navigate to={routes.DASHBOARD} />} />
-            </Route>
-            {/* not found - non-logged users will see the common AccessDenied component */}
-            <Route path="*" element={<RouteGuard roles={null} />}>
-              <Route path="*" element={<NotFound />} />
-            </Route>
+        {/* protected routes */}
+        <Route path="/" element={<RouteGuard roles={[PNRole.ADMIN, PNRole.OPERATOR]} />}>
+          <Route path="/" element={<ToSGuard />}>
+            <Route path={routes.DASHBOARD} element={<Dashboard />} />
+            <Route path={routes.DETTAGLIO_NOTIFICA} element={<NotificationDetail />} />
+            <Route path={routes.NUOVA_NOTIFICA} element={<NewNotification />} />
+            <Route path={routes.APP_STATUS} element={<AppStatus />} />
+            {/**
+             * Refers to PN-1741
+             * Commented out because beyond MVP scope
+             *
+             * LINKED TO:
+             * - "const BasicMenuItems" in packages/pn-pa-webapp/src/utils/role.utility.ts
+             * - BasicMenuItems in packages/pn-pa-webapp/src/utils/__TEST__/role.utilitytest.ts
+             *
+             * <Route path={routes.API_KEYS} element={<ApiKeys />} />
+             * */}
+            <Route path={routes.API_KEYS} element={<ApiKeys />} />
+            <Route path={routes.NUOVA_API_KEY} element={<NewApiKey />} />
+            {/* <Route path={routes.STATISTICHE} element={<Statistics />} /> */}
+            <Route path={routes.ESTIMATE} element={<EstimatePage />} />
+            <Route path={routes.ESTIMATE_EDIT} element={<EstimateEditPage />} />
+            <Route path={routes.ESTIMATE_DETAIL} element={<EstimateDetailPage />} />
+            <Route path={routes.PROFILING} element={<ProfilingPage />} />
+            <Route path={routes.PROFILING_EDIT} element={<ProfilingEditPage />} />
+            <Route path={routes.PROFILING_DETAIL} element={<ProfilingDetailPage />} />
+            <Route path="/" element={<Navigate to={routes.DASHBOARD} />} />
+          </Route>
+          {/* not found - non-logged users will see the common AccessDenied component */}
+          <Route path="*" element={<RouteGuard roles={null} />}>
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Route>
       </Route>

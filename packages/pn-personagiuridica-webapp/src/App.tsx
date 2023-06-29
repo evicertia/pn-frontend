@@ -1,4 +1,4 @@
-import { ErrorInfo, useEffect, useMemo } from 'react';
+import { ErrorInfo, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
@@ -35,11 +35,7 @@ import Router from './navigation/routes';
 import { logout } from './redux/auth/actions';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { RootState, store } from './redux/store';
-import {
-  getDomicileInfo,
-  getSidemenuInformation,
-  // getSidemenuInformation
-} from './redux/sidemenu/actions';
+import { getDomicileInfo, getSidemenuInformation } from './redux/sidemenu/actions';
 import { PNRole } from './redux/auth/types';
 import { trackEventByType } from './utils/mixpanel';
 import { TrackEventType } from './utils/events';
@@ -50,7 +46,29 @@ import { setUpInterceptor } from './api/interceptors';
 import { getCurrentAppStatus } from './redux/appStatus/actions';
 import { getConfiguration } from './services/configuration.service';
 
+// Cfr. PN-6096
+// --------------------
+// The i18n initialization must execute before the *first* time anything is actually rendered.
+// Cfr. comment in packages/pn-personafisica-webapp/src/App.tsx
+// --------------------
 const App = () => {
+  const { t } = useTranslation(['common', 'notifiche']);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!isInitialized) {
+      setIsInitialized(true);
+      // init localization
+      initLocalization((namespace, path, data) => t(path, { ns: namespace, ...data }));
+      // eslint-disable-next-line functional/immutable-data
+      errorFactoryManager.factory = new PGAppErrorFactory((path, ns) => t(path, { ns }));
+    }
+  }, [isInitialized]);
+
+  return isInitialized ? <ActualApp /> : <div/>;
+};
+
+const ActualApp = () => {
   const { MIXPANEL_TOKEN, PAGOPA_HELP_EMAIL, VERSION } = getConfiguration();
   setUpInterceptor(store);
   const dispatch = useAppDispatch();
@@ -59,7 +77,9 @@ const App = () => {
   const { tosConsent, fetchedTos, privacyConsent, fetchedPrivacy } = useAppSelector(
     (state: RootState) => state.userState
   );
-  const { pendingDelegators } = useAppSelector((state: RootState) => state.generalInfoState);
+  const pendingDelegators = useAppSelector(
+    (state: RootState) => state.generalInfoState.pendingDelegators
+  );
   const currentStatus = useAppSelector((state: RootState) => state.appStatus.currentStatus);
   const { pathname } = useLocation();
   const path = pathname.split('/');
@@ -79,7 +99,6 @@ const App = () => {
   const isPrivacyPage = path[1] === 'privacy-tos';
   const organization = loggedUser.organization;
   const role = loggedUser.organization?.roles ? loggedUser.organization?.roles[0] : null;
-
   const userHasAdminPermissions = useHasPermissions(role ? [role.role] : [], [PNRole.ADMIN]);
 
   // TODO: get products list from be (?)
@@ -108,35 +127,45 @@ const App = () => {
   useTracking(MIXPANEL_TOKEN, process.env.NODE_ENV);
 
   useEffect(() => {
-    // init localization
-    initLocalization((namespace, path, data) => t(path, { ns: namespace, ...data }));
-    // eslint-disable-next-line functional/immutable-data
-    errorFactoryManager.factory = new PGAppErrorFactory((path, ns) => t(path, { ns }));
-  }, []);
-
-  useEffect(() => {
     if (sessionToken !== '') {
       if (userHasAdminPermissions) {
-        void dispatch(getDomicileInfo());
         void dispatch(getSidemenuInformation());
       }
+      if (userHasAdminPermissions && !loggedUser.hasGroup) {
+        void dispatch(getDomicileInfo());
+      }
+
       void dispatch(getCurrentAppStatus());
     }
   }, [sessionToken]);
 
-  const notificationMenuItems: Array<SideMenuItem> = [
-    {
-      label: t('menu.notifiche'),
-      route: routes.NOTIFICHE,
-    },
-  ];
+  const mapDelegatorSideMenuItem = (): Array<SideMenuItem> | undefined => {
+    // if the current user is not a groupAdmin can also see own PG notifications,
+    // else it sees only delegated notifications and we return undefined
+    if (!loggedUser.hasGroup) {
+      return [
+        {
+          label: t('menu.notifiche-impresa'),
+          route: routes.NOTIFICHE,
+        },
+        {
+          label: t('menu.notifiche-delegato'),
+          route: routes.NOTIFICHE_DELEGATO,
+        },
+      ];
+    } else {
+      return undefined;
+    }
+  };
+
+  const notificationMenuItems: Array<SideMenuItem> | undefined = mapDelegatorSideMenuItem();
 
   // TODO spostare questo in un file di utility
   const menuItems: Array<SideMenuItem> = [
     {
-      label: t('menu.notifiche'),
+      label: !loggedUser.hasGroup ? t('menu.notifiche') : t('menu.notifiche-delegato'),
       icon: MailOutlineIcon,
-      route: routes.NOTIFICHE,
+      route: !loggedUser.hasGroup ? routes.NOTIFICHE : routes.NOTIFICHE_DELEGATO,
       children: notificationMenuItems,
       notSelectable: notificationMenuItems && notificationMenuItems.length > 0,
     },
@@ -165,6 +194,9 @@ const App = () => {
       route: routes.DELEGHE,
       rightBadgeNotification: pendingDelegators ? pendingDelegators : undefined,
     });
+  }
+
+  if (userHasAdminPermissions && !loggedUser.hasGroup) {
     /* eslint-disable-next-line functional/immutable-data */
     menuItems.splice(2, 0, {
       label: t('menu.contacts'),

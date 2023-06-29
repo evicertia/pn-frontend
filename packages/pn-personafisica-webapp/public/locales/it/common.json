@@ -73,8 +73,8 @@
   },
   "not-accessible": {
     "title": "Non è possibile accedere alla piattaforma",
-    "description": "Riprova tra qualche ora. Se hai bisogno di assistenza",
-    "action": "scrivici"
+    "description": "In questo momento SEND è in fase di collaudo e non è ancora disponibile. Per maggiori informazioni sull’iniziativa,",
+    "action": "visita il sito dedicato"
   },
   "access-denied": "Non hai le autorizzazioni necessarie per accedere a questa pagina",
   "not-logged": "Accedi a SEND",
@@ -131,6 +131,8 @@
     "legal-part-2": "CAP 00187 - n. di iscrizione a Registro Imprese di Roma, CF e P.IVA 15376371009"
   },
   "required-fields": "*Campi obbligatori",
+  "required-field": "Campo obbligatorio",
+  "too-long-field-error": "Scrivi massimo {{maxLength}} caratteri",
   "validation": {
     "search-pattern-length-limit": "ricerca max {{maxLength}} caratteri",
     "invalid-characters-not-inserted": "I caratteri non validi non sono stati inseriti."

@@ -69,7 +69,7 @@ const IOContact: React.FC<Props> = ({ recipientId, contact }) => {
               btn: t('button.disable'),
             };
       return (
-        <Stack direction="row" mt={3}>
+        <Stack direction="row" alignItems="center" mt={3}>
           {content.Icon}
           <Typography data-testid="IO status" ml={1}>
             {content.text}
@@ -94,11 +94,17 @@ const IOContact: React.FC<Props> = ({ recipientId, contact }) => {
     } else {
       return (
         <Alert
+          tabIndex={0}
           sx={{ mt: 4 }}
+          aria-label={
+            status === IOContactStatus.UNAVAILABLE
+              ? t('io-contact.disclaimer-message-unavailable', { ns: 'recapiti' })
+              : t('io-contact.disclaimer-message', { ns: 'recapiti' })
+          }
           severity={status !== IOContactStatus.UNAVAILABLE ? 'info' : 'warning'}
           data-testid="appIO-contact-disclaimer"
         >
-          <Typography component="span" variant="body1">
+          <Typography component="span" variant="body1" role="banner">
             {status === IOContactStatus.UNAVAILABLE
               ? t('io-contact.disclaimer-message-unavailable', { ns: 'recapiti' })
               : t('io-contact.disclaimer-message', { ns: 'recapiti' })}{' '}
@@ -121,7 +127,7 @@ const IOContact: React.FC<Props> = ({ recipientId, contact }) => {
       sectionTitle={t('io-contact.title', { ns: 'recapiti' })}
       title={t('io-contact.subtitle', { ns: 'recapiti' })}
       subtitle={t('io-contact.description', { ns: 'recapiti' })}
-      avatar={<IllusSms />}
+      avatar={<IllusSms size={60} />}
     >
       {getContent()}
       {getDisclaimer()}

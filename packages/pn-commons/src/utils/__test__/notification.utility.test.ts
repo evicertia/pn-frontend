@@ -375,7 +375,7 @@ describe('notification status texts', () => {
       },
       ['single-recipient'],
       'status.viewed',
-      'info',
+      'success',
       'status.viewed-tooltip',
       'status.viewed-description',
       { subject: 'status.recipient' }
@@ -392,7 +392,7 @@ describe('notification status texts', () => {
       },
       ['single-recipient'],
       'status.viewed',
-      'info',
+      'success',
       'status.viewed-tooltip',
       'status.viewed-description',
       { subject: 'status.delegate.Mario Rossi' }
@@ -408,7 +408,7 @@ describe('notification status texts', () => {
       },
       ['recipient-1', 'recipient-2'],
       'status.viewed-multirecipient',
-      'info',
+      'success',
       'status.viewed-tooltip-multirecipient',
       'status.viewed-description-multirecipient',
       { subject: 'status.recipient' }
@@ -458,6 +458,35 @@ describe('timeline event description', () => {
     testTimelineStatusInfosFnMulti1(
       'schedule-digital-workflow',
       'schedule-digital-workflow-description-multirecipient',
+      { name: 'Nome2 Cognome2', taxId: '(mocked-taxId2)' }
+    );
+  });
+
+  it('return timeline status infos - ANALOG_FAILURE_WORKFLOW - single recipient', () => {
+    parsedNotificationCopy.timeline[0].category = TimelineCategory.ANALOG_FAILURE_WORKFLOW;
+    testTimelineStatusInfosFnSingle(
+      'analog-failure-workflow',
+      'analog-failure-workflow-description',
+      { name: 'Nome Cognome', taxId: '(mocked-taxId)' }
+    );
+  });
+
+  it('return timeline status infos - ANALOG_FAILURE_WORKFLOW - multirecipient - recipient 0', () => {
+    parsedNotificationTwoRecipientsCopy.timeline[0].category =
+      TimelineCategory.ANALOG_FAILURE_WORKFLOW;
+    testTimelineStatusInfosFnMulti0(
+      'analog-failure-workflow',
+      'analog-failure-workflow-description-multirecipient',
+      { name: 'Nome Cognome', taxId: '(mocked-taxId)' }
+    );
+  });
+
+  it('return timeline status infos - ANALOG_FAILURE_WORKFLOW - multirecipient - recipient 1', () => {
+    parsedNotificationTwoRecipientsCopy.timeline[0].category =
+      TimelineCategory.ANALOG_FAILURE_WORKFLOW;
+    testTimelineStatusInfosFnMulti1(
+      'analog-failure-workflow',
+      'analog-failure-workflow-description-multirecipient',
       { name: 'Nome2 Cognome2', taxId: '(mocked-taxId2)' }
     );
   });
@@ -880,23 +909,20 @@ describe('timeline event description', () => {
   });
 
   it(`return timeline status infos - SEND_ANALOG_FEEDBACK - failure code - single recipient`, () => {
-    const mockDetailCode = 'mock-detail-code';
     const mockFailureCode = 'mock-failure-code';
     const mockLetterNumber = 'mock-letter-number';
     
     parsedNotificationCopy.timeline[0].category = TimelineCategory.SEND_ANALOG_FEEDBACK;
-    (parsedNotificationCopy.timeline[0].details as SendPaperDetails).responseStatus =
-      ResponseStatus.KO;
     (parsedNotificationCopy.timeline[0].details as SendPaperDetails) = {
       ...(parsedNotificationCopy.timeline[0].details as SendPaperDetails),
-      deliveryDetailCode: mockDetailCode,
+      deliveryDetailCode: 'RECAG003C',
       deliveryFailureCause: mockFailureCode,
       registeredLetterCode: mockLetterNumber
     };
 
     testTimelineStatusInfosFnSingle(
       'send-analog-error',
-      `send-analog-flow-${mockDetailCode}-description`,
+      `send-analog-flow-RECAG003C-description`,
       {
         name: 'Nome Cognome',
         taxId: '(mocked-taxId)',
@@ -909,8 +935,6 @@ describe('timeline event description', () => {
 
   it('return timeline status infos - SEND_ANALOG_FEEDBACK - failure - single recipient', () => {
     parsedNotificationCopy.timeline[0].category = TimelineCategory.SEND_ANALOG_FEEDBACK;
-    (parsedNotificationCopy.timeline[0].details as SendPaperDetails).responseStatus =
-      ResponseStatus.KO;
     (parsedNotificationCopy.timeline[0].details as SendPaperDetails).physicalAddress = {
       address: 'Indirizzo fisico',
       zip: 'zip',
@@ -935,8 +959,6 @@ describe('timeline event description', () => {
     parsedNotificationTwoRecipientsCopy.recipients[1].denomination = `Catena Dall'Olio`;
     parsedNotificationTwoRecipientsCopy.timeline[0].category =
       TimelineCategory.SEND_ANALOG_FEEDBACK;
-    (parsedNotificationTwoRecipientsCopy.timeline[0].details as SendPaperDetails).responseStatus =
-      ResponseStatus.KO;
     (parsedNotificationTwoRecipientsCopy.timeline[0].details as SendPaperDetails).physicalAddress =
       {
         address: 'Indirizzo fisico',
@@ -961,17 +983,15 @@ describe('timeline event description', () => {
 
   it('return timeline status infos - SEND_ANALOG_FEEDBACK - success - single recipient', () => {
     parsedNotificationCopy.timeline[0].category = TimelineCategory.SEND_ANALOG_FEEDBACK;
-    (parsedNotificationCopy.timeline[0].details as SendPaperDetails).responseStatus =
-      ResponseStatus.OK;
     (parsedNotificationCopy.timeline[0].details as SendPaperDetails).physicalAddress = {
       address: 'Indirizzo fisico',
       zip: 'zip',
       municipality: 'municipality',
     };
     (parsedNotificationCopy.timeline[0].details as SendPaperDetails).sendRequestId = 'SEND_ANALOG_DOMICILE_0';
-    (parsedNotificationCopy.timeline[0].details as SendPaperDetails).deliveryDetailCode = 'RECRN003C';
+    (parsedNotificationCopy.timeline[0].details as SendPaperDetails).deliveryDetailCode = 'RECAG001C';
     (parsedNotificationCopy.timeline[0].details as SendPaperDetails).deliveryFailureCause = '';
-    testTimelineStatusInfosFnSingle('send-analog-success', 'send-analog-flow-RECRN003C-description', 
+    testTimelineStatusInfosFnSingle('send-analog-success', 'send-analog-flow-RECAG001C-description', 
       {
         name: 'Nome Cognome',
         taxId: '(mocked-taxId)',
@@ -988,8 +1008,6 @@ describe('timeline event description', () => {
     parsedNotificationTwoRecipientsCopy.recipients[1].denomination = `Catena Dall'Olio`;
     parsedNotificationTwoRecipientsCopy.timeline[0].category =
       TimelineCategory.SEND_ANALOG_FEEDBACK;
-    (parsedNotificationTwoRecipientsCopy.timeline[0].details as SendPaperDetails).responseStatus =
-      ResponseStatus.OK;
     (parsedNotificationTwoRecipientsCopy.timeline[0].details as SendPaperDetails).physicalAddress =
       {
         address: 'Indirizzo fisico',
@@ -997,11 +1015,11 @@ describe('timeline event description', () => {
         municipality: 'municipality',
       };
     (parsedNotificationTwoRecipientsCopy.timeline[0].details as SendPaperDetails).sendRequestId = 'SEND_ANALOG_DOMICILE_0';
-    (parsedNotificationTwoRecipientsCopy.timeline[0].details as SendPaperDetails).deliveryDetailCode = 'RECRN005C';
+    (parsedNotificationTwoRecipientsCopy.timeline[0].details as SendPaperDetails).deliveryDetailCode = 'RECRN003C';
     (parsedNotificationTwoRecipientsCopy.timeline[0].details as SendPaperDetails).deliveryFailureCause = '';
     testTimelineStatusInfosFnMulti1(
       'send-analog-success',
-      'send-analog-flow-RECRN005C-description-multirecipient',
+      'send-analog-flow-RECRN003C-description-multirecipient',
       { 
         name: `Catena Dall'Olio`, taxId: '(mocked-taxId2)',
         registeredLetterKind: ' detail.timeline.registered-letter-kind.AR',
@@ -1110,6 +1128,56 @@ describe('parse notification & filters', () => {
       TimelineCategory.SEND_COURTESY_MESSAGE
     );
     expect(currentSteps && currentSteps[1].category).toEqual(TimelineCategory.REQUEST_ACCEPTED);
+  });
+
+  it('reverse status and events - simultaneous events', () => {
+    const timeline = acceptedDeliveringDeliveredTimeline();
+    const timelineElementToBeClonedIndex = timeline.findIndex(elem => elem.elementId === 'digital_progress_0_PLATFORM');
+    if (timelineElementToBeClonedIndex === -1) {
+      fail('cannot build the test scenario');
+    }
+    const timelineElementToBeCloned = timeline[timelineElementToBeClonedIndex];
+    const newTimelineElement = {...timelineElementToBeCloned, elementId: 'digital_progress_1_PLATFORM'};
+    (newTimelineElement.details as SendDigitalDetails).deliveryDetailCode = 'C002';
+    newTimelineElement.timestamp = timeline[timelineElementToBeClonedIndex+1].timestamp;
+    timeline.splice(timelineElementToBeClonedIndex+1, 0, newTimelineElement);
+    sourceNotification.timeline = timeline;
+    const statusHistory = acceptedDeliveringDeliveredTimelineStatusHistory();
+    const deliveringStatus = statusHistory.find(status => status.status === NotificationStatus.DELIVERING);
+    if (!deliveringStatus) {
+      fail('cannot build the test scenario');
+    }
+    const insertionIndex = deliveringStatus.relatedTimelineElements.findIndex(elem => elem === 'digital_progress_0_PLATFORM') + 1;
+    deliveringStatus?.relatedTimelineElements.splice(insertionIndex, 0, 'digital_progress_1_PLATFORM');
+    sourceNotification.notificationStatusHistory = statusHistory;
+
+    // parse
+    const parsedNotification = parseNotificationDetail(sourceNotification);
+
+    // ----------- checks
+    // DELIVERING events -- FEEDBACK comes before both PROGRESS
+    let currentSteps = parsedNotification.notificationStatusHistory[1].steps;
+    expect(currentSteps && currentSteps[0].category).toEqual(
+      TimelineCategory.SEND_DIGITAL_FEEDBACK
+    );
+    expect(currentSteps && currentSteps[1].category).toEqual(
+      TimelineCategory.SEND_DIGITAL_PROGRESS
+    );
+    expect(currentSteps && currentSteps[1].elementId).toEqual(
+      'digital_progress_1_PLATFORM'
+    );
+    expect(currentSteps && currentSteps[1].timestamp).toEqual(
+      currentSteps && currentSteps[0].timestamp
+    );
+    expect(currentSteps && currentSteps[2].category).toEqual(
+      TimelineCategory.SEND_DIGITAL_PROGRESS
+    );
+    expect(currentSteps && currentSteps[2].elementId).toEqual(
+      'digital_progress_0_PLATFORM'
+    );
+    expect(currentSteps && currentSteps[2].timestamp).not.toEqual(
+      currentSteps && currentSteps[0].timestamp
+    );
   });
 
   it('duplicates ACCEPTED events - hidden copies', () => {

@@ -204,7 +204,7 @@ export function getNotificationStatusInfos(
         );
       }
       return {
-        color: 'info',
+        color: 'success',
         ...localizeStatus(
           'viewed',
           'Avvenuto accesso',
@@ -276,10 +276,13 @@ export const getNotificationAllowedStatus = () => [
   },
 ];
 
-
-function legalFactTypeForAnalogEvent(timelineStep: INotificationDetailTimeline, legalFactKey?: string) {
+function legalFactTypeForAnalogEvent(
+  timelineStep: INotificationDetailTimeline,
+  legalFactKey?: string
+) {
   const attachments = (timelineStep.details as SendPaperDetails).attachments;
-  const matchingAttachment = legalFactKey && attachments && attachments.find(att => att.url === legalFactKey);
+  const matchingAttachment =
+    legalFactKey && attachments && attachments.find((att) => att.url === legalFactKey);
   return matchingAttachment ? matchingAttachment.documentType : undefined;
 }
 
@@ -292,7 +295,7 @@ function legalFactTypeForAnalogEvent(timelineStep: INotificationDetailTimeline, 
 export function getLegalFactLabel(
   timelineStep: INotificationDetailTimeline,
   legalFactType?: LegalFactType,
-  legalFactKey?: string,
+  legalFactKey?: string
 ): string {
   const legalFactLabel = getLocalizedOrDefaultLabel(
     'notifications',
@@ -310,8 +313,8 @@ export function getLegalFactLabel(
   // Hence I keep the condition on the category only.
   // -------------------------
   // Update as of 2023.04.21
-  // 
-  // As far as the new specification seems to indicate, 
+  //
+  // As far as the new specification seems to indicate,
   // the attachments for the analog flow will be always linked to
   // SEND_ANALOG_PROGRESS events and not to SEND_ANALOG_FEEDBACK ones.
   // As this is quite recent and maybe not that stable, I prefer to keep this code commented out
@@ -335,14 +338,14 @@ export function getLegalFactLabel(
   //   }
   //   return receiptLabel;
 
-  // For the SEND_ANALOG_PROGRESS / SIMPLE_REGISTERED_LETTER_PROGRESS events,
+  // For the SEND_ANALOG_PROGRESS / SEND_SIMPLE_REGISTERED_LETTER_PROGRESS events,
   // the text depend on the kind of document ... that is not indicated in legalFactType,
   // but rather inside the "attachments" attribute present in the detail of the timeline step
   // -------------------------
   // Carlos Lombardi
   if (
-    timelineStep.category === TimelineCategory.SEND_ANALOG_PROGRESS || 
-    timelineStep.category === TimelineCategory.SIMPLE_REGISTERED_LETTER_PROGRESS
+    timelineStep.category === TimelineCategory.SEND_ANALOG_PROGRESS ||
+    timelineStep.category === TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS
   ) {
     const type = legalFactTypeForAnalogEvent(timelineStep, legalFactKey) || 'generic';
     // eslint-disable-next-line functional/no-let
@@ -359,12 +362,11 @@ export function getLegalFactLabel(
       );
     }
     return text;
-  // Carlos Lombardi
+    // Carlos Lombardi
 
-
-  // PN-5484  
+    // PN-5484
   } else if (
-    timelineStep.category === TimelineCategory.COMPLETELY_UNREACHABLE && 
+    timelineStep.category === TimelineCategory.COMPLETELY_UNREACHABLE &&
     legalFactType === LegalFactType.ANALOG_FAILURE_DELIVERY
   ) {
     return getLocalizedOrDefaultLabel(
@@ -373,7 +375,7 @@ export function getLegalFactLabel(
       'Deposito di avvenuta ricezione'
     );
   } else if (
-    timelineStep.category === TimelineCategory.ANALOG_FAILURE_WORKFLOW && 
+    timelineStep.category === TimelineCategory.ANALOG_FAILURE_WORKFLOW &&
     legalFactType === LegalFactType.AAR
   ) {
     return getLocalizedOrDefaultLabel(
@@ -381,7 +383,6 @@ export function getLegalFactLabel(
       'detail.timeline.aar-document',
       'Avviso di avvenuta ricezione'
     );
-
   } else if (
     timelineStep.category === TimelineCategory.SEND_DIGITAL_PROGRESS &&
     legalFactType === LegalFactType.PEC_RECEIPT
@@ -450,8 +451,8 @@ export function getLegalFactLabel(
       'mancato recapito digitale'
     )}`;
 
-  // this is (at least in the examples I've seen)
-  // related to the category NOTIFICATION_VIEWED
+    // this is (at least in the examples I've seen)
+    // related to the category NOTIFICATION_VIEWED
   } else if (legalFactType === LegalFactType.RECIPIENT_ACCESS) {
     return `${legalFactLabel}: ${getLocalizedOrDefaultLabel(
       'notifications',
@@ -473,18 +474,43 @@ export function getNotificationTimelineStatusInfos(
   recipients: Array<NotificationDetailRecipient>,
   allStepsForThisStatus?: Array<INotificationDetailTimeline>
 ): TimelineStepInfo | null {
-  const recipient = !_.isNil(step.details.recIndex) ? recipients[step.details.recIndex] : undefined;
+  const recipient = _.isNil(step.details.recIndex)
+    ? undefined
+    : // For the accesses from recipient apps (cittadino / impresa)
+    // the API response will probably (in some future) include only the info about the requester recipient,
+    // i.e. recipients will be an array with exactly one element, disregarding how many recipients are included
+    // in the notification being requested.
+    // In that case, we don't consider the recIndex indicated in each timeline step,
+    // but otherwise take all steps as related with the only recipient included in the API response.
+    recipients.length === 1
+    ? recipients[0]
+    : recipients[step.details.recIndex];
 
+  // we show the multirecipient versions of the step descriptions
+  // only if the array of recipients include more than one "full" element
+  // (i.e. an element including the full data about the recipient, instead of being included
+  //  just to preserve the correlation with the recIndex in each step).
+  // We consider a recipient description to be "full" if it includes recipientType, taxId and denomination.
+  // -------------------------------------
+  // Carlos Lombardi, 2023.05.17
+  // cfr. PN-5911
+  // -------------------------------------
   return TimelineStepFactory.createTimelineStep(step).getTimelineStepInfo({
     step,
     recipient,
-    isMultiRecipient: recipients.length > 1,
-    allStepsForThisStatus
+    isMultiRecipient:
+      recipients.filter(
+        (recDescription) =>
+          recDescription.denomination && recDescription.taxId && recDescription.recipientType
+      ).length > 1,
+    allStepsForThisStatus,
   });
 }
 
 const TimelineAllowedStatus = [
   TimelineCategory.SCHEDULE_DIGITAL_WORKFLOW,
+  // PN-6902
+  TimelineCategory.ANALOG_FAILURE_WORKFLOW,
   TimelineCategory.SEND_DIGITAL_DOMICILE,
   TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER,
   TimelineCategory.SEND_ANALOG_DOMICILE,
@@ -496,7 +522,7 @@ const TimelineAllowedStatus = [
   TimelineCategory.NOT_HANDLED,
   TimelineCategory.SEND_ANALOG_PROGRESS,
   TimelineCategory.SEND_ANALOG_FEEDBACK,
-  TimelineCategory.SIMPLE_REGISTERED_LETTER_PROGRESS
+  TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS,
 ];
 
 const AnalogFlowAllowedCodes = [
@@ -521,6 +547,17 @@ const AnalogFlowAllowedCodes = [
   'RECRI003C',
   'RECRI004C',
   'RECRI005',
+  // new batch - PN-6079 / PN-6080 / PN-6081
+  'RECRN011',
+  'PNRN012',
+  'RECRN013',
+  'RECRN015',
+  'RECAG011A',
+  'RECAG013',
+  'RECAG015',
+  // new entries for international registered letter - PN-6636
+  'RECRI001',
+  'RECRI002',
   // only to include the legal fact reference at the right point in the timeline
   'RECRN001B',
   'RECRN002B',
@@ -585,15 +622,23 @@ function populateMacroStep(
       // PN-4484 - hide the internal events related to the courtesy messages sent through app IO
     } else if (isInternalAppIoEvent(step)) {
       status.steps!.push({ ...step, hidden: true });
-    // add legal facts for ANALOG_FAILURE_WORKFLOW steps with linked generatedAarUrl
-    // since the AAR for such steps must be shown in timeline exactly the same way as legalFacts.
-    // Cfr. comment in the definition of INotificationDetailTimeline in src/types/NotificationDetail.ts.
-    } else if (step.category === TimelineCategory.ANALOG_FAILURE_WORKFLOW && (step.details as AarDetails).generatedAarUrl) {
-      status.steps!.push({ 
-        ...step, 
-        legalFactsIds: [{ documentId: (step.details as AarDetails).generatedAarUrl as string, documentType: LegalFactType.AAR }] 
+      // add legal facts for ANALOG_FAILURE_WORKFLOW steps with linked generatedAarUrl
+      // since the AAR for such steps must be shown in timeline exactly the same way as legalFacts.
+      // Cfr. comment in the definition of INotificationDetailTimeline in src/types/NotificationDetail.ts.
+    } else if (
+      step.category === TimelineCategory.ANALOG_FAILURE_WORKFLOW &&
+      (step.details as AarDetails).generatedAarUrl
+    ) {
+      status.steps!.push({
+        ...step,
+        legalFactsIds: [
+          {
+            documentId: (step.details as AarDetails).generatedAarUrl as string,
+            documentType: LegalFactType.AAR,
+          },
+        ],
       });
-    // remove legal facts for those microsteps that are releated to accepted status
+      // remove legal facts for those microsteps that are releated to accepted status
     } else if (acceptedStatusItems.length && acceptedStatusItems.indexOf(step.elementId) > -1) {
       status.steps!.push({ ...step, legalFactsIds: [] });
       // default case
@@ -605,10 +650,16 @@ function populateMacroStep(
 }
 
 function fromLatestToEarliest(a: INotificationDetailTimeline, b: INotificationDetailTimeline) {
-  if (new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime() >= 0) {
+  const differenceInTimeline = new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+  const differenceInIndex = b.index && a.index ? b.index - a.index : 0;
+
+  if (differenceInTimeline > 0) {
     return 1;
+  } else if (differenceInTimeline < 0) {
+    return -1;
+  } else {
+    return differenceInIndex > 0 ? 1 : differenceInIndex < 0 ? -1 : 0;
   }
-  return -1;
 }
 
 function populateMacroSteps(parsedNotification: NotificationDetail) {
@@ -669,8 +720,8 @@ function populateMacroSteps(parsedNotification: NotificationDetail) {
 
         // record the last timeline event from DELIVERED that must be shifted to DELIVERING
         // the rules:
-        // - up to the last DIGITAL_FAILURE_WORKFLOW or SEND_SIMPLE_REGISTERED_LETTER or SIMPLE_REGISTERED_LETTER_PROGRESS element,
-        // - or the first DIGITAL_SUCCESS_WORKFLOW afterwards a DIGITAL_FAILURE_WORKFLOW or SEND_SIMPLE_REGISTERED_LETTER or SIMPLE_REGISTERED_LETTER_PROGRESS
+        // - up to the last DIGITAL_FAILURE_WORKFLOW or SEND_SIMPLE_REGISTERED_LETTER or SEND_SIMPLE_REGISTERED_LETTER_PROGRESS element,
+        // - or the first DIGITAL_SUCCESS_WORKFLOW afterwards a DIGITAL_FAILURE_WORKFLOW or SEND_SIMPLE_REGISTERED_LETTER or SEND_SIMPLE_REGISTERED_LETTER_PROGRESS
         //   (in this case, excluding it)
         // if a DIGITAL_SUCCESS_WORKFLOW is found before a DIGITAL_FAILURE_WORKFLOW or SEND_SIMPLE_REGISTERED_LETTER
         // then no shift has to be done
@@ -679,9 +730,9 @@ function populateMacroSteps(parsedNotification: NotificationDetail) {
           !preventShiftFromDeliveredToDelivering
         ) {
           if (
-            (step.category === TimelineCategory.DIGITAL_FAILURE_WORKFLOW 
-              || step.category === TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER 
-              || step.category === TimelineCategory.SIMPLE_REGISTERED_LETTER_PROGRESS) &&
+            (step.category === TimelineCategory.DIGITAL_FAILURE_WORKFLOW ||
+              step.category === TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER ||
+              step.category === TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS) &&
             !lastDeliveredIndexToShiftIsFixed
           ) {
             lastDeliveredIndexToShift = ix;
@@ -746,32 +797,44 @@ function populateMacroSteps(parsedNotification: NotificationDetail) {
 
 /**
  * Populate other documents array before send notification to fe.
- * @param  {Array<INotificationDetailTimeline>} timeline
+ * @param  {NotificationDetail} notificationDetail
  * @returns Array<NotificationDetailDocument>
  */
 const populateOtherDocuments = (
-  timeline: Array<INotificationDetailTimeline>
+  notificationDetail: NotificationDetail
 ): Array<NotificationDetailDocument> => {
-  const timelineFiltered = timeline.filter((t) => t.category === TimelineCategory.AAR_GENERATION);
+  const timelineFiltered = notificationDetail.timeline.filter(
+    (t) => t.category === TimelineCategory.AAR_GENERATION
+  );
   if (timelineFiltered.length > 0) {
-    return timelineFiltered.map((t) => ({
-      recIndex: t.details.recIndex,
-      documentId: (t.details as AarDetails).generatedAarUrl as string,
-      documentType: LegalFactType.AAR,
-      title: getLocalizedOrDefaultLabel(
+    const isMultiRecipient = timelineFiltered.length > 1;
+    return timelineFiltered.map((t) => {
+      const recIndex = t.details.recIndex;
+      const recipients = notificationDetail.recipients;
+      const recipientData =
+        isMultiRecipient && recIndex != null
+          ? ` - ${recipients[recIndex].denomination} (${recipients[recIndex].taxId})`
+          : '';
+      const title = `${getLocalizedOrDefaultLabel(
         'notifications',
         'detail.timeline.aar-document',
         'Avviso di avvenuta ricezione'
-      ),
-      digests: {
-        sha256: '',
-      },
-      ref: {
-        key: '',
-        versionToken: '',
-      },
-      contentType: '',
-    }));
+      )}${recipientData}`;
+      return {
+        recIndex: t.details.recIndex,
+        documentId: (t.details as AarDetails).generatedAarUrl as string,
+        documentType: LegalFactType.AAR,
+        title,
+        digests: {
+          sha256: '',
+        },
+        ref: {
+          key: '',
+          versionToken: '',
+        },
+        contentType: '',
+      };
+    });
   }
   return [];
 };
@@ -794,7 +857,13 @@ const populatePaymentHistory = (
     for (const payment of paymentTimelineStep) {
       const recIndex = payment.details.recIndex;
       if (recIndex !== null && recIndex !== undefined) {
-        const recipient = recipients[recIndex];
+        // For the accesses from recipient apps (cittadino / impresa)
+        // the API response will probably (in some future) include only the info about the requester recipient,
+        // i.e. recipients will be an array with exactly one element, disregarding how many recipients are included
+        // in the notification being requested.
+        // In that case, we don't consider the recIndex indicated in each timeline step,
+        // but otherwise take all steps as related with the only recipient included in the API response.
+        const recipient = recipients.length === 1 ? recipients[0] : recipients[recIndex];
         /* eslint-disable-next-line functional/immutable-data */
         paymentHistory.push({
           ...(payment.details as PaidDetails),
@@ -808,13 +877,11 @@ const populatePaymentHistory = (
   return paymentHistory;
 };
 
-
-
 function timelineElementMustBeShown(t: INotificationDetailTimeline): boolean {
   if (
-    t.category === TimelineCategory.SEND_ANALOG_PROGRESS || 
-    t.category === TimelineCategory.SEND_ANALOG_FEEDBACK || 
-    t.category === TimelineCategory.SIMPLE_REGISTERED_LETTER_PROGRESS
+    t.category === TimelineCategory.SEND_ANALOG_PROGRESS ||
+    t.category === TimelineCategory.SEND_ANALOG_FEEDBACK ||
+    t.category === TimelineCategory.SEND_SIMPLE_REGISTERED_LETTER_PROGRESS
   ) {
     const deliveryDetailCode = (t.details as SendPaperDetails).deliveryDetailCode;
     return !!deliveryDetailCode && AnalogFlowAllowedCodes.includes(deliveryDetailCode);
@@ -827,7 +894,7 @@ export function parseNotificationDetail(
 ): NotificationDetail {
   const parsedNotification = {
     ...notificationDetail,
-    otherDocuments: populateOtherDocuments(notificationDetail.timeline),
+    otherDocuments: populateOtherDocuments(notificationDetail),
     paymentHistory: populatePaymentHistory(
       notificationDetail.timeline,
       notificationDetail.recipients
@@ -837,8 +904,9 @@ export function parseNotificationDetail(
   /* eslint-disable functional/immutable-data */
   /* eslint-disable functional/no-let */
   // set which elements are visible
-  parsedNotification.timeline = parsedNotification.timeline.map((t) => ({
+  parsedNotification.timeline = parsedNotification.timeline.map((t, index) => ({
     ...t,
+    index,
     hidden: !timelineElementMustBeShown(t),
   }));
   // populate notification macro steps with corresponding timeline micro steps
