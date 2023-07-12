@@ -1,8 +1,14 @@
 import {Typography} from "@mui/material";
 import { EstimateStatusChip } from "../../statusChip";
-import {BillingDetail, Estimate, EstimatePeriod, PaInfo} from "../../../../../../models/UsageEstimation";
+import {
+  BillingDetail,
+  Estimate,
+  EstimatePeriod, FileReport,
+  PaInfo
+} from "../../../../../../models/UsageEstimation";
 import {getFormattedDateTime, localeStringReferenceId} from "../../../../../../utils/utility";
 import {RowDataInfo} from "../DataInfo";
+import {RowFileReport} from "../filesReports/RowFileReport";
 
 
 export const usagePeriod: Array<RowDataInfo<EstimatePeriod>> = [
@@ -163,5 +169,16 @@ export const usageInfoPA: Array<RowDataInfo<PaInfo>> = [
     label: "estimate.detail.data-info.pa-info-tax-id",
     type: "ROW",
     render: (data) => <Typography variant="body2" sx={{fontWeight: "bold"}}>{data.taxId}</Typography>
+  }
+];
+
+export const rowFilesReports: Array<RowDataInfo<Array<FileReport>>> = [
+  {
+    id: "fileReport",
+    label: undefined,
+    type: "LIST",
+    render: (reports) => (
+      reports.map((report) => <RowFileReport report={report}/>)
+    )
   }
 ];

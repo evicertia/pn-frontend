@@ -1,17 +1,18 @@
 import {apiClient} from "../../apiClients";
 import {
-  EstimateBodyRequest, EstimateDetail,
+  EstimateBodyRequest,
+  EstimateDetail,
   EstimatePeriod,
-  FilterRequestEstimate, HistoryEstimates,
-  InfoDownload, StatusUpdateEnum
+  FilterRequestEstimate,
+  HistoryEstimates,
+  StatusUpdateEnum
 } from "../../../models/UsageEstimation";
 import {
   ESTIMATE_DETAIL,
-  ESTIMATE_FILE_DETAIL,
-  ESTIMATE_FILES,
   ESTIMATE_PAGINATION_LIST,
-  ESTIMATE_UPDATE, ESTIMATE_VALIDATED
-} from "./usageestimates.routes";
+  ESTIMATE_UPDATE,
+  ESTIMATE_VALIDATED
+} from "./UsageEstimates.routes";
 
 export const UsageEstimatesApi = {
   /**
@@ -30,7 +31,7 @@ export const UsageEstimatesApi = {
   },
 
   /**
-   * Update estimate from PA-ID and referenceYear
+   * Update estimate from PA-ID and reference Month
    * @returns Promise
    * @param paId
    * @param referenceMonth format = Marzo-2023
@@ -43,7 +44,7 @@ export const UsageEstimatesApi = {
   },
 
   /**
-   * validated estimate from PA-ID and referenceYear
+   * validated estimate from PA-ID and reference Month
    * @returns Promise
    * @param paId
    * @param referenceMonth format = Marzo-2023
@@ -63,28 +64,5 @@ export const UsageEstimatesApi = {
   getDetailEstimate: async (paId: string, referenceMonth: string): Promise<EstimateDetail> => {
     const response = await apiClient.get<EstimateDetail>(ESTIMATE_DETAIL(paId, referenceMonth));
     return response.data;
-  },
-
-  /**
-   * Get all files of estimate from PA-ID and reference Month
-   * @param  {string} paId
-   * @param  {string:'Marzo-2023'} referenceMonth
-   * @returns Promise
-   */
-  getFilesEstimate: async (paId: string, referenceMonth: string): Promise<Array<InfoDownload>> => {
-    const response = await apiClient.get<Array<InfoDownload>>(ESTIMATE_FILES(paId, referenceMonth));
-    return response.data;
-  },
-
-  /**
-   * Get file of estimate from PA-ID and id
-   * @param  {string} paId
-   * @param  {string} id
-   * @returns Promise
-   */
-  getFileEstimate: async (paId: string, id: string): Promise<InfoDownload> => {
-    const response = await apiClient.get<InfoDownload>(ESTIMATE_FILE_DETAIL(paId, id));
-    return response.data;
   }
-
 };

@@ -13,6 +13,7 @@ import apiKeysSlice from './apiKeys/reducers';
 import statisticsSlice from "./statistics/reducers";
 import profilingSlice from "./usageEstimates/profiling/reducers";
 import usageEstimateSlice from "./usageEstimates/estimate/reducers";
+import fileReportsEstimateSlice from "./usageEstimates/filesReports/reducers";
 
 
 export const appReducers = {
@@ -26,7 +27,8 @@ export const appReducers = {
   newApiKeyState: newApiKeySlice.reducer,
   statisticsState: statisticsSlice.reducer,
   profilingState: profilingSlice.reducer,
-  usageEstimateState: usageEstimateSlice.reducer
+  usageEstimateState: usageEstimateSlice.reducer,
+  fileReportsEstimateState: fileReportsEstimateSlice.reducer
 };
 
 const createStore = (logReduxActions?: boolean) =>{

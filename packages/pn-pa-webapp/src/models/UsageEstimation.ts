@@ -185,3 +185,16 @@ export type Page<T> = {
   totalElements: number;
   content: Array<T>;
 };
+
+export type FileReport = {
+  "paId": string;
+  "reportKey": string;
+  "reportZipKey": string;
+  "url": string;
+  "referenceMonth": string;
+  "lastModifiedDate": string;
+  "errorMessage": string;
+  "generationDate": string;
+  "part": string;
+  "status": string;
+};

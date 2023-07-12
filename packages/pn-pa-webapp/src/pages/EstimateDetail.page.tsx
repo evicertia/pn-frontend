@@ -1,4 +1,4 @@
-import {ApiError, PnBreadcrumb, useIsMobile} from "@pagopa-pn/pn-commons";
+import {ApiError, PnBreadcrumb, useDownloadDocument, useIsMobile} from "@pagopa-pn/pn-commons";
 import {Fragment, useCallback, useEffect} from "react";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import {useTranslation} from "react-i18next";
@@ -10,12 +10,15 @@ import {RootState} from "../redux/store";
 import {localeStringReferenceId} from "../utils/utility";
 import {getDetailEstimate} from "../redux/usageEstimates/estimate/actions";
 import {resetDetailState} from "../redux/usageEstimates/estimate/reducers";
+import {getAllReportsFile} from "../redux/usageEstimates/filesReports/actions";
+import {resetFileReportUrl} from "../redux/usageEstimates/filesReports/reducers";
 import {DataInfo} from "./components/UsageEstimates/Common/dataInfo/DataInfo";
 import {
   usageBillingDataPA,
   usageEstimations,
   usageInfoPA,
-  usagePeriod
+  usagePeriod,
+  rowFilesReports
 } from "./components/UsageEstimates/Common/dataInfo/model/EstimateRows";
 
 
@@ -23,12 +26,27 @@ export function EstimateDetailPage(){
   const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.detail"});
   const isMobile = useIsMobile();
   const {detail, error} = useAppSelector(state => state.usageEstimateState);
+  const {filesReports, fileReportUrl} = useAppSelector(state => state.fileReportsEstimateState);
   const dispatch = useAppDispatch();
   const loggedUser = useAppSelector((state: RootState) => state.userState.user);
   const {referenceMonth} = useParams();
 
+
+  const handleClearDownloadActionUrl = () => {
+    console.log("TENTATIVO DOWNLOAD");
+    void dispatch(resetFileReportUrl());
+  };
+
+  // @ts-ignore
+  useDownloadDocument({fileReportUrl, handleClearDownloadActionUrl});
+
   const fetching = useCallback(() => {
     void dispatch(getDetailEstimate({
+      paId: loggedUser.organization?.id,
+      referenceMonth: referenceMonth || ""
+    }));
+
+    void dispatch(getAllReportsFile({
       paId: loggedUser.organization?.id,
       referenceMonth: referenceMonth || ""
     }));
@@ -102,6 +120,14 @@ export function EstimateDetailPage(){
               <DataInfo title={t("data-info.pa-info-title")}
                         data={detail.paInfo}
                         rows={usageInfoPA}/>
+
+              {
+                filesReports &&
+                <DataInfo title={t("data-info.files-reports-title")}
+                  data={filesReports}
+                  rows={rowFilesReports}/>
+              }
+
             </Fragment>
             : null
         }

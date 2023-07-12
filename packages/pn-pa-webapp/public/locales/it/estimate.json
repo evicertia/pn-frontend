@@ -116,7 +116,9 @@
         "pa-info-title": "INFORMAZIONI SULL'ENTE",
         "pa-info-subject-name": "Soggetto aderente",
         "pa-info-business-name": "Sede legale",
-        "pa-info-tax-id": "Partita IVA"
+        "pa-info-tax-id": "Partita IVA",
+
+        "files-reports-title": "DOCUMENTI ALLEGATI"
       }
     },
 
