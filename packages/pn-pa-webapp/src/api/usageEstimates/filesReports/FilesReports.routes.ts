@@ -7,7 +7,6 @@ const API_ESTIMATE_PREFIX = 'pn-usage-estimates';
 // Segments
 const API_ESTIMATE_SEGMENT = 'estimate';
 const API_ESTIMATE_REPORTS_SEGMENT = 'reports';
-const API_ESTIMATE_SCHEDULE_DEANONYMISED_SEGMENT = 'schedule';
 
 // Parameters
 const API_ESTIMATE_PA_ID_PARAMETER = 'paId';
@@ -20,13 +19,6 @@ const API_ESTIMATE_FILES_REPORTS_PATH = `:${API_ESTIMATE_PA_ID_PARAMETER}/${API_
 
 // estimate/{paId}/reports/{reportKey}
 const API_ESTIMATE_DOWNLOAD_FILES_REPORTS_PATH = `${API_ESTIMATE_SEGMENT}/:${API_ESTIMATE_PA_ID_PARAMETER}/${API_ESTIMATE_REPORTS_SEGMENT}/:${API_ESTIMATE_FILE_REPORT_KEY_PARAMETER}`;
-
-// reports/{paId}
-const API_ESTIMATE_DEANONYMISED_PATH = `${API_ESTIMATE_REPORTS_SEGMENT}/:${API_ESTIMATE_PA_ID_PARAMETER}`;
-
-// reports/{paId}/schedule/{reportKey}
-const API_ESTIMATE_SCHEDULE_DEANONYMISED_FILES_PATH = `${API_ESTIMATE_REPORTS_SEGMENT}/:${API_ESTIMATE_PA_ID_PARAMETER}/${API_ESTIMATE_SCHEDULE_DEANONYMISED_SEGMENT}/:${API_ESTIMATE_FILE_REPORT_KEY_PARAMETER}`;
-
 
 export function ESTIMATE_FILES_REPORTS(paId: string, referenceMonth: string){
   return compileRoute({
@@ -48,26 +40,5 @@ export function ESTIMATE_DOWNLOAD_FILE_REPORT(paId: string, reportKey: string){
       [API_ESTIMATE_FILE_REPORT_KEY_PARAMETER]: reportKey,
     },
     query: {[API_ESTIMATE_FILE_REPORT_TYPE_PARAMETER]: 'SOURCE'}
-  });
-}
-
-export function ESTIMATE_FILES_REPORTS_DEANONYMISED(paId: string){
-  return compileRoute({
-    prefix: API_ESTIMATE_PREFIX,
-    path: API_ESTIMATE_DEANONYMISED_PATH,
-    params: {
-      [API_ESTIMATE_PA_ID_PARAMETER]: paId,
-    }
-  });
-}
-
-export function ESTIMATE_SCHEDULE_FILES_REPORTS_DEANONYMISED(paId: string, reportKey: string){
-  return compileRoute({
-    prefix: API_ESTIMATE_PREFIX,
-    path: API_ESTIMATE_SCHEDULE_DEANONYMISED_FILES_PATH,
-    params: {
-      [API_ESTIMATE_PA_ID_PARAMETER]: paId,
-      [API_ESTIMATE_FILE_REPORT_KEY_PARAMETER]: reportKey,
-    }
   });
 }

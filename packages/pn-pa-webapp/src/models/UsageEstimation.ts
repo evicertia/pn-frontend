@@ -30,7 +30,6 @@ export interface ProfilingHistory {
   status: EstimateStatusEnum;
 }
 
-
 export interface FilterRequest {
   page: number;
   size: number;
@@ -131,7 +130,6 @@ export interface HistoryEstimates {
   history : Page<EstimateHistory>;
 }
 
-
 export interface ProfilingDetail {
   paInfo: PaInfo;
   status: EstimateStatusEnum;
@@ -155,6 +153,20 @@ export interface HistoryProfilings {
   actual: ProfilingPeriod;
   history : Page<ProfilingHistory>;
 }
+
+export type FileReport = {
+  "paId": string;
+  "reportKey": string;
+  "reportZipKey": string;
+  "url": string;
+  "referenceMonth": string;
+  "lastModifiedDate": string;
+  "errorMessage": string;
+  "generationDate": string;
+  "part": string;
+  "status": string;
+};
+
 
 export interface InfoDownload {
   paId?: string;
@@ -184,17 +196,4 @@ export type Page<T> = {
   size: number;
   totalElements: number;
   content: Array<T>;
-};
-
-export type FileReport = {
-  "paId": string;
-  "reportKey": string;
-  "reportZipKey": string;
-  "url": string;
-  "referenceMonth": string;
-  "lastModifiedDate": string;
-  "errorMessage": string;
-  "generationDate": string;
-  "part": string;
-  "status": string;
 };
