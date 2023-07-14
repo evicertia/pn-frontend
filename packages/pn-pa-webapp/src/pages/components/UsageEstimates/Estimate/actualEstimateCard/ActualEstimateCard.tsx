@@ -12,7 +12,7 @@ import {
   getFormattedDateTimeAbstract,
   localeStringReferenceId
 } from "../../../../../utils/utility";
-import {EstimateStatusChip} from "../../Common/statusChip/index";
+import {EstimateStatusChip} from "../../Common/statusChip";
 import {GET_EDIT_ESTIMATE_PATH} from "../../../../../navigation/routes.const";
 import {SendDialog} from "../../Common/dialog/SendDialog";
 import {validatedEstimate} from "../../../../../redux/usageEstimates/estimate/actions";
@@ -49,7 +49,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
               {t('card.label.digital-notif-estimate')}
             </Typography>
-            <Typography variant={"h5"} fontWeight={600} color={"primary"}>
+            <Typography variant={"h5"} fontWeight={600} data-testid="labelDigitalNotif" color={"primary"}>
               {props.data?.estimate?.totalDigitalNotif || t('card.label.estimate-to-complete')}
             </Typography>
           </Stack>
@@ -57,7 +57,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
               {t('card.label.analog-890-notif-estimate')}
             </Typography>
-            <Typography variant={"h5"} fontWeight={600} color={"primary"}>
+            <Typography variant={"h5"} fontWeight={600} data-testid="label890Notif" color={"primary"}>
               {props.data?.estimate?.total890Notif || t('card.label.estimate-to-complete')}
             </Typography>
           </Stack>
@@ -65,7 +65,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
             <Typography variant={"body2"} fontWeight={400} color={"#5C6F82"}>
               {t('card.label.analog-notif-estimate')}
             </Typography>
-            <Typography variant={"h5"} fontWeight={600} color={"primary"}>
+            <Typography variant={"h5"} fontWeight={600} data-testid="labelAnalogNotif" color={"primary"}>
               {props.data?.estimate?.totalAnalogNotif || t('card.label.estimate-to-complete')}
             </Typography>
           </Stack>
@@ -104,8 +104,8 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
   const { t } = useTranslation(['estimate'], {keyPrefix: "estimate.actual"});
 
   if (!props.data.lastModifiedDate && props.data.status === EstimateStatusEnum.DRAFT){
-    return <Button data-testid="create-button-test-id"
-        variant="outlined"
+    return <Button data-testid="createButtonTestId"
+                   variant="outlined"
                    onClick={() => {
                      navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
                    }}>
@@ -114,20 +114,21 @@ const ButtonsGroup = (props: ActualEstimateCardProps) => {
   } else if (props.data.lastModifiedDate && props.data.status === EstimateStatusEnum.DRAFT) {
     return <>
       <Button variant="outlined"
+              data-testid="editDraftEstimate"
               onClick={() => {
                 navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
               }}>
         {t('card.button.edit-estimate')}
       </Button>
 
-      <ButtonSendEstimate data-testid="send-estimate-button-draft-test-id"  paId={props.paId} referenceMonth={props.data.referenceMonth} deadlineDate={props.data.deadlineDate}/>
+      <ButtonSendEstimate paId={props.paId} referenceMonth={props.data.referenceMonth} deadlineDate={props.data.deadlineDate}/>
     </>;
   } else if (props.data.status === EstimateStatusEnum.VALIDATED) {
-    return <Button data-testid="update-after-validation-button-test-id"
+    return <Button data-testid="editValidateEstimateButton"
                     variant="contained"
                     onClick={() => {
                      navigate(GET_EDIT_ESTIMATE_PATH(props.data.referenceMonth));
-                   }}>
+                    }}>
       {t('card.button.edit-estimate')}
     </Button>;
   }
@@ -143,7 +144,8 @@ const ButtonSendEstimate = (props: {paId: string; referenceMonth: string; deadli
     void dispatch(validatedEstimate({
       paId: props.paId,
       referenceMonth: props.referenceMonth
-    })).unwrap()
+    }))
+      .unwrap()
       .then(()=> {
         dispatch(appStateActions.addSuccess({
           title: t('actual.toast-message.success.title'),
