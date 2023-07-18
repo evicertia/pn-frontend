@@ -86,17 +86,21 @@ export function ProfilingDetailPage() {
         {
           (detail) ?
             <Fragment>
-              <DataInfo title={t("data-info.period-title")}
+              <DataInfo key={"0"}
+                        title={t("data-info.period-title")}
                         data={detail}
                         rows={profilingPeriod}/>
 
-              <DataInfo title={t("data-info.billing-title")}
+              <DataInfo key={"1"}
+                        title={t("data-info.billing-title")}
                         data={detail.profilation}
                         rows={profilingBillingDataPA}/>
 
-              <DataInfo title={t("data-info.pa-info-title")}
+              <DataInfo key={"2"}
+                        title={t("data-info.pa-info-title")}
                         data={detail.paInfo}
                         rows={profilingInfoPA}/>
+
             </Fragment>
             : null
         }

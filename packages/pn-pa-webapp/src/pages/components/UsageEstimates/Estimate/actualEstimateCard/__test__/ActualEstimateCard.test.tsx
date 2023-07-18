@@ -4,6 +4,7 @@ import {Estimate, EstimatePeriod, EstimateStatusEnum} from "../../../../../../mo
 import {GET_EDIT_ESTIMATE_PATH} from "../../../../../../navigation/routes.const";
 import * as reactRedux from "../../../../../../redux/hooks";
 import {useAppDispatch} from "../../../../../../redux/hooks";
+import {EstimateForm} from "../../form/Estimate.form";
 
 
 const mockNavigateFn = jest.fn();
@@ -14,6 +15,29 @@ jest.mock('react-router-dom', () => ({
 }));
 
 const spyOnSelector = jest.spyOn(reactRedux, "useAppSelector");
+
+const getEstimatePeriod = (status: EstimateStatusEnum, showEdit: boolean, estimate ?: Estimate) : EstimatePeriod => (
+  {
+    referenceMonth: "GIU-2023",
+    status: status,
+    lastModifiedDate: (estimate) ? "2023-06-22T12:29:00.000+00:00" : null ,
+    deadlineDate: "2023-06-15T23:59:00.000+00:00",
+    estimate: estimate,
+    showEdit: showEdit,
+    billing: {
+      sdiCode: "ABCDE12345",
+      splitPayment: false,
+      description: "string",
+      mailAddress: "test@test.com",
+    }
+  }
+)
+
+const buildDispatch = (reject: boolean) => {
+  return jest.fn(() => ({
+    unwrap: () => (reject) ? Promise.reject(): Promise.resolve(),
+  }));
+}
 
 describe('ActualEstimateCardTest', () => {
   let mockDispatchFn: jest.Mock;
@@ -191,29 +215,40 @@ describe('ActualEstimateCardTest', () => {
     })
   })
 
-});
-
-
-const buildDispatch = (reject: boolean) => {
-  return jest.fn(() => ({
-    unwrap: () => (reject) ? Promise.reject(): Promise.resolve(),
-  }));
-}
-
-
-const getEstimatePeriod = (status: EstimateStatusEnum, showEdit: boolean, estimate ?: Estimate) : EstimatePeriod => (
-  {
-    referenceMonth: "GIU-2023",
-    status: status,
-    lastModifiedDate: (estimate) ? "2023-06-22T12:29:00.000+00:00" : null ,
-    deadlineDate: "2023-06-15T23:59:00.000+00:00",
-    estimate: estimate,
-    showEdit: showEdit,
-    billing: {
-      sdiCode: "ABCDE12345",
-      splitPayment: false,
-      description: "string",
-      mailAddress: "test@test.com",
+  it("whenEstimateIsNotValidated", async () => {
+    const detail:Estimate = {
+      totalDigitalNotif: 10,
+      totalAnalogNotif: 10,
+      total890Notif: 10,
     }
-  }
-)
+
+    mockDispatchFn = buildDispatch(true)
+    useDispatchSpy.mockReturnValue(mockDispatchFn as any);
+
+    const estimate = getEstimatePeriod("DRAFT", true, detail);
+
+    render(<ActualEstimateCard paId={"1234"} data={estimate}/>);
+
+    const openDialogButton = await screen.queryByTestId("loading-button-test-id");
+    expect(openDialogButton).toBeInTheDocument();
+    expect(openDialogButton).not.toBeDisabled();
+    fireEvent.click(openDialogButton);
+
+    const sendDialog = await screen.queryByTestId("send-dialog");
+    screen.debug(sendDialog);
+    const buttons = sendDialog.querySelectorAll('button');
+
+    buttons.forEach((btn, index) => {
+      if(index === 0) {
+        fireEvent.click(btn);
+      }
+    });
+
+    await act(async () => {
+      await waitFor( () => {
+        expect(sendDialog).not.toBeInTheDocument();
+      })
+    })
+  })
+
+});

@@ -33,12 +33,10 @@ export function EstimateDetailPage(){
 
 
   const handleClearDownloadActionUrl = () => {
-    console.log("TENTATIVO DOWNLOAD");
-    void dispatch(resetFileReportUrl());
+    dispatch(resetFileReportUrl());
   };
 
-  // @ts-ignore
-  useDownloadDocument({fileReportUrl, handleClearDownloadActionUrl});
+  useDownloadDocument({url: fileReportUrl, clearDownloadAction: handleClearDownloadActionUrl});
 
   const fetching = useCallback(() => {
     void dispatch(getDetailEstimate({
@@ -56,7 +54,7 @@ export function EstimateDetailPage(){
   useEffect(() => {
     fetching();
     return () => {
-      void dispatch(resetDetailState());
+      dispatch(resetDetailState());
     };
   }, [fetching]);
 
@@ -103,33 +101,40 @@ export function EstimateDetailPage(){
       {header}
       <Stack spacing={3}>
         {
-          (detail) ?
-            <Fragment>
-              <DataInfo title={t("data-info.period-title")}
-                        data={detail}
-                        rows={usagePeriod}/>
+          (detail)
+            ?
+              <Fragment>
+                <DataInfo key={"0"}
+                          title={t("data-info.period-title")}
+                          data={detail}
+                          rows={usagePeriod}/>
 
-              <DataInfo title={t("data-info.usage-estimate-title")}
-                        data={detail.estimate}
-                        rows={usageEstimations}/>
+                <DataInfo key={"1"}
+                          title={t("data-info.usage-estimate-title")}
+                          data={detail.estimate}
+                          rows={usageEstimations}/>
 
-              <DataInfo title={t("data-info.billing-title")}
-                        data={detail.billing}
-                        rows={usageBillingDataPA}/>
+                <DataInfo key={"2"}
+                          title={t("data-info.billing-title")}
+                          data={detail.billing}
+                          rows={usageBillingDataPA}/>
 
-              <DataInfo title={t("data-info.pa-info-title")}
-                        data={detail.paInfo}
-                        rows={usageInfoPA}/>
+                <DataInfo key={"3"}
+                          title={t("data-info.pa-info-title")}
+                          data={detail.paInfo}
+                          rows={usageInfoPA}/>
 
-              {
-                filesReports &&
-                <DataInfo title={t("data-info.files-reports-title")}
-                  data={filesReports}
-                  rows={rowFilesReports}/>
-              }
+                {
+                  filesReports && filesReports.length > 0 &&
+                  <DataInfo key={"4"}
+                            title={t("data-info.files-reports-title")}
+                            data={filesReports}
+                            rows={rowFilesReports}/>
+                }
 
-            </Fragment>
-            : null
+              </Fragment>
+            :
+              null
         }
       </Stack>
     </Box>

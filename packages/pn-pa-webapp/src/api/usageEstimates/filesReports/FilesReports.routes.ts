@@ -14,7 +14,7 @@ const API_ESTIMATE_REFERENCE_MONTH_PARAMETER = 'referenceMonth';
 const API_ESTIMATE_FILE_REPORT_KEY_PARAMETER = 'reportKey';
 const API_ESTIMATE_FILE_REPORT_TYPE_PARAMETER = 'type';
 
-// estimate/{paId}/reports/{referenceMonth}
+// /{paId}/reports/{referenceMonth}
 const API_ESTIMATE_FILES_REPORTS_PATH = `:${API_ESTIMATE_PA_ID_PARAMETER}/${API_ESTIMATE_REPORTS_SEGMENT}/:${API_ESTIMATE_REFERENCE_MONTH_PARAMETER}`;
 
 // estimate/{paId}/reports/{reportKey}

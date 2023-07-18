@@ -142,25 +142,23 @@ describe("Bill.form.test", () => {
     });
   });
 
-  // it("whenRadioValueIsChanged", async () => {
-  //   render(<BillFormFields />);
-  //
-  //   const billRadio = await screen.queryByTestId("bill-radio");
-  //   expect(billRadio).toBeInTheDocument();
-  //   const inputRadio = billRadio.querySelector("input[value='Y']");
-  //   expect(inputRadio.checked).toEqual(false);
-  //   // screen.debug(inputRadio);
-  //
-  //   await act(async () => {
-  //     fireEvent.change(inputRadio, { target : {checked: true} });
-  //     fireEvent.blur(inputRadio)
-  //
-  //     // inputRadio.setAttribute("checked", "");
-  //     await waitFor(() => {
-  //       screen.debug(inputRadio);
-  //       // expect(inputRadio.getAttribute("checked")).toEqual("");
-  //     })
-  //   });
-  //
-  // });
+  it("whenRadioValueIsChanged", async () => {
+    render(<BillFormFields />);
+
+    const billRadio = await screen.queryByTestId("bill-radio");
+    expect(billRadio).toBeInTheDocument();
+    const inputRadio = billRadio.querySelector("input[value='Y']");
+    expect(inputRadio).not.toBeChecked();
+
+    await act(async () => {
+      fireEvent.change(inputRadio, { target : {checked: true} });
+      fireEvent.blur(inputRadio)
+
+      await waitFor(() => {
+        screen.debug(inputRadio);
+        expect(inputRadio).toBeChecked();
+      })
+    });
+  });
+
 })

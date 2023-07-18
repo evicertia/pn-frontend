@@ -5,11 +5,12 @@ import {
   ESTIMATE_FILES_REPORTS
 } from "./FilesReports.routes";
 
+
 export const FilesReportsApi = {
   /**
    * Get all reports of estimate from PA-ID and reference Month
    * @param  {string} paId
-   * @param  {string:'Marzo-2023'} referenceMonth
+   * @param  {string:'GIU-2023'} referenceMonth
    * @returns Promise
    */
   getAllReportsFile: async (paId: string, referenceMonth: string): Promise<Array<FileReport>> => {

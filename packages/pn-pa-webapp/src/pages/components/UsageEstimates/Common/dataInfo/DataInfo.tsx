@@ -12,6 +12,7 @@ export interface RowDataInfo<T> {
 
 }
 export interface DataInfoProps<T> {
+  key: string;
   title: string;
   data: T;
   rows: Array<RowDataInfo<T>>;
@@ -43,13 +44,9 @@ export function DataInfo<T>(props: DataInfoProps<T>){
       case "LIST":
         return <>
           <Grid key={row.id} container spacing={1} alignItems={"center"} width="1" mt={1}>
-            <Grid item >
-              {row?.render?.(props.data)}
-            </Grid>
+            {row?.render?.(props.data)}
           </Grid>
         </>;
-      default:
-        return "-";
     }
   };
 

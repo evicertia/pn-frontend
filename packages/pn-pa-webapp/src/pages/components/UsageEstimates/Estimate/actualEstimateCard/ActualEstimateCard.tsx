@@ -24,7 +24,6 @@ interface ActualEstimateCardProps {
   data: EstimatePeriod;
 }
 
-
 export function ActualEstimateCard (props:ActualEstimateCardProps) {
   const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.actual"});
 
@@ -37,7 +36,7 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
     }}>
       <Stack spacing={2}>
         <Grid container direction={"row"} justifyContent={"space-between"}>
-          <Typography fontWeight={"600"} variant={"h6"}>
+          <Typography fontWeight={"600"} variant={"h4"}>
             {t('card.label.number-notify-estimate').concat(localeStringReferenceId(props.data.referenceMonth))}
           </Typography>
           {
@@ -80,7 +79,6 @@ export function ActualEstimateCard (props:ActualEstimateCardProps) {
     </Card>
   </>;
 }
-
 
 const TagEditDate = (props: {data: EstimatePeriod}) => {
   const {t} = useTranslation(['estimate'], {keyPrefix: "estimate.actual"});

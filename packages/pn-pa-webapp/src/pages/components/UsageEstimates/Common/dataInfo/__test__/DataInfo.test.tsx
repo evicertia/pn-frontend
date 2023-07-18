@@ -1,8 +1,9 @@
 import {render, cleanup, screen} from "@testing-library/react";
 import {DataInfo} from "../DataInfo";
-import {usageBillingDataPA, usageEstimations, usageInfoPA, usagePeriod} from "../model/EstimateRows";
+import {usageBillingDataPA, usageEstimations, usageInfoPA, usagePeriod, rowFilesReports} from "../model/EstimateRows";
 import {EstimateStatusEnum} from "../../../../../../models/UsageEstimation";
 import {localeStringReferenceId} from "../../../../../../utils/utility";
+import * as reactRedux from "../../../../../../redux/hooks";
 
 
 const ScenarioUsageInfoPA = () => {
@@ -18,7 +19,7 @@ const ScenarioUsageInfoPA = () => {
       sdiCode: "c3rfl93qw903v"
     }
   };
-  return (<DataInfo title={""} data={paInfoDetail.paInfo} rows={usageInfoPA}/>);
+  return (<DataInfo key={"0"} title={""} data={paInfoDetail.paInfo} rows={usageInfoPA}/>);
 };
 
 const ScenarioUsagePeriod = () => {
@@ -40,17 +41,16 @@ const ScenarioUsagePeriod = () => {
         mailAddress: ""
       }
   };
-  return (<DataInfo title={""} data={estimateDetail} rows={usagePeriod}/>);
+  return (<DataInfo key={"1"} title={"UsagePeriod"} data={estimateDetail} rows={usagePeriod}/>);
 };
 
 const ScenarioUsageBillingDataPA = () => {
-
   const billingDetail = {
     splitPayment: false,
     description: "This is a description",
     mailAddress: "test@test.com"
   };
-  return (<DataInfo title={""} data={billingDetail} rows={usageBillingDataPA}/>);
+  return (<DataInfo key={"2"} title={"UsageBilling"} data={billingDetail} rows={usageBillingDataPA}/>);
 };
 
 const ScenarioUsageEstimations = () => {
@@ -59,11 +59,73 @@ const ScenarioUsageEstimations = () => {
     totalAnalogNotif: 10,
     total890Notif: 10,
   };
-  return (<DataInfo title={""} data={estimateDetail} rows={usageEstimations}/>);
+  return (<DataInfo key={"3"} title={"UsageEstimation"} data={estimateDetail} rows={usageEstimations}/>);
 };
 
+const ScenarioRowFilesReports = () => {
+  const filesReports = [{
+    paId: "026e8c72-7944-4dcd-8668-f596447fec6d",
+    reportKey: "report_compressed.zip",
+    reportZipKey: null,
+    url: null,
+    referenceMonth: "LUG-2023",
+    lastModifiedDate: null,
+    errorMessage: null,
+    generationDate: null,
+    part: null,
+    status: null
+  },
+  {
+    paId: "026e8c72-7944-4dcd-8668-f596447fec6d",
+    reportKey: "report_compressed-1.zip",
+    reportZipKey: null,
+    url: null,
+    referenceMonth: "LUG-2023",
+    lastModifiedDate: null,
+    errorMessage: null,
+    generationDate: null,
+    part: null,
+    status: null
+  }];
+  mockingStore(stateUser);
+  return (<DataInfo key={"4"} title={"FilesReports"} data={filesReports} rows={rowFilesReports}/>);
+}
+
+const stateUser = {
+  sessionToken: "",
+  name: "",
+  family_name: "",
+  fiscal_number: "",
+  email: "",
+  uid: ""
+};
+
+const mockingStore = (userStore= { }) => {
+  const reduxStore = {
+    userState: {
+      user: userStore
+    }
+  } as any
+
+  spyOnSelector.mockImplementation((selector) => selector(reduxStore))
+}
+
+const mockDispatchFn = jest.fn();
+const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
+const spyOnSelector = jest.spyOn(reactRedux, "useAppSelector");
+
 describe("whenDataArePassedToDataInfo", () => {
-  afterEach(cleanup);
+  beforeEach(() => {
+    spyOnDispatch.mockReturnValue(mockDispatchFn);
+  });
+
+  afterEach(() => {
+    cleanup()
+    spyOnSelector.mockClear()
+    spyOnSelector.mockReset()
+    spyOnDispatch.mockClear()
+    spyOnDispatch.mockReset()
+  });
 
   it("checkDataCorrectlyInsertedIntoTheRowsOfusageInfoPAtype", async () => {
     render(<ScenarioUsageInfoPA />);
@@ -86,7 +148,6 @@ describe("whenDataArePassedToDataInfo", () => {
     expect(screen.getByText("No")).toBeInTheDocument();
   });
 
-
   it("checkDataCorrectlyInsertedIntoTheRowsOfusageEstimationsType'", async () => {
     render(<ScenarioUsageEstimations />);
     const [totalDigitalNotif, toDigitalWay] = screen.getAllByText('5');
@@ -103,4 +164,13 @@ describe("whenDataArePassedToDataInfo", () => {
     expect(toAnalogicWay).toBeInTheDocument();
     expect(totalEstimateNotif).toBeInTheDocument();
   });
+
+  it("checkDataCorrectlyInsertedIntoTheRowsOfFilesReportsType'", async () => {
+    render(<ScenarioRowFilesReports />);
+    const [reportCompressed0] = screen.getAllByText('report_compressed.zip');
+    const [reportCompressed1] = screen.getAllByText('report_compressed-1.zip');
+    expect(reportCompressed0).toBeInTheDocument();
+    expect(reportCompressed1).toBeInTheDocument();
+  });
+
 });

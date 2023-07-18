@@ -3,7 +3,7 @@ import {FileReport} from "../../../models/UsageEstimation";
 import {getAllReportsFile, getReportFile} from "./actions";
 
 
-interface FileReportsState {
+export interface FileReportsState {
   filesReports: Array<FileReport>;
   fileReportUrl?: string;
   loading: boolean;
@@ -24,6 +24,8 @@ const fileReportsEstimateSlice = createSlice({
   reducers: {
     resetFileReportUrl: (state) => {
       state.fileReportUrl = undefined;
+      state.error = undefined;
+      state.loading = false;
     },
   },
   extraReducers: (builder) => {

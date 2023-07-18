@@ -34,7 +34,7 @@ export const UsageEstimatesApi = {
    * Update estimate from PA-ID and reference Month
    * @returns Promise
    * @param paId
-   * @param referenceMonth format = Marzo-2023
+   * @param referenceMonth format = MAR-2023
    * @param status  DRAFT or VALIDATED
    * @param body  estimate body updated
    */
@@ -47,7 +47,7 @@ export const UsageEstimatesApi = {
    * validated estimate from PA-ID and reference Month
    * @returns Promise
    * @param paId
-   * @param referenceMonth format = Marzo-2023
+   * @param referenceMonth format = MAR-2023
    */
   validatedEstimate: async (paId: string, referenceMonth: string): Promise<EstimatePeriod> => {
     const response = await apiClient.get<EstimatePeriod>(ESTIMATE_VALIDATED(paId, referenceMonth));

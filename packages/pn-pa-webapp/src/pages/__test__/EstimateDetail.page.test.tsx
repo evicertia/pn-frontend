@@ -10,11 +10,15 @@ const mockDispatchFn = jest.fn();
 const spyOnDispatch = jest.spyOn(reactRedux, "useAppDispatch");
 const spyOnSelector = jest.spyOn(reactRedux, "useAppSelector");
 
-const mockingStore = (estimateDetailStore = { }, userStore= { }, errorStore= undefined) => {
+const mockingStore = (estimateDetailStore = { }, filesReportsStore = {}, userStore= { }, errorStore= undefined) => {
   const reduxStore = {
     usageEstimateState: {
       detail: estimateDetailStore,
       error: errorStore,
+    },
+    fileReportsEstimateState: {
+      filesReports: filesReportsStore,
+      fileReportUrl: undefined
     },
     userState: {
       user: userStore
@@ -45,7 +49,20 @@ const ReceivedStatusVALIDATED = () => {
     }
   };
 
-  mockingStore(stateEstimateDetail, stateUser);
+  const stateFilesReports = {
+    paId: "026e8c72-7944-4dcd-8668-f596447fec6d",
+    reportKey: "report_compressed.zip",
+    reportZipKey: null,
+    url: null,
+    referenceMonth: "LUG-2023",
+    lastModifiedDate: null,
+    errorMessage: null,
+    generationDate: null,
+    part: null,
+    status: null
+  };
+
+  mockingStore(stateEstimateDetail, stateFilesReports, stateUser);
   return (
     <MemoryRouter>
       <EstimateDetailPage />
@@ -75,7 +92,20 @@ const ReceivedRestError404 = () => {
     }
   };
 
-  mockingStore(stateEstimateDetail, stateUser, 404);
+  const stateFilesReports = {
+    paId: "026e8c72-7944-4dcd-8668-f596447fec6d",
+    reportKey: null,
+    reportZipKey: null,
+    url: null,
+    referenceMonth: "LUG-2023",
+    lastModifiedDate: null,
+    errorMessage: null,
+    generationDate: null,
+    part: null,
+    status: null
+  };
+
+  mockingStore(stateEstimateDetail, stateFilesReports, stateUser, 404);
   return (<EstimateDetailPage />);
 };
 
@@ -100,7 +130,20 @@ const ReceivedRestError503 = () => {
     }
   };
 
-  mockingStore(stateEstimateDetail, stateUser, 503);
+  const stateFilesReports = {
+    paId: "026e8c72-7944-4dcd-8668-f596447fec6d",
+    reportKey: null,
+    reportZipKey: null,
+    url: null,
+    referenceMonth: "LUG-2023",
+    lastModifiedDate: null,
+    errorMessage: null,
+    generationDate: null,
+    part: null,
+    status: null
+  };
+
+  mockingStore(stateEstimateDetail, stateFilesReports, stateUser, 503);
   return (
     <MemoryRouter>
       <EstimateDetailPage />
@@ -156,7 +199,7 @@ describe("EstimateDetail.page.test", () => {
     render(<ReceivedStatusVALIDATED/>);
 
     await act(async () => {
-      expect(mockDispatchFn).toBeCalledTimes(1);
+      expect(mockDispatchFn).toBeCalledTimes(2);
     })
   });
 
@@ -172,7 +215,7 @@ describe("EstimateDetail.page.test", () => {
     await act(async () => {
       expect(location.pathname).toEqual(routes.ESTIMATE);
       expect(screen.getByTestId("estimate-page")).toBeInTheDocument()
-      expect(mockDispatchFn).toBeCalledTimes(2);
+      expect(mockDispatchFn).toBeCalledTimes(3);
     })
   });
 
@@ -187,7 +230,7 @@ describe("EstimateDetail.page.test", () => {
       fireEvent.blur(apiErrorReloadButton)
 
       await waitFor(async () => {
-        expect(mockDispatchFn).toBeCalledTimes(2);
+        expect(mockDispatchFn).toBeCalledTimes(4);
       })
     })
   });

@@ -135,8 +135,6 @@ describe("Estimate.form.test", () => {
     screen.debug(sendDialog);
     const buttons = sendDialog.querySelectorAll('button');
 
-    // const buttons = sendDialog.querySelectorAll("input[type='button']");
-
     buttons.forEach((btn, index) => {
       if(index === 1) {
         fireEvent.click(btn);
@@ -156,7 +154,6 @@ describe("Estimate.form.test", () => {
     render(<EstimateForm detail={initialValue} onEstimateValidated={mockOnEstimateValidated}/>);
 
     const openDialogButton = await screen.queryByTestId("btn-open-dialog");
-    // screen.debug(openDialogButton);
     expect(openDialogButton).toBeInTheDocument();
     expect(openDialogButton).not.toBeDisabled();
     fireEvent.click(openDialogButton);

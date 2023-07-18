@@ -1,10 +1,11 @@
 import * as React from 'react'
 import * as reactRedux from "../../redux/hooks";
 import {act, cleanup, fireEvent, render, screen} from "@testing-library/react";
-import {EstimateStatusEnum, ProfilingPeriod} from "../../models/UsageEstimation";
+import {EstimatePeriod, EstimateStatusEnum, ProfilingPeriod} from "../../models/UsageEstimation";
 import * as routes from "../../navigation/routes.const";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {ProfilingEditPage} from "../ProfilingEdit.page";
+import {EstimateEditPage} from "../EstimateEdit.page";
 
 
 const mockDispatchFn = jest.fn();
@@ -29,10 +30,10 @@ const ScenarioWithStatusAndError = (props:{status: EstimateStatusEnum; showEdit:
   const stateFormData = {
     status: props.status,
     showEdit: props.showEdit,
-    deadlineDate: "2023-06-15T23:59:00.000+00:00",
-    referenceYear: "2023",
+    deadlineDate: (!props.emptyField) ? "2023-06-15T23:59:00.000+00:00" : undefined,
+    referenceYear: (!props.emptyField) ? "2023" : undefined,
     lastModifiedDate: (!props.emptyField) ? "2023-06-1T23:59:00.000+00:00" : undefined,
-    billing: {
+    profilation: {
       splitPayment: (props.emptyField) ? null : true,
       description: (props.emptyField) ? null : "ABCDDDDD",
       mailAddress: (props.emptyField) ? null : "C.P@gmail.com"

@@ -29,8 +29,8 @@ const ScenarioWithStatusAndError = (props:{status: EstimateStatusEnum; showEdit:
   const stateFormData = {
     status: props.status,
     showEdit: props.showEdit,
-    deadlineDate: "2023-06-15T23:59:00.000+00:00",
-    referenceMonth: "LUG-2023",
+    deadlineDate: (!props.emptyField) ? "2023-06-15T23:59:00.000+00:00" : undefined,
+    referenceMonth: (!props.emptyField) ? "LUG-2023" : undefined,
     lastModifiedDate: (!props.emptyField) ? "2023-06-1T23:59:00.000+00:00" : undefined,
     estimate: {
       total890Notif: (props.emptyField) ? null : 100,
@@ -63,7 +63,6 @@ const stateUser = {
   email: "",
   uid: ""
 };
-
 
 jest.mock('react-i18next', () => ({
   // this mock makes sure any components using the translate hook can use it without a warning being shown

@@ -24,7 +24,6 @@ interface ActualProfilingCardProps {
   data: ProfilingPeriod;
 }
 
-
 export function ActualProfilingCard (props:ActualProfilingCardProps) {
   const {t} = useTranslation(['estimate'], {keyPrefix: "profiling.actual"});
 
@@ -46,7 +45,7 @@ export function ActualProfilingCard (props:ActualProfilingCardProps) {
         </Grid>
 
         <Grid container direction={"row"} justifyContent={"space-between"}>
-          <TagEditDate data-testid={"testIdTagEditDate"} data={props.data}/>
+          <TagEditDate data={props.data}/>
           <Stack direction={"row"} sx={{alignSelf: "end"}} spacing={.5}>
             <ButtonsGroup paId={props.paId} data={props.data}/>
           </Stack>
@@ -55,7 +54,6 @@ export function ActualProfilingCard (props:ActualProfilingCardProps) {
     </Card>
   </>;
 }
-
 
 const TagEditDate = (props: {data: ProfilingPeriod}) => {
   const {t} = useTranslation(['estimate'], {keyPrefix: "profiling.actual"});
@@ -66,7 +64,7 @@ const TagEditDate = (props: {data: ProfilingPeriod}) => {
         {t('card.label.last-modify').concat(getDateString(props.data.lastModifiedDate))}
         </Typography>
     }
-    <Tag
+    <Tag data-testid={"testIdTagEditDate"}
       color={(props.data.lastModifiedDate) ? "warning" : "default"}
       value={t('card.label.editable').concat(`${getFormattedDateTime(props.data.deadlineDate)}`)}
       variant="default"
@@ -89,6 +87,7 @@ const ButtonsGroup = (props: ActualProfilingCardProps) => {
   } else if (props.data.lastModifiedDate && props.data.status === EstimateStatusEnum.DRAFT) {
     return <>
       <Button variant="outlined"
+              data-testid="edit-draft-state-button"
               onClick={() => {
                 navigate(GET_EDIT_PROFILING_PATH(props.data.referenceYear));
               }}>
@@ -98,7 +97,7 @@ const ButtonsGroup = (props: ActualProfilingCardProps) => {
       <ButtonSendProfiling data-testid="send-estimate-button-draft-test-id"  paId={props.paId} referenceYear={props.data.referenceYear} deadlineDate={props.data.deadlineDate}/>
     </>;
   } else if (props.data.status === EstimateStatusEnum.VALIDATED) {
-    return <Button data-testid="update-after-validation-button-test-id"
+    return <Button data-testid="edit-validated-state-button"
                    variant="contained"
                    onClick={() => {
                      navigate(GET_EDIT_PROFILING_PATH(props.data.referenceYear));

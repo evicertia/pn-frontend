@@ -11,7 +11,7 @@ import {UsageEstimatesApi} from "../UsageEstimates.api";
 
 
 const PA_ID = "1234";
-const REF_MONTH = "MARZO-2023"
+const REF_MONTH = "MAR-2023"
 
 describe('Usage Estimate api tests', () => {
   let mock = null;
@@ -145,35 +145,3 @@ const mockHistoryEstimates = {
     content: []
   }
 }
-
-describe('Usage Estimate api tests', () => {
-  let mock;
-
-  beforeEach(() => {
-    mock = new MockAdapter(apiClient);
-  });
-
-  afterEach(() => {
-    mock.reset();
-    mock.restore();
-  });
-  //
-  // it('getFilesEstimate', async () => {
-  //   const mockInfoDownloads = [{ /* mocked info download data */ }];
-  //   mock.onGet(ESTIMATE_FILES(PA_ID, REF_MONTH)).reply(200, mockInfoDownloads);
-  //
-  //   const res = await UsageEstimatesApi.getFilesEstimate(PA_ID, REF_MONTH);
-  //
-  //   expect(res).toStrictEqual(mockInfoDownloads);
-  // });
-  //
-  // it('getFileEstimate', async () => {
-  //   const fileId = 'exampleFileId';
-  //   const mockInfoDownload = { /* mocked info download data */ };
-  //   mock.onGet(ESTIMATE_FILE_DETAIL(PA_ID, fileId)).reply(200, mockInfoDownload);
-  //
-  //   const res = await UsageEstimatesApi.getFileEstimate(PA_ID, fileId);
-  //
-  //   expect(res).toStrictEqual(mockInfoDownload);
-  // });
-});
