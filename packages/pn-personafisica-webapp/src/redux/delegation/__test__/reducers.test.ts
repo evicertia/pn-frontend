@@ -3,7 +3,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { mockAuthentication } from '../../../__mocks__/Auth.mock';
 import { arrayOfDelegates, arrayOfDelegators } from '../../../__mocks__/Delegations.mock';
 import { createMockedStore } from '../../../__test__/test-utils';
-import { apiClient } from '../../../api/apiClients';
+import { getApiClient } from '../../../api/apiClients';
 import {
   ACCEPT_DELEGATION,
   DELEGATIONS_BY_DELEGATE,
@@ -11,7 +11,7 @@ import {
   REJECT_DELEGATION,
   REVOKE_DELEGATION,
 } from '../../../api/delegations/delegations.routes';
-import { store } from '../../store';
+import { getStore } from '../../store';
 import {
   acceptDelegation,
   getDelegates,
@@ -62,7 +62,7 @@ describe('delegation redux state tests', () => {
   mockAuthentication();
 
   beforeAll(() => {
-    mock = new MockAdapter(apiClient);
+    mock = new MockAdapter(getApiClient());
   });
 
   afterEach(() => {
@@ -74,26 +74,26 @@ describe('delegation redux state tests', () => {
   });
 
   it('checks the initial state', () => {
-    const state = store.getState().delegationsState;
+    const state = getStore().getState().delegationsState;
     expect(state).toEqual(initialState);
   });
 
   it('should be able to fetch the delegates', async () => {
     mock.onGet(DELEGATIONS_BY_DELEGATOR()).reply(200, arrayOfDelegates);
-    const action = await store.dispatch(getDelegates());
+    const action = await getStore().dispatch(getDelegates());
     expect(action.type).toBe('getDelegates/fulfilled');
     expect(action.payload).toEqual(arrayOfDelegates);
   });
 
   it('should be able to fetch the delegators', async () => {
     mock.onGet(DELEGATIONS_BY_DELEGATE()).reply(200, arrayOfDelegators);
-    const action = await store.dispatch(getDelegators());
+    const action = await getStore().dispatch(getDelegators());
     expect(action.type).toBe('getDelegators/fulfilled');
     expect(action.payload).toEqual(arrayOfDelegators);
   });
 
   it('should accept a delegation request', async () => {
-    // init store
+    // init getStore()
     const testStore = createMockedStore({
       delegationsState: {
         ...initialState,
@@ -118,10 +118,10 @@ describe('delegation redux state tests', () => {
 
   it('should set the accept modal state to error', async () => {
     mock.onPatch(ACCEPT_DELEGATION('1')).reply(500, 'error');
-    const action = await store.dispatch(acceptDelegation({ id: '1', code: '12345' }));
+    const action = await getStore().dispatch(acceptDelegation({ id: '1', code: '12345' }));
     expect(action.type).toBe('acceptDelegation/rejected');
     expect(action.payload).toStrictEqual({ response: { status: 500, data: 'error' } });
-    const state = store.getState().delegationsState;
+    const state = getStore().getState().delegationsState;
     expect(state.acceptModalState.error).toBeTruthy();
   });
 
@@ -150,10 +150,10 @@ describe('delegation redux state tests', () => {
 
   it('should throw an error trying to reject a delegation', async () => {
     mock.onPatch(REJECT_DELEGATION('2')).reply(500, 'error');
-    const action = await store.dispatch(rejectDelegation('2'));
+    const action = await getStore().dispatch(rejectDelegation('2'));
     expect(action.type).toBe('rejectDelegation/rejected');
     expect(action.payload).toStrictEqual({ response: { status: 500, data: 'error' } });
-    const state = store.getState().delegationsState;
+    const state = getStore().getState().delegationsState;
     expect(state.modalState.open).toBeFalsy();
   });
 
@@ -182,46 +182,46 @@ describe('delegation redux state tests', () => {
 
   it('should throw an error trying to revoke a delegation', async () => {
     mock.onPatch(REVOKE_DELEGATION('2')).reply(500, 'error');
-    const action = await store.dispatch(revokeDelegation('2'));
+    const action = await getStore().dispatch(revokeDelegation('2'));
     expect(action.type).toBe('revokeDelegation/rejected');
     expect(action.payload).toStrictEqual({ response: { status: 500, data: 'error' } });
-    const state = store.getState().delegationsState;
+    const state = getStore().getState().delegationsState;
     expect(state.modalState.open).toBeFalsy();
   });
 
   it('sets the confirmation modal state to open and then to close', async () => {
-    const openAction = store.dispatch(openRevocationModal({ id: '123', type: 'delegates' }));
+    const openAction = getStore().dispatch(openRevocationModal({ id: '123', type: 'delegates' }));
     expect(openAction.type).toBe('delegationsSlice/openRevocationModal');
-    const openModalState = store.getState().delegationsState.modalState;
+    const openModalState = getStore().getState().delegationsState.modalState;
     expect(openModalState).toEqual({ id: '123', type: 'delegates', open: true });
-    const closeAction = store.dispatch(closeRevocationModal());
+    const closeAction = getStore().dispatch(closeRevocationModal());
     expect(closeAction.type).toBe('delegationsSlice/closeRevocationModal');
-    const closeModalState = store.getState().delegationsState.modalState;
+    const closeModalState = getStore().getState().delegationsState.modalState;
     expect(closeModalState).toEqual({ id: '', type: 'delegates', open: false });
   });
 
   it('sets the accept modal state to open and then to close', async () => {
-    const action = store.dispatch(openAcceptModal({ id: '123', name: 'test name' }));
+    const action = getStore().dispatch(openAcceptModal({ id: '123', name: 'test name' }));
     expect(action.type).toBe('delegationsSlice/openAcceptModal');
-    const confirmModalState = store.getState().delegationsState.acceptModalState;
+    const confirmModalState = getStore().getState().delegationsState.acceptModalState;
     expect(confirmModalState).toEqual({ id: '123', open: true, name: 'test name', error: false });
-    const closeAction = store.dispatch(closeAcceptModal());
+    const closeAction = getStore().dispatch(closeAcceptModal());
     expect(closeAction.type).toBe('delegationsSlice/closeAcceptModal');
-    const closeModalState = store.getState().delegationsState.acceptModalState;
+    const closeModalState = getStore().getState().delegationsState.acceptModalState;
     expect(closeModalState).toEqual({ id: '', open: false, name: 'test name', error: false });
   });
 
   it('sets the delegates sorting by test in ascendant order', () => {
-    const action = store.dispatch(setDelegatesSorting({ orderBy: 'startDate', order: 'asc' }));
+    const action = getStore().dispatch(setDelegatesSorting({ orderBy: 'startDate', order: 'asc' }));
     expect(action.type).toBe('delegationsSlice/setDelegatesSorting');
-    const sortDelegates = store.getState().delegationsState.sortDelegates;
+    const sortDelegates = getStore().getState().delegationsState.sortDelegates;
     expect(sortDelegates).toEqual({ orderBy: 'startDate', order: 'asc' });
   });
 
   it('sets the delegates sorting by test in descendant order', () => {
-    const action = store.dispatch(setDelegatorsSorting({ orderBy: 'endDate', order: 'desc' }));
+    const action = getStore().dispatch(setDelegatorsSorting({ orderBy: 'endDate', order: 'desc' }));
     expect(action.type).toBe('delegationsSlice/setDelegatorsSorting');
-    const sortDelegators = store.getState().delegationsState.sortDelegators;
+    const sortDelegators = getStore().getState().delegationsState.sortDelegators;
     expect(sortDelegators).toEqual({ orderBy: 'endDate', order: 'desc' });
   });
 });

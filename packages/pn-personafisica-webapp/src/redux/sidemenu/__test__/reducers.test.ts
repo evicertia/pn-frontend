@@ -3,14 +3,14 @@ import MockAdapter from 'axios-mock-adapter';
 import { mockAuthentication } from '../../../__mocks__/Auth.mock';
 import { arrayOfDelegators } from '../../../__mocks__/Delegations.mock';
 import { createMockedStore } from '../../../__test__/test-utils';
-import { apiClient } from '../../../api/apiClients';
+import { getApiClient } from '../../../api/apiClients';
 import {
   ACCEPT_DELEGATION,
   DELEGATIONS_BY_DELEGATE,
   REJECT_DELEGATION,
 } from '../../../api/delegations/delegations.routes';
 import { acceptDelegation, rejectDelegation } from '../../delegation/actions';
-import { store } from '../../store';
+import { getStore } from '../../store';
 import { getSidemenuInformation } from '../actions';
 import { closeDomicileBanner } from '../reducers';
 
@@ -29,7 +29,7 @@ describe('Sidemenu redux state tests', () => {
   mockAuthentication();
 
   beforeAll(() => {
-    mock = new MockAdapter(apiClient);
+    mock = new MockAdapter(getApiClient());
   });
 
   afterEach(() => {
@@ -41,23 +41,23 @@ describe('Sidemenu redux state tests', () => {
   });
 
   it('Initial state', () => {
-    const state = store.getState().generalInfoState;
+    const state = getStore().getState().generalInfoState;
     expect(state).toEqual(initialState);
   });
 
   it('Should be able to close domicile banner', () => {
-    const action = store.dispatch(closeDomicileBanner());
+    const action = getStore().dispatch(closeDomicileBanner());
     expect(action.type).toBe('generalInfoSlice/closeDomicileBanner');
-    const state = store.getState().generalInfoState;
+    const state = getStore().getState().generalInfoState;
     expect(state).toEqual({ ...initialState, domicileBannerOpened: false });
   });
 
   it('Should load state properly', async () => {
     mock.onGet(DELEGATIONS_BY_DELEGATE()).reply(200, arrayOfDelegators);
-    const action = await store.dispatch(getSidemenuInformation());
+    const action = await getStore().dispatch(getSidemenuInformation());
     expect(action.type).toBe('getSidemenuInformation/fulfilled');
     expect(action.payload).toEqual(arrayOfDelegators);
-    const state = store.getState().generalInfoState;
+    const state = getStore().getState().generalInfoState;
     expect(state.delegators).toHaveLength(activeDelegators.length);
     expect(state.pendingDelegators).toBe(pendingDelegators.length);
   });

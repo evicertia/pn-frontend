@@ -15,7 +15,7 @@ import {
 } from '../../../__mocks__/AppStatus.mock';
 import { mockAuthentication } from '../../../__mocks__/Auth.mock';
 import { getApiClient } from '../../../api/apiClients';
-import { store } from '../../store';
+import { getStore } from '../../store';
 import { getCurrentAppStatus, getDowntimeLogPage } from '../actions';
 
 describe('App Status redux state tests', () => {
@@ -37,13 +37,13 @@ describe('App Status redux state tests', () => {
   });
 
   it('Initial state', () => {
-    const state = store.getState().appStatus;
+    const state = getStore().getState().appStatus;
     expect(state).toEqual({ pagination: { size: 10, page: 0, resultPages: ['0'] } });
   });
 
   it('Should be able to fetch the current status', async () => {
     mock.onGet(DOWNTIME_STATUS()).reply(200, currentStatusDTO);
-    const action = await store.dispatch(getCurrentAppStatus());
+    const action = await getStore().dispatch(getCurrentAppStatus());
     const payload = action.payload as AppCurrentStatus;
     expect(action.type).toBe('getCurrentAppStatus/fulfilled');
     expect(payload).toEqual({
@@ -57,7 +57,7 @@ describe('App Status redux state tests', () => {
       startDate: '2022-10-23T15:50:04Z',
     };
     mock.onGet(DOWNTIME_HISTORY(mockRequest)).reply(200, downtimesDTO);
-    const action = await store.dispatch(getDowntimeLogPage(mockRequest));
+    const action = await getStore().dispatch(getDowntimeLogPage(mockRequest));
     const payload = action.payload as DowntimeLogPage;
     expect(action.type).toBe('getDowntimeLogPage/fulfilled');
     expect(payload).toEqual(simpleDowntimeLogPage);

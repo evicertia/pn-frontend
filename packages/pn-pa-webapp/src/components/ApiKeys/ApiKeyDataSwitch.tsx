@@ -220,7 +220,7 @@ const ApiKeyDataSwitch: React.FC<{
     );
   }
   if (type === 'status') {
-    const { label, tooltip, color } = getApiKeyStatusInfos(data.status, data.statusHistory);
+    const { label, tooltip, color } = getApiKeyStatusInfos(data.status, data.statusHistory, t);
     return (
       <Box
         sx={{

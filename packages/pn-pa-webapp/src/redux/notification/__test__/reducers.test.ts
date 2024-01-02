@@ -26,7 +26,7 @@ import {
   NOTIFICATION_DETAIL_OTHER_DOCUMENTS,
   NOTIFICATION_PAYMENT_ATTACHMENT,
 } from '../../../api/notifications/notifications.routes';
-import { store } from '../../store';
+import { getStore } from '../../store';
 import {
   cancelNotification,
   getDowntimeEvents,
@@ -82,7 +82,7 @@ describe('Notification detail redux state tests', () => {
   });
 
   it('Initial state', () => {
-    const state = store.getState().notificationState;
+    const state = getStore().getState().notificationState;
     expect(state).toEqual(initialState);
   });
 
@@ -90,11 +90,11 @@ describe('Notification detail redux state tests', () => {
     mock
       .onGet(NOTIFICATION_DETAIL(notificationToFeMultiRecipient.iun))
       .reply(200, notificationDTOMultiRecipient);
-    const action = await store.dispatch(getSentNotification(notificationToFeMultiRecipient.iun));
+    const action = await getStore().dispatch(getSentNotification(notificationToFeMultiRecipient.iun));
     const payload = action.payload as NotificationDetail;
     expect(action.type).toBe('getSentNotification/fulfilled');
     expect(payload).toEqual(notificationToFeMultiRecipient);
-    expect(store.getState().notificationState.notification).toStrictEqual(
+    expect(getStore().getState().notificationState.notification).toStrictEqual(
       notificationToFeMultiRecipient
     );
   });
@@ -108,7 +108,7 @@ describe('Notification detail redux state tests', () => {
     mock
       .onGet(NOTIFICATION_DETAIL_DOCUMENTS(mockRequest.iun, mockRequest.documentIndex))
       .reply(200, mockResponse);
-    const action = await store.dispatch(getSentNotificationDocument(mockRequest));
+    const action = await getStore().dispatch(getSentNotificationDocument(mockRequest));
     const payload = action.payload;
     expect(action.type).toBe('getSentNotificationDocument/fulfilled');
     expect(payload).toEqual(mockResponse);
@@ -123,7 +123,7 @@ describe('Notification detail redux state tests', () => {
     mock
       .onGet(NOTIFICATION_DETAIL_LEGALFACT(mockRequest.iun, mockRequest.legalFact))
       .reply(200, mockResponse);
-    const action = await store.dispatch(getSentNotificationLegalfact(mockRequest));
+    const action = await getStore().dispatch(getSentNotificationLegalfact(mockRequest));
     const payload = action.payload;
     expect(action.type).toBe('getSentNotificationLegalfact/fulfilled');
     expect(payload).toEqual(mockResponse);
@@ -141,7 +141,7 @@ describe('Notification detail redux state tests', () => {
     mock
       .onGet(NOTIFICATION_DETAIL_OTHER_DOCUMENTS(mockRequest.iun, mockRequest.otherDocument))
       .reply(200, mockResponse);
-    const action = await store.dispatch(getSentNotificationOtherDocument(mockRequest));
+    const action = await getStore().dispatch(getSentNotificationOtherDocument(mockRequest));
     const payload = action.payload;
     expect(action.type).toBe('getSentNotificationOtherDocument/fulfilled');
     expect(payload).toEqual(mockResponse);
@@ -153,7 +153,7 @@ describe('Notification detail redux state tests', () => {
     const recIndex = 1;
     const url = 'http://mocked-url.com';
     mock.onGet(NOTIFICATION_PAYMENT_ATTACHMENT(iun, attachmentName, recIndex)).reply(200, { url });
-    const action = await store.dispatch(getPaymentAttachment({ iun, attachmentName, recIndex }));
+    const action = await getStore().dispatch(getPaymentAttachment({ iun, attachmentName, recIndex }));
     const payload = action.payload;
     expect(action.type).toBe('getPaymentAttachment/fulfilled');
     expect(payload).toEqual({ url });
@@ -175,11 +175,11 @@ describe('Notification detail redux state tests', () => {
         })
       )
       .reply(200, downtimesDTO);
-    const action = await store.dispatch(getDowntimeEvents(mockRequest));
+    const action = await getStore().dispatch(getDowntimeEvents(mockRequest));
     const payload = action.payload;
     expect(action.type).toBe('getDowntimeEvents/fulfilled');
     expect(payload).toEqual(simpleDowntimeLogPage);
-    expect(store.getState().notificationState.downtimeEvents).toStrictEqual(
+    expect(getStore().getState().notificationState.downtimeEvents).toStrictEqual(
       simpleDowntimeLogPage.downtimes
     );
   });
@@ -193,37 +193,37 @@ describe('Notification detail redux state tests', () => {
     mock
       .onGet(DOWNTIME_LEGAL_FACT_DETAILS(notificationToFeMultiRecipient.iun))
       .reply(200, mockResponse);
-    const action = await store.dispatch(
+    const action = await getStore().dispatch(
       getDowntimeLegalFactDocumentDetails(notificationToFeMultiRecipient.iun)
     );
     const payload = action.payload;
     expect(action.type).toBe('getNotificationDowntimeLegalFactDocumentDetails/fulfilled');
     expect(payload).toEqual(mockResponse);
-    expect(store.getState().notificationState.downtimeLegalFactUrl).toStrictEqual(mockResponse.url);
+    expect(getStore().getState().notificationState.downtimeLegalFactUrl).toStrictEqual(mockResponse.url);
   });
 
   it('Should be able to reset state', () => {
-    const action = store.dispatch(resetState());
+    const action = getStore().dispatch(resetState());
     const payload = action.payload;
     expect(action.type).toBe('notificationSlice/resetState');
     expect(payload).toEqual(undefined);
-    const state = store.getState().notificationState;
+    const state = getStore().getState().notificationState;
     expect(state).toEqual(initialState);
   });
 
   it('Should be able to reset legalfact state', () => {
-    const action = store.dispatch(resetLegalFactState());
+    const action = getStore().dispatch(resetLegalFactState());
     const payload = action.payload;
     expect(action.type).toBe('notificationSlice/resetLegalFactState');
     expect(payload).toEqual(undefined);
-    const state = store.getState().notificationState;
+    const state = getStore().getState().notificationState;
     expect(state.legalFactDownloadRetryAfter).toEqual(0);
     expect(state.legalFactDownloadUrl).toEqual('');
   });
 
   it('Should be able to cancel notification', async () => {
     mock.onPut(CANCEL_NOTIFICATION('mocked-iun')).reply(200);
-    const action = await store.dispatch(cancelNotification('mocked-iun'));
+    const action = await getStore().dispatch(cancelNotification('mocked-iun'));
     expect(action.type).toBe('cancelNotification/fulfilled');
     expect(action.payload).toEqual(undefined);
   });

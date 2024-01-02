@@ -1,13 +1,14 @@
 import React from 'react';
 
 import { formatDate } from '@pagopa-pn/pn-commons';
+import { vi } from 'vitest';
 
 import { mockApiKeysForFE } from '../../../__mocks__/ApiKeys.mock';
 import { fireEvent, render, waitFor } from '../../../__test__/test-utils';
 import { getApiKeyStatusInfos } from '../../../utility/apikeys.utility';
 import ApiKeyDataSwitch from '../ApiKeyDataSwitch';
 
-jest.mock('react-i18next', () => ({
+vi.mock('react-i18next', () => ({
   // this mock makes sure any components using the translate hook can use it without a warning being shown
   useTranslation: () => ({
     t: (str: string) => str,
@@ -17,7 +18,7 @@ jest.mock('react-i18next', () => ({
 const data = mockApiKeysForFE.items[0];
 
 describe('ApiKeyDataSwitch Component', () => {
-  const mockClick = jest.fn();
+  const mockClick = vi.fn();
 
   it('renders component - name', () => {
     const { container } = render(
@@ -78,7 +79,9 @@ describe('ApiKeyDataSwitch Component', () => {
   });
 
   it('renders component - status', () => {
-    const { label } = getApiKeyStatusInfos(data.status, data.statusHistory);
+    const fakeTranslationFunction = (str: string) => str;
+
+    const { label } = getApiKeyStatusInfos(data.status, data.statusHistory, fakeTranslationFunction);
     const { container } = render(
       <ApiKeyDataSwitch handleModalClick={mockClick} data={data} type="status" />
     );

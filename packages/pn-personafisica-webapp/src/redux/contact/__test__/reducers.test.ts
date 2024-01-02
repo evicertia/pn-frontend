@@ -2,14 +2,14 @@ import MockAdapter from 'axios-mock-adapter';
 
 import { mockAuthentication } from '../../../__mocks__/Auth.mock';
 import { digitalAddresses } from '../../../__mocks__/Contacts.mock';
-import { apiClient } from '../../../api/apiClients';
+import { getApiClient } from '../../../api/apiClients';
 import {
   CONTACTS_LIST,
   COURTESY_CONTACT,
   LEGAL_CONTACT,
 } from '../../../api/contacts/contacts.routes';
 import { CourtesyChannelType, IOAllowedValues, LegalChannelType } from '../../../models/contacts';
-import { store } from '../../store';
+import { getStore } from '../../store';
 import {
   createOrUpdateCourtesyAddress,
   createOrUpdateLegalAddress,
@@ -35,7 +35,7 @@ describe('Contacts redux state tests', () => {
   mockAuthentication();
 
   beforeAll(() => {
-    mock = new MockAdapter(apiClient);
+    mock = new MockAdapter(getApiClient());
   });
 
   afterEach(() => {
@@ -47,13 +47,13 @@ describe('Contacts redux state tests', () => {
   });
 
   it('Initial state', () => {
-    const state = store.getState().contactsState;
+    const state = getStore().getState().contactsState;
     expect(state).toEqual(initialState);
   });
 
   it('Should be able to fetch the digital addresses list', async () => {
     mock.onGet(CONTACTS_LIST()).reply(200, digitalAddresses);
-    const action = await store.dispatch(getDigitalAddresses('mocked-recipientId'));
+    const action = await getStore().dispatch(getDigitalAddresses('mocked-recipientId'));
     expect(action.type).toBe('getDigitalAddresses/fulfilled');
     expect(action.payload).toEqual(digitalAddresses);
   });
@@ -65,7 +65,7 @@ describe('Contacts redux state tests', () => {
         value: updatedDigitalAddress.value,
       })
       .reply(200);
-    const action = await store.dispatch(
+    const action = await getStore().dispatch(
       createOrUpdateLegalAddress({
         recipientId: updatedDigitalAddress.recipientId,
         senderId: updatedDigitalAddress.senderId,
@@ -84,7 +84,7 @@ describe('Contacts redux state tests', () => {
         value: updatedDigitalAddress.value,
       })
       .reply(200, { result: 'PEC_VALIDATION_REQUIRED' });
-    const action = await store.dispatch(
+    const action = await getStore().dispatch(
       createOrUpdateLegalAddress({
         recipientId: updatedDigitalAddress.recipientId,
         senderId: updatedDigitalAddress.senderId,
@@ -107,7 +107,7 @@ describe('Contacts redux state tests', () => {
         value: updatedDigitalAddress.value,
       })
       .reply(204);
-    const action = await store.dispatch(
+    const action = await getStore().dispatch(
       createOrUpdateLegalAddress({
         recipientId: updatedDigitalAddress.recipientId,
         senderId: updatedDigitalAddress.senderId,
@@ -127,7 +127,7 @@ describe('Contacts redux state tests', () => {
     mock
       .onDelete(LEGAL_CONTACT(digitalAddresses.legal[0].senderId, LegalChannelType.PEC))
       .reply(204);
-    const action = await store.dispatch(
+    const action = await getStore().dispatch(
       deleteLegalAddress({
         recipientId: digitalAddresses.legal[0].recipientId,
         senderId: digitalAddresses.legal[0].senderId,
@@ -146,7 +146,7 @@ describe('Contacts redux state tests', () => {
     mock
       .onPost(COURTESY_CONTACT(updatedDigitalAddress.senderId, CourtesyChannelType.EMAIL))
       .reply(200, { value: updatedDigitalAddress.value });
-    const action = await store.dispatch(
+    const action = await getStore().dispatch(
       createOrUpdateCourtesyAddress({
         recipientId: updatedDigitalAddress.recipientId,
         senderId: updatedDigitalAddress.senderId,
@@ -168,7 +168,7 @@ describe('Contacts redux state tests', () => {
         value: updatedDigitalAddress.value,
       })
       .reply(204);
-    const action = await store.dispatch(
+    const action = await getStore().dispatch(
       createOrUpdateCourtesyAddress({
         recipientId: updatedDigitalAddress.recipientId,
         senderId: updatedDigitalAddress.senderId,
@@ -185,7 +185,7 @@ describe('Contacts redux state tests', () => {
       (el) => el.channelType === CourtesyChannelType.EMAIL
     );
     mock.onDelete(COURTESY_CONTACT(emailContact!.senderId, CourtesyChannelType.EMAIL)).reply(204);
-    const action = await store.dispatch(
+    const action = await getStore().dispatch(
       deleteCourtesyAddress({
         recipientId: emailContact!.recipientId,
         senderId: emailContact!.senderId,
@@ -207,7 +207,7 @@ describe('Contacts redux state tests', () => {
         verificationCode: '00000',
       })
       .reply(204, ioAddress);
-    const action = await store.dispatch(enableIOAddress(ioAddress.recipientId));
+    const action = await getStore().dispatch(enableIOAddress(ioAddress.recipientId));
     expect(action.type).toBe('enableIOAddress/fulfilled');
     expect(action.payload).toEqual({ ...ioAddress, value: 'APPIO', senderName: undefined });
   });
@@ -217,16 +217,16 @@ describe('Contacts redux state tests', () => {
       (el) => el.channelType === CourtesyChannelType.IOMSG
     );
     mock.onDelete(COURTESY_CONTACT(ioContact!.senderId, CourtesyChannelType.IOMSG)).reply(204);
-    const action = await store.dispatch(disableIOAddress(ioContact!.recipientId));
+    const action = await getStore().dispatch(disableIOAddress(ioContact!.recipientId));
     expect(action.type).toBe('disableIOAddress/fulfilled');
     expect(action.payload).toEqual(ioContact!.senderId);
   });
 
   it('Should be able to reset state', () => {
-    const action = store.dispatch(resetState());
+    const action = getStore().dispatch(resetState());
     expect(action.type).toBe('contactsSlice/resetState');
     expect(action.payload).toEqual(undefined);
-    const state = store.getState().contactsState;
+    const state = getStore().getState().contactsState;
     expect(state).toEqual(initialState);
   });
 
@@ -241,7 +241,7 @@ describe('Contacts redux state tests', () => {
         value: updatedDigitalAddress.value,
       })
       .reply(200, { result: 'PEC_VALIDATION_REQUIRED' });
-    await store.dispatch(
+    await getStore().dispatch(
       createOrUpdateLegalAddress({
         recipientId: updatedDigitalAddress.recipientId,
         senderId: 'default',
@@ -249,10 +249,10 @@ describe('Contacts redux state tests', () => {
         value: updatedDigitalAddress.value,
       })
     );
-    const action = store.dispatch(resetPecValidation());
+    const action = getStore().dispatch(resetPecValidation());
     expect(action.type).toBe('contactsSlice/resetPecValidation');
     expect(action.payload).toEqual(undefined);
-    const state = store.getState().contactsState.digitalAddresses.legal;
+    const state = getStore().getState().contactsState.digitalAddresses.legal;
     expect(state).toEqual([]);
   });
 });

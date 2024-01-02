@@ -10,10 +10,10 @@ import {
 
 import { mockAuthentication } from '../../../__mocks__/Auth.mock';
 import { notificationsDTO, notificationsToFe } from '../../../__mocks__/Notifications.mock';
-import { apiClient } from '../../../api/apiClients';
+import { getApiClient } from '../../../api/apiClients';
 import { NOTIFICATIONS_LIST } from '../../../api/notifications/notifications.routes';
 import { NotificationColumn } from '../../../models/Notifications';
-import { store } from '../../store';
+import { getStore } from '../../store';
 import { getReceivedNotifications } from '../actions';
 import { setMandateId, setNotificationFilters, setPagination, setSorting } from '../reducers';
 
@@ -22,7 +22,7 @@ describe('Dashbaord redux state tests', () => {
   mockAuthentication();
 
   beforeAll(() => {
-    mock = new MockAdapter(apiClient);
+    mock = new MockAdapter(getApiClient());
   });
 
   afterEach(() => {
@@ -34,7 +34,7 @@ describe('Dashbaord redux state tests', () => {
   });
 
   it('Initial state', () => {
-    const state = store.getState().dashboardState;
+    const state = getStore().getState().dashboardState;
     expect(state).toEqual({
       loading: false,
       notifications: [],
@@ -65,7 +65,7 @@ describe('Dashbaord redux state tests', () => {
         })
       )
       .reply(200, notificationsDTO);
-    const action = await store.dispatch(
+    const action = await getStore().dispatch(
       getReceivedNotifications({
         startDate: tenYearsAgo,
         endDate: today,
@@ -76,7 +76,7 @@ describe('Dashbaord redux state tests', () => {
   });
 
   it('Should be able to change pagination', () => {
-    const action = store.dispatch(
+    const action = getStore().dispatch(
       setPagination({
         page: 2,
         size: 50,
@@ -94,7 +94,7 @@ describe('Dashbaord redux state tests', () => {
       orderBy: 'status',
       order: 'desc',
     };
-    const action = store.dispatch(setSorting(sort));
+    const action = getStore().dispatch(setSorting(sort));
     expect(action.type).toBe('dashboardSlice/setSorting');
     expect(action.payload).toEqual({
       orderBy: 'status',
@@ -110,13 +110,13 @@ describe('Dashbaord redux state tests', () => {
       status: NotificationStatus.PAID,
       subjectRegExp: 'mocked-regexp',
     };
-    const action = store.dispatch(setNotificationFilters(filters));
+    const action = getStore().dispatch(setNotificationFilters(filters));
     expect(action.type).toBe('dashboardSlice/setNotificationFilters');
     expect(action.payload).toEqual(filters);
   });
 
   it('Should be able to set mandate id', () => {
-    const action = store.dispatch(setMandateId('mocked-mandate-id'));
+    const action = getStore().dispatch(setMandateId('mocked-mandate-id'));
     expect(action.type).toBe('dashboardSlice/setMandateId');
     expect(action.payload).toEqual('mocked-mandate-id');
   });

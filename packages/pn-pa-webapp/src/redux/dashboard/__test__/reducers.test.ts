@@ -12,7 +12,7 @@ import { mockAuthentication } from '../../../__mocks__/Auth.mock';
 import { getApiClient } from '../../../api/apiClients';
 import { notificationsDTO, notificationsToFe } from '../../../__mocks__/Notifications.mock';
 import { NOTIFICATIONS_LIST } from '../../../api/notifications/notifications.routes';
-import { store } from '../../store';
+import { getStore } from '../../store';
 import { getSentNotifications } from '../actions';
 import { setNotificationFilters, setPagination, setSorting } from '../reducers';
 
@@ -35,7 +35,7 @@ describe('Dashboard redux state tests', () => {
   });
 
   it('Initial state', () => {
-    const state = store.getState().dashboardState;
+    const state = getStore().getState().dashboardState;
     expect(state).toEqual({
       loading: false,
       notifications: [],
@@ -73,17 +73,17 @@ describe('Dashboard redux state tests', () => {
       endDate: formatToTimezoneString(today),
     };
     mock.onGet(NOTIFICATIONS_LIST(mockRequestString)).reply(200, notificationsDTO);
-    const action = await store.dispatch(getSentNotifications(mockRequest));
+    const action = await getStore().dispatch(getSentNotifications(mockRequest));
     const payload = action.payload as GetNotificationsResponse;
     expect(action.type).toBe('getSentNotifications/fulfilled');
     expect(payload).toEqual(notificationsToFe);
-    expect(store.getState().dashboardState.notifications).toStrictEqual(
+    expect(getStore().getState().dashboardState.notifications).toStrictEqual(
       notificationsToFe.resultsPage
     );
   });
 
   it('Should be able to change pagination', () => {
-    const action = store.dispatch(
+    const action = getStore().dispatch(
       setPagination({
         page: 2,
         size: 50,
@@ -98,7 +98,7 @@ describe('Dashboard redux state tests', () => {
   });
 
   it('Should be able to change sort', () => {
-    const action = store.dispatch(
+    const action = getStore().dispatch(
       setSorting({
         orderBy: 'recipients',
         order: 'desc',
@@ -113,7 +113,7 @@ describe('Dashboard redux state tests', () => {
   });
 
   it('Should be able to change filters', () => {
-    const action = store.dispatch(
+    const action = getStore().dispatch(
       setNotificationFilters({
         startDate: new Date('2022-02-22T14:20:20.566Z'),
         endDate: new Date('2022-02-27T14:20:20.566Z'),

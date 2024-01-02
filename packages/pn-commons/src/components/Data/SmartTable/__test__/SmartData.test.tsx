@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { Box } from '@mui/material';
+import { vi } from 'vitest';
 
 import { Row, SmartTableData, Sort } from '../../../../models';
 import {
@@ -18,9 +17,9 @@ import SmartData from '../SmartData';
 import SmartHeader from '../SmartHeader';
 import SmartHeaderCell from '../SmartHeaderCell';
 
-const handleSort = jest.fn();
-const handleColumnClick = jest.fn();
-const clickActionMockFn = jest.fn();
+const handleSort = vi.fn();
+const handleColumnClick = vi.fn();
+const clickActionMockFn = vi.fn();
 
 type Item = {
   'column-1': string;

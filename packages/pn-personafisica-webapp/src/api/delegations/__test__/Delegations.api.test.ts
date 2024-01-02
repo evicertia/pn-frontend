@@ -7,7 +7,7 @@ import {
   mockCreateDelegation,
 } from '../../../__mocks__/Delegations.mock';
 import { Delegation } from '../../../redux/delegation/types';
-import { apiClient } from '../../apiClients';
+import { getApiClient } from '../../apiClients';
 import { DelegationsApi } from '../Delegations.api';
 import {
   ACCEPT_DELEGATION,
@@ -36,7 +36,7 @@ describe('Delegations api tests', () => {
   mockAuthentication();
 
   beforeAll(() => {
-    mock = new MockAdapter(apiClient);
+    mock = new MockAdapter(getApiClient());
   });
 
   afterEach(() => {

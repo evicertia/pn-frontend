@@ -7,7 +7,7 @@ import { APIKEY_LIST } from '../../../api/apiKeys/apiKeys.routes';
 import { GET_USER_GROUPS } from '../../../api/notifications/notifications.routes';
 import { ApiKeys } from '../../../models/ApiKeys';
 import { UserGroup } from '../../../models/user';
-import { store } from '../../store';
+import { getStore } from '../../store';
 import { getApiKeys } from '../actions';
 import { resetState, setPagination } from '../reducers';
 
@@ -46,19 +46,19 @@ describe('api keys page redux state test', () => {
   });
 
   it('initial state', () => {
-    const state = store.getState().apiKeysState;
+    const state = getStore().getState().apiKeysState;
     expect(state).toEqual(initialState);
   });
 
   it('Should be able to fetch the api keys list', async () => {
     mock.onGet(APIKEY_LIST()).reply(200, mockApiKeysDTO);
     mock.onGet(GET_USER_GROUPS()).reply(200, mockGroups);
-    const action = await store.dispatch(getApiKeys());
+    const action = await getStore().dispatch(getApiKeys());
     const payload = action.payload;
     expect(action.type).toBe('getApiKeys/fulfilled');
     expect(payload).toEqual(mockApiKeysForFE);
-    expect(store.getState().apiKeysState.apiKeys).toStrictEqual(mockApiKeysForFE);
-    expect(store.getState().apiKeysState.pagination).toEqual({
+    expect(getStore().getState().apiKeysState.apiKeys).toStrictEqual(mockApiKeysForFE);
+    expect(getStore().getState().apiKeysState.pagination).toEqual({
       page: 0,
       size: 10,
       nextPagesKey: [
@@ -68,20 +68,20 @@ describe('api keys page redux state test', () => {
   });
 
   it('Should be able to change page', () => {
-    const action = store.dispatch(setPagination({ page: 2, size: 20 }));
+    const action = getStore().dispatch(setPagination({ page: 2, size: 20 }));
     const payload = action.payload;
     expect(action.type).toBe('apiKeysSlice/setPagination');
     expect(payload).toEqual({ page: 2, size: 20 });
-    const state = store.getState().apiKeysState;
+    const state = getStore().getState().apiKeysState;
     expect(state.pagination).toEqual({ page: 2, size: 20, nextPagesKey: [] });
   });
 
   it('Should be able to reset state', () => {
-    const action = store.dispatch(resetState());
+    const action = getStore().dispatch(resetState());
     const payload = action.payload;
     expect(action.type).toBe('apiKeysSlice/resetState');
     expect(payload).toEqual(undefined);
-    const state = store.getState().apiKeysState;
+    const state = getStore().getState().apiKeysState;
     expect(state).toEqual(initialState);
   });
 });

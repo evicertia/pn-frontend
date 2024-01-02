@@ -7,7 +7,7 @@ import { CREATE_APIKEY } from '../../../api/apiKeys/apiKeys.routes';
 import { GET_USER_GROUPS } from '../../../api/notifications/notifications.routes';
 import { GroupStatus, UserGroup } from '../../../models/user';
 import { getUserGroups } from '../../newNotification/actions';
-import { store } from '../../store';
+import { getStore } from '../../store';
 import { saveNewApiKey } from '../actions';
 import { resetState } from '../reducers';
 
@@ -36,7 +36,7 @@ describe('api keys page redux state test', () => {
   });
 
   it('Initial state', () => {
-    const state = store.getState().newApiKeyState;
+    const state = getStore().getState().newApiKeyState;
     expect(state).toEqual(initialState);
   });
 
@@ -45,27 +45,27 @@ describe('api keys page redux state test', () => {
       { id: 'mocked-id', name: 'mocked-name', description: '', status: GroupStatus.ACTIVE },
     ];
     mock.onGet(GET_USER_GROUPS()).reply(200, mockResponse);
-    const action = await store.dispatch(getUserGroups());
+    const action = await getStore().dispatch(getUserGroups());
     const payload = action.payload;
     expect(action.type).toBe('getUserGroups/fulfilled');
     expect(payload).toEqual(mockResponse);
-    expect(store.getState().newNotificationState.groups).toStrictEqual(mockResponse);
+    expect(getStore().getState().newNotificationState.groups).toStrictEqual(mockResponse);
   });
 
   it('Should be able to create new API Key', async () => {
     mock.onPost(CREATE_APIKEY(), newApiKeyDTO).reply(200, newApiKeyResponse);
-    const action = await store.dispatch(saveNewApiKey(newApiKeyDTO));
+    const action = await getStore().dispatch(saveNewApiKey(newApiKeyDTO));
     const payload = action.payload;
     expect(action.type).toBe('saveNewApiKey/fulfilled');
     expect(payload).toEqual(newApiKeyResponse.apiKey);
   });
 
   it('Should be able to reset state', () => {
-    const action = store.dispatch(resetState());
+    const action = getStore().dispatch(resetState());
     const payload = action.payload;
     expect(action.type).toBe('newApiKeySlice/resetState');
     expect(payload).toEqual(undefined);
-    const state = store.getState().newApiKeyState;
+    const state = getStore().getState().newApiKeyState;
     expect(state).toEqual(initialState);
   });
 });
