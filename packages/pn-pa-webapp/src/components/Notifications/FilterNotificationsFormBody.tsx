@@ -167,11 +167,27 @@ const FilterNotificationsFormBody = ({
         inputFormat={DATE_FORMAT}
         value={endDate}
         onChange={(value: DatePickerTypes) => {
+          console.log('change value of endDate');
+          console.log(value);
           void formikInstance.setFieldValue('endDate', value || today).then(() => {
             trackEventByType(TrackEventType.NOTIFICATION_FILTER_DATE, { source: 'to date' });
             setEndDate(value);
           });
         }}
+        // slotProps={{ textField: { 
+        //   id: "endDate",
+        //   name: "endDate",
+        //   size: 'small',
+        //   'aria-label': t('filters.data_a-aria-label'),
+        //   inputProps: {
+        //     inputMode: 'text',
+        //     placeholder: 'gg/mm/aaaa',
+        //     type: 'text',
+        //     'aria-label': t('filters.data_a-input-aria-label'),
+        //   },
+        //   fullWidth: isMobile,
+        //   sx: { marginBottom: isMobile ? '20px' : '0' }
+        // } }}
         renderInput={(params) => (
           <TextField
             id="endDate"

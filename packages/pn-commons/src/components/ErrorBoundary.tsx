@@ -10,6 +10,7 @@ type Props = {
   printError?: boolean;
   eventTrackingCallback?: (error: Error, errorInfo: ErrorInfo) => void;
   eventTrackingCallbackRefreshPage?: () => void;
+  children?: React.ReactNode;
 };
 
 type State = { hasError: boolean };
