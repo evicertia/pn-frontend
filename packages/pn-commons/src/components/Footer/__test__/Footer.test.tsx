@@ -49,9 +49,10 @@ describe('Footer Component', () => {
   });
 
   it('shows languages dropdown', async () => {
-    const { getAllByRole } = render(<Footer loggedUser={true} />);
-    const buttons = getAllByRole('button');
-    const dropdownLanguageButton = buttons[4];
+    const { getByRole } = render(<Footer loggedUser={true} />);
+    const dropdownLanguageButton = getByRole('button');
+    // const buttons = getAllByRole('button');
+    // const dropdownLanguageButton = buttons[4];
     const languageKeys = Object.keys(LANGUAGES);
     // This array represents how the options labels should sequentially change when you click the option.
     const expectedLanguagesLabels = new Array();

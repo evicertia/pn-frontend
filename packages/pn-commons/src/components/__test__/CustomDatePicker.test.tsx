@@ -13,7 +13,7 @@ const RenderDatePicker = ({ language = 'it' }: { language?: string }) => (
     value={new Date('01/01/2023')}
     language={language}
     inputFormat={DATE_FORMAT}
-    textField={(params) => (
+    renderInput={(params) => (
       <TextField
         {...params}
         inputProps={{
