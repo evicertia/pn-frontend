@@ -35,7 +35,7 @@ const initialState = {
   iunMatch: '',
 };
 
-async function testCalendar(form: HTMLFormElement, elementName: string) {
+async function testCalendar(form: HTMLFormElement, elementName: string, expectedDate: string) {
   const input = form.querySelector(`input[name="${elementName}"]`);
   const button = input?.parentElement!.querySelector(`button`);
   fireEvent.click(button!);
@@ -50,7 +50,7 @@ async function testCalendar(form: HTMLFormElement, elementName: string) {
   );
   fireEvent.click(dateButton.iterateNext()!);
   await waitFor(() => {
-    expect(input).toHaveValue('01/02/2022');
+    expect(input).toHaveValue(expectedDate);
     expect(dialog).not.toBeInTheDocument();
   });
 }
@@ -130,17 +130,17 @@ describe('Filter Notifications Table Component', () => {
     });
     form = result?.container.querySelector('form') as HTMLFormElement;
     await testInput(form!, 'startDate', '23/02/2022');
-    await testCalendar(form!, 'startDate');
+    await testCalendar(form!, 'startDate', '23/02/2022');
   });
 
-  it.skip('test endDate input', async () => {
+  it('test endDate input', async () => {
     // render component
     await act(async () => {
       result = render(<FilterNotifications showFilters />);
-      form = result.container.querySelector('form') as HTMLFormElement;
     });
+    form = result?.container.querySelector('form') as HTMLFormElement;
     await testInput(form!, 'endDate', '23/02/2022');
-    await testCalendar(form!, 'endDate');
+    await testCalendar(form!, 'endDate', '23/02/2022');
   });
 
   it.skip('test form submission - valid fields', async () => {

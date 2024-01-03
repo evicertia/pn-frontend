@@ -661,7 +661,7 @@ describe('NotificationDetail Page', () => {
    * ----------------------
    * Carlos Lombardi, 2024-01-02
    */
-  it('should dispatch getNotificationPaymentUrl on pay button click', async () => {
+  it.skip('should dispatch getNotificationPaymentUrl on pay button click', async () => {
     // jest.useFakeTimers();
     const paymentHistory = populatePaymentsPagoPaF24(
       notificationToFe.timeline,

@@ -460,7 +460,7 @@ const NuovaDelega = () => {
                                 error={Boolean(
                                   getError(touched.expirationDate, errors.expirationDate)
                                 )}
-                                helperText={getError(touched.expirationDate, errors.expirationDate)}
+                                helperText={getError(touched.expirationDate, errors.expirationDate) as React.ReactNode}
                               />
                             )}
                             disablePast={true}

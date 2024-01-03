@@ -36,7 +36,7 @@ const initialState = {
   mandateId: undefined,
 };
 
-async function testCalendar(form: HTMLFormElement, elementName: string) {
+async function testCalendar(form: HTMLFormElement, elementName: string, expectedValue: string) {
   const input = form.querySelector(`input[name="${elementName}"]`);
   const button = input?.parentElement!.querySelector(`button`);
   fireEvent.click(button!);
@@ -51,7 +51,7 @@ async function testCalendar(form: HTMLFormElement, elementName: string) {
   );
   fireEvent.click(dateButton.iterateNext()!);
   await waitFor(() => {
-    expect(input).toHaveValue('01/02/2022');
+    expect(input).toHaveValue(expectedValue);
     expect(dialog).not.toBeInTheDocument();
   });
 }
@@ -136,21 +136,21 @@ describe('Filter Notifications Table Component', () => {
     });
     form = result?.container.querySelector('form') as HTMLFormElement;
     await testInput(form!, 'startDate', '23/02/2022');
-    await testCalendar(form!, 'startDate');
+    await testCalendar(form!, 'startDate', '23/02/2022');
   });
 
   /**
    *   16/10/2023 TO-FIX: Test skipped in order to proceed with the upgrade to React 18
    *   until the testing framework is changed (vitest);
    */
-  it.skip('test endDate input', async () => {
+  it('test endDate input', async () => {
     // render component
     await act(async () => {
       result = render(<FilterNotifications showFilters />);
-      form = result.container.querySelector('form') as HTMLFormElement;
     });
+    form = result?.container.querySelector('form') as HTMLFormElement;
     await testInput(form!, 'endDate', '23/02/2022');
-    await testCalendar(form!, 'endDate');
+    await testCalendar(form!, 'endDate', '23/02/2022');
   });
 
   /**

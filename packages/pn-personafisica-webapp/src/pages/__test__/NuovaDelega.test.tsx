@@ -120,47 +120,44 @@ describe('NuovaDelega page', () => {
     expect(createButton).toBeEnabled();
   });
 
-  // Cfr the comment in NuovaDelega.page.tsx, when using PnBreadcrumb,
-  // about the inability of vi.mock to affect imports inside files in pn-commons
-  // (in other terms, pn-commons seems to be outside the scope of vi.mock)
-  //
-  // Done analogously in pn-personagiuridica-webapp
+  // As the back button refers explicitly to routes.DELEGHE, 
+  // I set a router that includes just that route with a mocked page, 
+  // and the NuovaDelega with a mock history top.
   // --------------------------------------
-  // Carlos Lombardi, 2023-11-14
+  // Carlos Lombardi, 2024-01-03
   // --------------------------------------
   it('navigates to Deleghe page', async () => {
     mustMockNavigate = false;
 
     let result: any;
 
-    // insert two entries into the history, so the initial render will refer to the path /
-    // and when the back button is pressed and so navigate(-1) is invoked,
-    // the path will change to /mock-path
-    window.history.pushState({}, '', '/mock-path');
-    window.history.pushState({}, '', '/nuova-delega');
+    // insert an entry into the history, so the initial render will refer to that path
+    window.history.pushState({}, '', '/mock-history-top');
 
     // render with an ad-hoc router, will render initially NuovaDelega 
     // since it corresponds to the top of the mocked history stack
     await act(async () => {
       result = render(<>
         <Routes>
-          <Route path={'/mock-path'} element={<div data-testid="mocked-page">hello</div>} />
-          <Route path={'/nuova-delega'} element={<NuovaDelega />} />
+          <Route path={routes.DELEGHE} element={<div data-testid="mocked-page-deleghe">hello</div>} />
+          <Route path={'/mock-history-top'} element={<NuovaDelega />} />
         </Routes>
       </>);
     });
 
-    // before pressing "back" button - mocked page not present
-    const mockedPageBefore = result?.queryByTestId('mocked-page');
+    // before pressing "back" button - mocked deleghe page not present
+    const mockedPageBefore = result?.queryByTestId('mocked-page-deleghe');
     expect(mockedPageBefore).not.toBeInTheDocument();
 
     // simulate press of "back" button
     const backButton = result?.getByTestId('breadcrumb-indietro-button');
+    console.log(backButton);
     fireEvent.click(backButton);
 
-    // after pressing "back" button - mocked page present
+    // before pressing "back" button - mocked deleghe page not present
     await waitFor(() => {
-      const mockedPageAfter = result?.queryByTestId('mocked-page');
+      console.log(result);
+      const mockedPageAfter = result?.queryByTestId('mocked-page-deleghe');
       expect(mockedPageAfter).toBeInTheDocument();
     });
   });
