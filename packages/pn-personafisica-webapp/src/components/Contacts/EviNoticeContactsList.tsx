@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import { Alert, Box, Grid, TextField, Typography } from '@mui/material';
 import { dataRegex } from '@pagopa-pn/pn-commons';
-import { ButtonNaked, IllusEmailValidation } from '@pagopa/mui-italia';
+import { ButtonNaked, IllusSimplify } from '@pagopa/mui-italia';
 
 import { DigitalAddress, LegalChannelType } from '../../models/contacts';
 import CancelVerificationModal from './CancelVerificationModal';
@@ -18,7 +18,7 @@ type Props = {
   legalAddresses: Array<DigitalAddress>;
 };
 
-const LegalContactsList = ({ recipientId, legalAddresses }: Props) => {
+const EviNoticeContactsList = ({ recipientId, legalAddresses }: Props) => {
   const { t, i18n } = useTranslation(['common', 'recapiti']);
   const digitalElemRef = useRef<{ editContact: () => void }>({ editContact: () => {} });
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
@@ -27,37 +27,37 @@ const LegalContactsList = ({ recipientId, legalAddresses }: Props) => {
     () => (
       <Grid container spacing={1} alignItems="flex-end" direction="row">
         <Grid item xs="auto">
-          {t('legal-contacts.subtitle-2', { ns: 'recapiti' })}
+          {t('en-contacts.subtitle-2', { ns: 'recapiti' })}
         </Grid>
       </Grid>
     ),
     [i18n.language]
   );
   const defaultAddress = useMemo(
-    () => legalAddresses.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.PEC  && a.pecValid === true),
+    () => legalAddresses.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.EVINOTICE && a.eviNoticeValid === true),
     [legalAddresses]
   );
 
   const verifyingAddress = useMemo(
-    () => legalAddresses.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.PEC && a.pecValid === false),
+    () => legalAddresses.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.EVINOTICE && a.eviNoticeValid === false),
     [legalAddresses]
   );
 
-  const hasAnyPEC = useMemo(
-    () => legalAddresses.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.PEC),
+  const hasAnyEviNotice = useMemo(
+    () => legalAddresses.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.EVINOTICE),
     [legalAddresses]
   );
 
   const validationSchema = yup.object({
-    pec: yup
+    eviNotice: yup
       .string()
-      .required(t('legal-contacts.valid-pec', { ns: 'recapiti' }))
+      .required(t('legal-contacts.valid-en', { ns: 'recapiti' }))
       .max(254, t('common.too-long-field-error', { ns: 'recapiti', maxLength: 254 }))
-      .matches(dataRegex.email, t('legal-contacts.valid-pec', { ns: 'recapiti' })),
+      .matches(dataRegex.email, t('legal-contacts.valid-en', { ns: 'recapiti' })),
   });
 
   const initialValues = {
-    pec: defaultAddress?.value || '',
+    eviNotice: defaultAddress?.value || '',
   };
 
   const formik = useFormik({
@@ -78,7 +78,7 @@ const LegalContactsList = ({ recipientId, legalAddresses }: Props) => {
     }
   };
 
-  const handlePecValidationCancel = () => {
+  const handleEviNoticeValidationCancel = () => {
     setCancelDialogOpen(true);
   };
 
@@ -89,12 +89,12 @@ const LegalContactsList = ({ recipientId, legalAddresses }: Props) => {
         handleClose={() => setCancelDialogOpen(false)}
       />
       <DigitalContactsCard
-        sectionTitle={t('legal-contacts.title', { ns: 'recapiti' })}
+        sectionTitle={t('en-contacts.title', { ns: 'recapiti' })}
         title={title}
-        subtitle={t('legal-contacts.description', { ns: 'recapiti' })}
-        avatar={<IllusEmailValidation />}
+        subtitle={t('en-contacts.description', { ns: 'recapiti' })}
+        avatar={<IllusSimplify />}
       >
-        {!verifyingAddress && hasAnyPEC && (
+        {!verifyingAddress && hasAnyEviNotice && (
           <Box mt="20px" data-testid="legalContacts">
             <form
               onSubmit={(e) => {
@@ -102,29 +102,29 @@ const LegalContactsList = ({ recipientId, legalAddresses }: Props) => {
                 digitalElemRef.current.editContact();
               }}
             >
-              <Typography mb={1} sx={{ fontWeight: 'bold' }} id="associatedPEC">
-                {t('legal-contacts.pec-added', { ns: 'recapiti' })}
+              <Typography mb={1} sx={{ fontWeight: 'bold' }} id="associatedEviNotice">
+                {t('legal-contacts.en-added', { ns: 'recapiti' })}
               </Typography>
               <DigitalContactElem
                 recipientId={recipientId}
                 senderId="default"
-                contactType={LegalChannelType.PEC}
+                contactType={LegalChannelType.EVINOTICE}
                 fields={[
                   {
                     id: `legalContacts`,
                     key: 'legalContactValue',
                     component: (
                       <TextField
-                        id="pec"
+                        id="eviNotice"
                         fullWidth
-                        name="pec"
-                        label="PEC"
+                        name="eviNotice"
+                        label="Internet"
                         variant="outlined"
                         size="small"
-                        value={formik.values.pec}
+                        value={formik.values.eviNotice}
                         onChange={handleChangeTouched}
-                        error={formik.touched.pec && Boolean(formik.errors.pec)}
-                        helperText={formik.touched.pec && formik.errors.pec}
+                        error={formik.touched.eviNotice && Boolean(formik.errors.eviNotice)}
+                        helperText={formik.touched.eviNotice && formik.errors.eviNotice}
                       />
                     ),
                     isEditable: true,
@@ -134,18 +134,18 @@ const LegalContactsList = ({ recipientId, legalAddresses }: Props) => {
                 saveDisabled={!formik.isValid}
                 removeModalTitle={
                   legalAddresses.length > 1
-                    ? t('legal-contacts.block-remove-pec-title', { ns: 'recapiti' })
-                    : t('legal-contacts.remove-pec-title', { ns: 'recapiti' })
+                    ? t('legal-contacts.block-remove-en-title', { ns: 'recapiti' })
+                    : t('legal-contacts.remove-en-title', { ns: 'recapiti' })
                 }
                 removeModalBody={
                   legalAddresses.length > 1
-                    ? t('legal-contacts.block-remove-pec-message', { ns: 'recapiti' })
-                    : t('legal-contacts.remove-pec-message', {
-                        value: formik.values.pec,
+                    ? t('legal-contacts.block-remove-en-message', { ns: 'recapiti' })
+                    : t('legal-contacts.remove-en-message', {
+                        value: formik.values.eviNotice,
                         ns: 'recapiti',
                       })
                 }
-                value={formik.values.pec}
+                value={formik.values.eviNotice}
                 onConfirmClick={handleEditConfirm}
                 blockDelete={legalAddresses.length > 1}
                 resetModifyValue={() => handleEditConfirm('cancelled')}
@@ -154,24 +154,24 @@ const LegalContactsList = ({ recipientId, legalAddresses }: Props) => {
             </form>
           </Box>
         )}
-        {verifyingAddress && hasAnyPEC && (
+        {verifyingAddress && hasAnyEviNotice && (
           <Box mt="20px" data-testid="legalContacts">
             <Typography mb={1} sx={{ fontWeight: 'bold' }}>
-              {t('legal-contacts.pec-validating', { ns: 'recapiti' })}
+              {t('legal-contacts.en-validating', { ns: 'recapiti' })}
             </Typography>
             <Box display="flex" flexDirection="row" mt={2.5}>
               <Box display="flex" flexDirection="row" mr={1}>
                 <WatchLaterIcon fontSize="small" />
-                <Typography id="validationPecProgress" fontWeight="bold" variant="body2" ml={1}>
+                <Typography id="validationEviNoticeProgress" fontWeight="bold" variant="body2" ml={1}>
                   {t('legal-contacts.validation-in-progress', { ns: 'recapiti' })}
                 </Typography>
               </Box>
               <ButtonNaked
                 color="primary"
-                onClick={handlePecValidationCancel}
+                onClick={handleEviNoticeValidationCancel}
                 data-testid="cancelValidation"
               >
-                {t('legal-contacts.cancel-pec-validation', { ns: 'recapiti' })}
+                {t('legal-contacts.cancel-en-validation', { ns: 'recapiti' })}
               </ButtonNaked>
             </Box>
           </Box>
@@ -191,17 +191,11 @@ const LegalContactsList = ({ recipientId, legalAddresses }: Props) => {
           >
             {t('legal-contacts.disclaimer-message', { ns: 'recapiti' })}{' '}
           </Typography>
-          {/**
-             * Waiting for FAQs
-          <Link href={URL_DIGITAL_NOTIFICATIONS} target="_blank" variant="body1">
-            {t('legal-contacts.disclaimer-link', { ns: 'recapiti' })}
-          </Link>
-             * */}
         </Alert>
       </DigitalContactsCard>
     </>
   );
 };
 
-export default LegalContactsList;
+export default EviNoticeContactsList;
 

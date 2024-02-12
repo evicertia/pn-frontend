@@ -8,11 +8,13 @@ import { ApiErrorWrapper, TitleBox } from '@pagopa-pn/pn-commons';
 import CourtesyContacts from '../components/Contacts/CourtesyContacts';
 import { DigitalContactsCodeVerificationProvider } from '../components/Contacts/DigitalContactsCodeVerification.context';
 import IOContact from '../components/Contacts/IOContact';
+import InsertEviNoticeContact from '../components/Contacts/InsertEviNoticeContact';
 import InsertLegalContact from '../components/Contacts/InsertLegalContact';
 import LegalContactsList from '../components/Contacts/LegalContactsList';
+import EviNoticeContactsList from '../components/Contacts/EviNoticeContactsList';
 import SpecialContacts from '../components/Contacts/SpecialContacts';
 import LoadingPageWrapper from '../components/LoadingPageWrapper/LoadingPageWrapper';
-import { CourtesyChannelType, DigitalAddress, IOAllowedValues } from '../models/contacts';
+import { CourtesyChannelType, LegalChannelType, DigitalAddress, IOAllowedValues } from '../models/contacts';
 import { FAQ_WHAT_IS_AAR, FAQ_WHAT_IS_COURTESY_MESSAGE } from '../navigation/externalRoutes.const';
 import { PROFILO } from '../navigation/routes.const';
 import { CONTACT_ACTIONS, getDigitalAddresses } from '../redux/contact/actions';
@@ -37,6 +39,16 @@ const Contacts = () => {
   const contactIO = digitalAddresses.courtesy
     ? digitalAddresses.courtesy.find((address) => address.channelType === CourtesyChannelType.IOMSG)
     : null;
+
+  const hasAnyPEC = useMemo(
+    () => digitalAddresses.legal.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.PEC),
+      [digitalAddresses]
+  );
+
+  const hasAnyEviNotice = useMemo(
+    () => digitalAddresses.legal.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.EVINOTICE),
+      [digitalAddresses]
+  );
 
   const fetchAddresses = useCallback(() => {
     void dispatch(getDigitalAddresses(recipientId)).then(() => {
@@ -151,13 +163,23 @@ const Contacts = () => {
               <Stack spacing={3}>
                 <Stack direction={{ xs: 'column', lg: 'row' }} spacing={3}>
                   <Box sx={{ width: { xs: '100%', lg: '50%' } }}>
-                    {digitalAddresses.legal.length === 0 ? (
-                      <InsertLegalContact recipientId={recipientId} />
-                    ) : (
+                    {digitalAddresses.legal.length > 0 && hasAnyPEC ? (
                       <LegalContactsList
                         recipientId={recipientId}
                         legalAddresses={digitalAddresses.legal}
                       />
+                    ) : (
+                      <InsertLegalContact recipientId={recipientId} />
+                    )}
+                  </Box>
+                  <Box sx={{ width: { xs: '100%', lg: '50%' } }}>
+                    {digitalAddresses.legal.length > 0 && hasAnyEviNotice ? (
+                      <EviNoticeContactsList
+                        recipientId={recipientId}
+                        legalAddresses={digitalAddresses.legal}
+                      />
+                    ) : (
+                      <InsertEviNoticeContact recipientId={recipientId} />
                     )}
                   </Box>
                   <Box sx={{ width: { xs: '100%', lg: '50%' } }}>

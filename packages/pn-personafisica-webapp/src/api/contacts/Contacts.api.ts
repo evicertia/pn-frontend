@@ -35,8 +35,7 @@ export const ContactsApi = {
     channelType: LegalChannelType,
     body: { value: string; verificationCode?: string },
     senderName?: string
-  ): Promise<void | DigitalAddress> =>
-    apiClient
+    ): Promise<void | DigitalAddress> => apiClient
       .post<void | { result: string }>(LEGAL_CONTACT(senderId, channelType), body)
       .then((response) => {
         if (response.status === 204) {
@@ -48,11 +47,12 @@ export const ContactsApi = {
             senderName,
             channelType,
             value: body.value,
-            pecValid: true,
+            pecValid: (channelType === LegalChannelType.PEC? true : false),
+            eviNoticeValid: (channelType === LegalChannelType.EVINOTICE? true : false),
           };
         }
 
-        // PEC_VALIDATION_REQUIRED is received when the code has been inserted and is valid, but the pec validation is
+        // VALIDATION_REQUIRED is received when the code has been inserted and is valid, but validation is
         // still in progress
         if (response.data?.result === 'PEC_VALIDATION_REQUIRED') {
           return {
@@ -63,6 +63,17 @@ export const ContactsApi = {
             channelType,
             value: '',
             pecValid: false,
+          };
+        }else if (response.data?.result === 'EVINOTICE_VALIDATION_REQUIRED' ){
+
+          return {
+            addressType: 'legal',
+            recipientId,
+            senderId,
+            senderName,
+            channelType,
+            value: '',
+            eviNoticeValid: false,
           };
         } else {
           return;

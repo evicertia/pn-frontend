@@ -7,8 +7,8 @@ void i18next
   .use(initReactI18next)
   .use(HttpApi)
   .init({
-    lng: 'it',
-    fallbackLng: 'it',
+    lng: 'en',
+    fallbackLng: 'en',
     debug: process.env.NODE_ENV === 'development',
     ns: ['common'],
     interpolation: {

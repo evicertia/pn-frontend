@@ -1,5 +1,6 @@
 export enum LegalChannelType {
   PEC = 'PEC',
+  EVINOTICE = 'EVINOTICE',
 }
 
 export enum CourtesyChannelType {
@@ -22,6 +23,7 @@ export interface DigitalAddress {
   value: string;
   requestId?: string;
   pecValid?: boolean;
+  eviNoticeValid?: boolean;
   codeValid?: boolean;
 }
 
