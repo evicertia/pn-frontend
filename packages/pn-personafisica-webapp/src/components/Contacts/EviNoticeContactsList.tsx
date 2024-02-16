@@ -34,12 +34,12 @@ const EviNoticeContactsList = ({ recipientId, legalAddresses }: Props) => {
     [i18n.language]
   );
   const defaultAddress = useMemo(
-    () => legalAddresses.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.EVINOTICE && a.eviNoticeValid === true),
+    () => legalAddresses.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.EVINOTICE && a.codeValid === true),
     [legalAddresses]
   );
 
   const verifyingAddress = useMemo(
-    () => legalAddresses.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.EVINOTICE && a.eviNoticeValid === false),
+    () => legalAddresses.find((a) => a.senderId === 'default' && a.channelType === LegalChannelType.EVINOTICE && a.codeValid === false),
     [legalAddresses]
   );
 

@@ -161,7 +161,7 @@ const DigitalContactElem = forwardRef<{ editContact: () => void }, Props>(
       handleModalClose();
       /* eslint-disable-next-line functional/no-let */
       let actionToDispatch: AsyncThunk<string, DeleteDigitalAddressParams, any>;
-      if (contactType === LegalChannelType.PEC) {
+      if (contactType === LegalChannelType.PEC || contactType === LegalChannelType.EVINOTICE) {
         actionToDispatch = deleteLegalAddress;
       } else {
         actionToDispatch = deleteCourtesyAddress;
