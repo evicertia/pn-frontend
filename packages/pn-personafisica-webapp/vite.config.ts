@@ -36,7 +36,7 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
         },
         '^/token-exchange': {
-          target: 'https://18.102.187.200',
+          target: 'https://18.102.99.115',
           agent: new https.Agent({
             servername: 'webapi.dev.notifichedigitali.it',
           }),
@@ -59,16 +59,22 @@ export default defineConfig(({ mode }) => {
           target: 'http://localhost:8085',
           changeOrigin: true,
           headers: {
-            'x-pagopa-pn-cx-id': '11',
-            'x-pagopa-pn-cx-type': 'PA',
+            'x-pagopa-pn-cx-id': 'PF-X105H60C08LNDSRC',
+            'x-pagopa-pn-cx-type': 'PF',
             'origin': 'http://localhost:8085'
           },
         },
         '^/delivery/.*': {
-          target: 'http://mockserver.pagopa.test:5000',
+          target: 'http://localhost:8080',
           changeOrigin: true,
+          headers: {
+            'x-pagopa-pn-uid': 'X105H60C08LNDSRC',
+            'x-pagopa-pn-cx-id': 'PF-X105H60C08LNDSRC',
+            'x-pagopa-pn-cx-type': 'PF',
+            'origin': 'http://localhost:8080'
+          },
         },
-/*        '^/ext-registry/pa/v1/activated-on-pn': {
+        /*'^/ext-registry/pa/v1/activated-on-pn': {
           target: 'http://mockserver.pagopa.test:5000',
           changeOrigin: true,
          },*/

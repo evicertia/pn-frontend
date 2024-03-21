@@ -48,7 +48,7 @@ export const ContactsApi = {
             channelType,
             value: body.value,
             pecValid: (channelType === LegalChannelType.PEC? true : false),
-            eviNoticeValid: (channelType === LegalChannelType.EVINOTICE? true : false),
+            codeValid: (channelType === LegalChannelType.EVINOTICE? true : false),
           };
         }
 
